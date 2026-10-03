@@ -90,6 +90,8 @@ export type Design = {
   template: "classic" | "modern" | "minimal";
   /** Image shape; optional because older posts predate the choice (see aspectOf). */
   aspect?: Aspect;
+  /** Which slides get text overlays; optional for older posts (see textModeOf). */
+  text_mode?: TextMode;
   primary: string;
   secondary: string;
   accent: string;
@@ -151,6 +153,11 @@ export type SocialAccount = {
 export type Aspect = "portrait" | "square";
 export type Size = { w: number; h: number };
 
+/** Text overlays: on every slide, only the cover, or none (clean listing photos). */
+export type TextMode = "all" | "cover" | "none";
+
+export const TEXT_MODE_LABELS: Record<TextMode, string> = { all: "All slides", cover: "Cover only", none: "None (clean photos)" };
+
 export const ASPECT_LABELS: Record<Aspect, string> = { square: "Square (1:1)", portrait: "Portrait (4:5)" };
 
 /**
@@ -167,6 +174,8 @@ export const PLATFORM_SPECS: Record<
     defaultAspect: Aspect;
     /** Size used by posts created before the aspect choice existed. */
     legacyAspect: Record<PostFormat, Aspect>;
+    /** Default text overlays for new posts. */
+    defaultTextMode: TextMode;
     maxSlides: number;
     captionLimit: number;
     hashtagTarget: string;
@@ -178,7 +187,8 @@ export const PLATFORM_SPECS: Record<
     aspects: ["portrait"],
     defaultAspect: "portrait",
     legacyAspect: { single: "portrait", carousel: "portrait" },
-    maxSlides: 10,
+    defaultTextMode: "all",
+    maxSlides: 10, // Instagram's own carousel limit
     captionLimit: 2200,
     hashtagTarget: "5-10 targeted hashtags",
   },
@@ -190,7 +200,9 @@ export const PLATFORM_SPECS: Record<
     // Older Facebook posts also render square: portrait gets colour bars on desktop.
     // Images are re-rendered on every publish, so this never changes a live post.
     legacyAspect: { single: "square", carousel: "square" },
-    maxSlides: 10,
+    // Facebook shows the Page name above every post, so clean listing photos are the norm.
+    defaultTextMode: "none",
+    maxSlides: 20, // photo-album posts; Facebook shows them as a grid
     captionLimit: 5000,
     hashtagTarget: "0-3 hashtags",
   },
@@ -200,6 +212,7 @@ export const PLATFORM_SPECS: Record<
     aspects: ["square", "portrait"],
     defaultAspect: "square",
     legacyAspect: { single: "square", carousel: "square" },
+    defaultTextMode: "all",
     maxSlides: 9,
     captionLimit: 3000,
     hashtagTarget: "3-5 professional hashtags",
@@ -213,4 +226,22 @@ export function aspectOf(post: { platform: Platform; format: PostFormat; design:
   return a && spec.aspects.includes(a) ? a : spec.legacyAspect[post.format];
 }
 
+/** Text overlays a post renders with (older posts had text on every slide). */
+export function textModeOf(post: { design: { text_mode?: TextMode } }): TextMode {
+  return post.design?.text_mode ?? "all";
+}
+
+/** Whether a given slide shows text overlays under the post's text mode. */
+export function slideHasText(mode: TextMode, slide: { kind: string }, index: number): boolean {
+  if (slide.kind === "details" || slide.kind === "mortgage" || slide.kind === "contact") return true; // info cards are text by nature
+  return mode === "all" || (mode === "cover" && index === 0);
+}
+
 export const PROVINCES = ["AB", "BC", "MB", "NB", "NL", "NS", "NT", "NU", "ON", "PE", "QC", "SK", "YT"];
+
+/** Text-on-photos choices that make sense for a format (single images have no "cover only"). */
+export function textModeOptions(format: PostFormat): Record<string, string> {
+  return format === "single"
+    ? { all: "Text on photo", none: "Clean photo" }
+    : { all: TEXT_MODE_LABELS.all, cover: TEXT_MODE_LABELS.cover, none: TEXT_MODE_LABELS.none };
+}

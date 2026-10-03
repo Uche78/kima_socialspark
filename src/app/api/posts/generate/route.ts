@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createAdminClient, getUser } from "@/lib/supabase/server";
 import { generatePost, MAX_FOCUS } from "@/lib/generate";
 import { ClaudeRefusalError } from "@/lib/claude";
-import type { Design, Language, Listing, MortgageInputs, Platform, PostFormat, PostType, Profile, Aspect } from "@/lib/types";
+import type { Design, Language, Listing, MortgageInputs, Platform, PostFormat, PostType, Profile, Aspect, TextMode } from "@/lib/types";
 import { PLATFORM_SPECS, POST_TYPES } from "@/lib/types";
 
 export const maxDuration = 60;
@@ -23,6 +23,7 @@ type Body = {
   mortgage?: MortgageInputs | null;
   template?: Design["template"];
   aspect?: Aspect;
+  text_mode?: TextMode;
 };
 
 export async function POST(request: Request) {
@@ -73,6 +74,10 @@ export async function POST(request: Request) {
     .slice(0, MAX_FOCUS);
   const notes = String(body.notes ?? body.highlights ?? "").trim().slice(0, 1000);
 
+  // Single images have one slide, so "cover only" is the same as text on the photo.
+  const requested = body.text_mode && ["all", "cover", "none"].includes(body.text_mode) ? body.text_mode : PLATFORM_SPECS[body.platform].defaultTextMode;
+  const textMode: TextMode = body.format === "single" && requested === "cover" ? "all" : requested;
+
   const mortgage = profile.role === "mortgage_broker" && body.mortgage?.enabled ? body.mortgage : null;
   const includeContact = body.include_contact_slide ?? profile.include_contact;
 
@@ -87,6 +92,7 @@ export async function POST(request: Request) {
       language: body.language,
       focus,
       notes,
+      textMode,
       includeContactSlide: body.format === "carousel" && includeContact,
       mortgage,
     });
@@ -99,6 +105,7 @@ export async function POST(request: Request) {
   const design: Design = {
     template: body.template ?? "classic",
     aspect: body.aspect && PLATFORM_SPECS[body.platform].aspects.includes(body.aspect) ? body.aspect : PLATFORM_SPECS[body.platform].defaultAspect,
+    text_mode: textMode,
     primary: profile.brand_primary,
     secondary: profile.brand_secondary,
     accent: profile.brand_accent,

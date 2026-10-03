@@ -2,7 +2,7 @@
 import { forwardRef, type CSSProperties, type ReactNode } from "react";
 import { estimateMortgage, formatCurrency } from "@/lib/mortgage";
 import { mediaUrl, postTypeLabel, t } from "@/lib/media";
-import { type Design, type Language, type Listing, type MortgageInputs, type PostType, type Profile, type Slide } from "@/lib/types";
+import { slideHasText, type Design, type Language, type Listing, type MortgageInputs, type PostType, type Profile, type Slide } from "@/lib/types";
 
 export type SlideCanvasProps = {
   slide: Slide;
@@ -139,7 +139,10 @@ export const SlideCanvas = forwardRef<HTMLDivElement, SlideCanvasProps>(function
 
   let body: ReactNode;
 
-  if (slide.kind === "details") {
+  if (!slideHasText(design.text_mode ?? "all", slide, index)) {
+    // Clean listing photo: no overlays, badge, counter or branding.
+    body = <Bg src={photo} />;
+  } else if (slide.kind === "details") {
     body = (
       <>
         <Bg src={photo} style={{ opacity: 0.18, filter: "blur(2px)" }} />

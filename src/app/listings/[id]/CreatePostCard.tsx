@@ -6,7 +6,7 @@ import { FocusChips } from "@/components/FocusChips";
 import { estimateMortgage, formatCurrency } from "@/lib/mortgage";
 import type { Usage } from "@/lib/plans";
 import { MAX_FOCUS } from "@/lib/focus";
-import { ASPECT_LABELS, PLATFORM_SPECS, POST_TYPES, type Aspect, type Design, type Language, type Listing, type MortgageInputs, type Platform, type PostFormat, type PostType, type Profile } from "@/lib/types";
+import { ASPECT_LABELS, PLATFORM_SPECS, POST_TYPES, textModeOptions, type Aspect, type TextMode, type Design, type Language, type Listing, type MortgageInputs, type Platform, type PostFormat, type PostType, type Profile } from "@/lib/types";
 
 export type PostSettings = {
   platform: Platform;
@@ -15,6 +15,7 @@ export type PostSettings = {
   language: Language;
   template: Design["template"];
   aspect: Aspect;
+  text_mode: TextMode;
   /** Features to lead with; empty = Claude chooses. */
   focus: string[];
   /** Agent's notes: facts not in the listing. */
@@ -40,11 +41,18 @@ export function CreatePostCard({ listing, profile, usage, generating, error, onG
   const [language, setLanguage] = useState<Language>(profile.default_language);
   const [template, setTemplate] = useState<Design["template"]>("classic");
   const [aspect, setAspect] = useState<Aspect>(PLATFORM_SPECS.instagram.defaultAspect);
+  const [textMode, setTextModeState] = useState<TextMode>(PLATFORM_SPECS.instagram.defaultTextMode);
+  // Clean-photo posts usually end on a photo, not a text card.
+  function setTextMode(m: TextMode) {
+    setTextModeState(m);
+    setContactSlide(m === "all" && profile.include_contact);
+  }
   const aspects = PLATFORM_SPECS[platform].aspects;
   // Each platform has its own allowed sizes; reset to its default when switching.
   function choosePlatform(p: Platform) {
     setPlatform(p);
     setAspect(PLATFORM_SPECS[p].defaultAspect);
+    setTextMode(PLATFORM_SPECS[p].defaultTextMode);
   }
   const [focus, setFocus] = useState<string[]>([]);
   const [notes, setNotes] = useState("");
@@ -71,6 +79,7 @@ export function CreatePostCard({ listing, profile, usage, generating, error, onG
       language,
       template,
       aspect,
+      text_mode: format === "single" && textMode === "cover" ? "all" : textMode,
       focus,
       notes,
       include_contact_slide: format === "carousel" && contactSlide,
@@ -88,6 +97,12 @@ export function CreatePostCard({ listing, profile, usage, generating, error, onG
         {aspects.length > 1 && (
           <Chips label="Size" value={aspect} onChange={setAspect} options={Object.fromEntries(aspects.map((a) => [a, ASPECT_LABELS[a]])) as Record<Aspect, string>} />
         )}
+        <Chips
+          label="Text on photos"
+          value={format === "single" && textMode === "cover" ? "all" : textMode}
+          onChange={(v) => setTextMode(v as TextMode)}
+          options={textModeOptions(format)}
+        />
         <Chips label="Design" value={template} onChange={setTemplate} options={{ classic: "Classic", modern: "Modern", minimal: "Minimal" }} />
         <Chips label="Language" value={language} onChange={setLanguage} options={{ en: "English", fr: "Français (QC)", bilingual: "Bilingual" }} />
         <Chips label="Post type" value={postType} onChange={setPostType} options={POST_TYPES} />

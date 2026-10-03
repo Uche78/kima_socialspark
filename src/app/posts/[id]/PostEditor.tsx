@@ -14,7 +14,7 @@ import { ScaledSlide } from "@/components/ScaledSlide";
 import { arrayMove } from "@dnd-kit/sortable";
 import { fullCaption } from "@/lib/caption";
 import { isLowRes, uniqueSuffix } from "@/lib/media";
-import { ASPECT_LABELS, aspectOf, PLATFORM_SPECS, POST_TYPES, type Design, type Listing, type Post, type Profile, type Slide, type SocialAccount, type Aspect } from "@/lib/types";
+import { ASPECT_LABELS, aspectOf, textModeOf, textModeOptions, type TextMode, PLATFORM_SPECS, POST_TYPES, type Design, type Listing, type Post, type Profile, type Slide, type SocialAccount, type Aspect } from "@/lib/types";
 
 type Props = { initialPost: Post; listing: Listing; profile: Profile; accounts: SocialAccount[]; isGuest: boolean };
 
@@ -337,6 +337,19 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest }:
           {tab === "design" && (
             <div className="space-y-5">
               <Chips label="Template" value={post.design.template} onChange={(template) => patchDesign({ template })} options={{ classic: "Classic", modern: "Modern", minimal: "Minimal" }} />
+              <div>
+                <Chips
+                  label="Text on photos"
+                  value={post.format === "single" && textModeOf(post) === "cover" ? "all" : textModeOf(post)}
+                  onChange={(m) => patchDesign({ text_mode: m as TextMode })}
+                  options={textModeOptions(post.format)}
+                />
+                {textModeOf(post) !== "all" && (
+                  <p className="mt-1.5 text-xs text-muted">
+                    Photos without text show just the listing photo. Your name and brokerage stay in the caption.
+                  </p>
+                )}
+              </div>
               {spec.aspects.length > 1 && (
                 <div>
                   <Chips

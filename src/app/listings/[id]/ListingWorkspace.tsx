@@ -8,7 +8,7 @@ import { Drawer } from "@/components/Drawer";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { confirmAndDeleteListing } from "@/lib/delete-listing";
 import type { Usage } from "@/lib/plans";
-import { aspectOf, PLATFORM_SPECS, type Listing, type Post, type Profile } from "@/lib/types";
+import { aspectOf, textModeOf, PLATFORM_SPECS, type Listing, type Post, type Profile } from "@/lib/types";
 import { CreatePostCard, type PostSettings } from "./CreatePostCard";
 import { LatestResult, LatestResultSkeleton } from "./LatestResult";
 import { ListingEditor } from "./ListingEditor";
@@ -149,6 +149,7 @@ function settingsFrom(post: Post): PostSettings {
     language: post.language,
     template: post.design.template,
     aspect: aspectOf(post),
+    text_mode: textModeOf(post),
     focus: post.focus ?? [],
     notes: post.highlights ?? "",
     include_contact_slide: post.slides.some((s) => s.kind === "contact"),
