@@ -4,6 +4,10 @@
 
 [build.environment]
   NODE_VERSION = "22"
+  # NEXT_PUBLIC_* values are public by design (shipped to the browser), so don't flag them.
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"
+  # Next.js's build cache can contain env values but is never published; still scan everything that is.
+  SECRETS_SCAN_OMIT_PATHS = ".next/cache/**,.netlify/.next/cache/**"
 
 [functions]
   directory = "netlify/functions"
