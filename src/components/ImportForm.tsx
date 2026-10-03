@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { PastePageDialog } from "./PastePageDialog";
 
 async function ensureSession() {
   const supabase = createClient();
@@ -28,6 +29,39 @@ export function ImportForm() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [offerManual, setOfferManual] = useState(false);
+  const [pasteOpen, setPasteOpen] = useState(false);
+  const [pasteBusy, setPasteBusy] = useState(false);
+  const [pasteError, setPasteError] = useState<string | null>(null);
+
+  /** Imports a page the user copied in their own browser. */
+  async function importPasted(content: string) {
+    setPasteError(null);
+    setPasteBusy(true);
+    try {
+      await ensureSession();
+      const res = await fetch("/api/listings/import", {
+        method: "POST",
+        body: JSON.stringify({ html: content, url: url.trim() || undefined }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setPasteError(json.error ?? "Couldn't read that page.");
+        setPasteBusy(false);
+        return;
+      }
+      router.push(`/listings/${json.id}`);
+      router.refresh();
+    } catch (e) {
+      setPasteError(e instanceof Error ? e.message : "Something went wrong.");
+      setPasteBusy(false);
+    }
+  }
+
+  const pasteLink = (label: string) => (
+    <button type="button" className="font-semibold underline underline-offset-2" onClick={() => setPasteOpen(true)}>
+      {label}
+    </button>
+  );
 
   async function createManual() {
     setBusy(true);
@@ -91,7 +125,8 @@ export function ImportForm() {
       {busy && <p className="mt-3 text-sm text-[#f3f1ec]/70">Reading the page and collecting photos. This usually takes 15–40 seconds.</p>}
       {realtorCa && !busy && (
         <div role="status" className="mt-3 rounded-2xl border border-amber-200/40 bg-black/50 p-3 text-sm text-[#f3f1ec] backdrop-blur-sm">
-          REALTOR.ca doesn&apos;t allow automatic retrieval yet. Try the same listing on the brokerage&apos;s or agent&apos;s website, or{" "}
+          REALTOR.ca doesn&apos;t allow automatic retrieval yet. {pasteLink("Copy and paste the page instead")}, try the same listing on the
+          brokerage&apos;s or agent&apos;s website, or{" "}
           <button type="button" className="font-semibold underline underline-offset-2" onClick={createManual}>
             enter it manually
           </button>
@@ -102,15 +137,37 @@ export function ImportForm() {
         <div className="mt-3 rounded-2xl border border-red-300/40 bg-red-950/60 p-3 text-sm text-red-100 backdrop-blur-sm">
           {error}
           {offerManual && (
-            <button type="button" className="ml-2 font-semibold underline" onClick={createManual} disabled={busy}>
-              Enter details manually
-            </button>
+            <>
+              {" "}
+              {pasteLink("Copy and paste the page instead")}, or{" "}
+              <button type="button" className="font-semibold underline" onClick={createManual} disabled={busy}>
+                enter details manually
+              </button>
+              .
+            </>
           )}
         </div>
       )}
-      <button type="button" className="mt-2 py-2.5 text-sm text-[#f3f1ec]/70 underline underline-offset-4 hover:text-[#f3f1ec]" onClick={createManual} disabled={busy}>
-        No link? Enter a listing manually
-      </button>
+      <div className="mt-2 flex flex-wrap gap-x-6">
+        <button type="button" className="py-2.5 text-sm text-[#f3f1ec]/70 underline underline-offset-4 hover:text-[#f3f1ec]" onClick={() => setPasteOpen(true)} disabled={busy}>
+          Site blocked? Copy and paste the page
+        </button>
+        <button type="button" className="py-2.5 text-sm text-[#f3f1ec]/70 underline underline-offset-4 hover:text-[#f3f1ec]" onClick={createManual} disabled={busy}>
+          No link? Enter a listing manually
+        </button>
+      </div>
+      {pasteOpen && (
+        <PastePageDialog
+          sourceUrl={url.trim()}
+          busy={pasteBusy}
+          error={pasteError}
+          onImport={importPasted}
+          onClose={() => {
+            setPasteOpen(false);
+            setPasteError(null);
+          }}
+        />
+      )}
     </div>
   );
 }

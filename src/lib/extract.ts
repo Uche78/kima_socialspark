@@ -154,6 +154,46 @@ export async function fetchListingPage(rawUrl: string): Promise<PageData> {
   }
   if (!res.ok) throw new Error(`The page returned an error (HTTP ${res.status}).`);
 
+  return parseListingHtml(html, url);
+}
+
+/** Placeholder base for pasted pages whose address we don't know (relative links won't resolve). */
+const UNKNOWN_PAGE = "https://pasted-page.invalid/";
+export const MAX_PASTED_CHARS = 5_000_000;
+
+/**
+ * Builds page data from content the user copied in their own browser (select all + copy,
+ * or the HTML from developer tools). Works for sites that block our server.
+ */
+export function pastedListingPage(content: string, sourceUrl?: string | null): PageData & { known: boolean } {
+  const trimmed = content.trim();
+  const looksLikeHtml = /<(html|body|div|img|meta|section|main)[\s>]/i.test(trimmed.slice(0, 20_000));
+  const html = looksLikeHtml ? trimmed : `<html><body><pre>${trimmed.replace(/[<&]/g, (c) => (c === "<" ? "&lt;" : "&amp;"))}</pre></body></html>`;
+
+  if (isBlockedPage(200, html)) {
+    throw new ExtractionBlockedError("That looks like the site's security check, not the listing. Open the listing page itself, then copy and paste again.");
+  }
+
+  // Prefer the address the user gave; otherwise the page's own canonical/og:url.
+  let url: URL | null = null;
+  try {
+    if (sourceUrl) url = new URL(sourceUrl);
+  } catch {
+    /* ignore */
+  }
+  if (!url && looksLikeHtml) {
+    const $ = cheerio.load(html);
+    const declared = $('link[rel="canonical"]').attr("href") ?? $('meta[property="og:url"]').attr("content");
+    try {
+      if (declared) url = new URL(declared);
+    } catch {
+      /* ignore */
+    }
+  }
+  return { ...parseListingHtml(html, url ?? new URL(UNKNOWN_PAGE)), known: !!url };
+}
+
+function parseListingHtml(html: string, url: URL): PageData {
   const $ = cheerio.load(html);
   const jsonLd: unknown[] = [];
   $('script[type="application/ld+json"]').each((_, el) => {

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getUser } from "@/lib/supabase/server";
-import { extractListing, ExtractionBlockedError, fetchListingPage } from "@/lib/extract";
+import { extractListing, ExtractionBlockedError, fetchListingPage, MAX_PASTED_CHARS, pastedListingPage } from "@/lib/extract";
 import { copyPhotosToStorage } from "@/lib/photos";
 import { upgradePhotoUrls } from "@/lib/photo-quality";
 import { ClaudeRefusalError } from "@/lib/claude";
@@ -11,12 +11,23 @@ export async function POST(request: Request) {
   const { supabase, user } = await getUser();
   if (!user) return NextResponse.json({ error: "Not signed in" }, { status: 401 });
 
-  const { url } = (await request.json().catch(() => ({}))) as { url?: string };
-  if (!url) return NextResponse.json({ error: "Paste a listing link first." }, { status: 400 });
+  // Either a link to fetch, or a page the user copied in their own browser (`html`).
+  const { url, html } = (await request.json().catch(() => ({}))) as { url?: string; html?: string };
+  if (!url && !html) return NextResponse.json({ error: "Paste a listing link first." }, { status: 400 });
+  if (html && html.length > MAX_PASTED_CHARS) {
+    return NextResponse.json({ error: "That page is too large to import. Try copying just the listing page." }, { status: 413 });
+  }
 
   let page;
+  let sourceKnown = true;
   try {
-    page = await fetchListingPage(url);
+    if (html) {
+      const pasted = pastedListingPage(html, url);
+      page = pasted;
+      sourceKnown = pasted.known;
+    } else {
+      page = await fetchListingPage(url!);
+    }
   } catch (e) {
     const blocked = e instanceof ExtractionBlockedError;
     return NextResponse.json(
@@ -45,8 +56,8 @@ export async function POST(request: Request) {
     .from("listings")
     .insert({
       user_id: user.id,
-      source_url: page.url.toString(),
-      source_site: page.url.hostname.replace(/^www\./, ""),
+      source_url: sourceKnown ? page.url.toString() : null,
+      source_site: sourceKnown ? page.url.hostname.replace(/^www\./, "") : null,
       address: l.address,
       city: l.city,
       province: l.province?.toUpperCase().slice(0, 2) ?? null,
