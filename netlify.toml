@@ -11,3 +11,11 @@
 
 [functions]
   directory = "netlify/functions"
+
+# Send visitors on the default Netlify address to the primary custom domain.
+# Exact-host match, so deploy previews (deploy-preview-N--kima-socialspark.netlify.app) are unaffected.
+[[redirects]]
+  from = "https://kima-socialspark.netlify.app/*"
+  to = "https://socialspark.usekima.com/:splat"
+  status = 301
+  force = true
