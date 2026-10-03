@@ -141,7 +141,9 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest }:
   const onPublish = () =>
     run("publish", async () => {
       if (!accountId) throw new Error("Choose an account to publish to.");
-      await saveWithImages();
+      // Retrying a stuck post: its images were saved when publishing started, and re-saving would
+      // reset the stuck timer, so only render and save for drafts and failed posts.
+      if (post.status !== "publishing") await saveWithImages();
       const res = await fetch(`/api/posts/${post.id}/publish`, { method: "POST", body: JSON.stringify({ social_account_id: accountId }) });
       const json = await res.json();
       if (!json.ok) throw new Error(json.error ?? "Publishing failed.");
@@ -154,6 +156,7 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest }:
           setPost((p) => ({ ...p, ...data }));
           router.refresh();
           if (data.status === "failed") throw new Error(data.error ?? "Publishing failed.");
+          if (data.status === "draft") return "Publishing cancelled. Nothing was posted.";
           return "Published!";
         }
         await new Promise((r) => setTimeout(r, 3000));
@@ -188,6 +191,20 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest }:
       setPost((p) => ({ ...p, status: "draft", published_at: null, external_post_id: null, external_url: null, scheduled_at: null, error: null }));
       router.refresh();
       return "Reopened. Edit anything you like, then publish again.";
+    });
+
+  const onCancelPublishing = () =>
+    run("cancel", async () => {
+      const ok = window.confirm(
+        `Cancel publishing?\n\nIf the post hasn't gone live on ${spec.label} yet, it will be stopped and returned to draft. If it has already appeared there, delete it on ${spec.label}.`,
+      );
+      if (!ok) return;
+      const res = await fetch(`/api/posts/${post.id}/cancel`, { method: "POST" });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error ?? "Couldn't cancel.");
+      setPost((p) => ({ ...p, status: "draft", error: null }));
+      router.refresh();
+      return "Publishing cancelled. The post is back to draft.";
     });
 
   const onUnschedule = () =>
@@ -440,6 +457,15 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest }:
             No {spec.label} account connected. <Link href="/settings#accounts" className="font-medium text-brand underline">Connect one</Link>, or download the images and post manually.
           </p>
         ) : (
+          <>
+          {post.status === "publishing" && (
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">
+              <span>Publishing to {spec.label}… If it seems stuck for more than a few minutes, cancel and try again.</span>
+              <button className="btn-secondary" onClick={onCancelPublishing} disabled={busy === "cancel"}>
+                {busy === "cancel" ? "Cancelling…" : "Cancel publishing"}
+              </button>
+            </div>
+          )}
           <div className="flex flex-wrap items-end gap-3">
             <label className="block">
               <span className="label">Account</span>
@@ -456,6 +482,7 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest }:
             <button className="btn-secondary" onClick={onSchedule} disabled={!!busy}>{busy === "schedule" ? "Scheduling…" : post.status === "scheduled" ? "Reschedule" : "Schedule"}</button>
             {post.status === "scheduled" && <button className="btn-ghost" onClick={onUnschedule} disabled={!!busy}>Cancel schedule</button>}
           </div>
+          </>
         )}
       </section>
 

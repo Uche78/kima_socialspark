@@ -96,8 +96,12 @@ export async function metaExchangeCode(code: string, redirectUri: string): Promi
   return accounts;
 }
 
-export async function publishFacebook(pageId: string, token: string, imageUrls: string[], message: string) {
+/** Called right before the step that makes a post visible; throws if the user cancelled. */
+export type BeforeGoLive = () => Promise<void>;
+
+export async function publishFacebook(pageId: string, token: string, imageUrls: string[], message: string, beforeGoLive: BeforeGoLive = async () => {}) {
   if (imageUrls.length === 1) {
+    await beforeGoLive();
     const res = await post<{ id: string; post_id?: string }>(`/${pageId}/photos`, {
       url: imageUrls[0],
       caption: message,
@@ -111,6 +115,7 @@ export async function publishFacebook(pageId: string, token: string, imageUrls: 
     const photo = await post<{ id: string }>(`/${pageId}/photos`, { url, published: "false", access_token: token });
     return { media_fbid: photo.id };
   });
+  await beforeGoLive();
   const res = await post<{ id: string }>(`/${pageId}/feed`, {
     message,
     attached_media: JSON.stringify(media),
@@ -130,7 +135,7 @@ async function waitForContainer(containerId: string, token: string) {
 }
 
 /** Instagram requires JPEG images hosted at public URLs. */
-export async function publishInstagram(igUserId: string, token: string, imageUrls: string[], caption: string) {
+export async function publishInstagram(igUserId: string, token: string, imageUrls: string[], caption: string, beforeGoLive: BeforeGoLive = async () => {}) {
   let containerId: string;
   if (imageUrls.length === 1) {
     containerId = (await post<{ id: string }>(`/${igUserId}/media`, { image_url: imageUrls[0], caption, access_token: token })).id;
@@ -149,6 +154,7 @@ export async function publishInstagram(igUserId: string, token: string, imageUrl
     ).id;
   }
   await waitForContainer(containerId, token);
+  await beforeGoLive();
   const published = await post<{ id: string }>(`/${igUserId}/media_publish`, { creation_id: containerId, access_token: token });
   const link = await call<{ permalink?: string }>(graph(`/${published.id}?fields=permalink&access_token=${token}`)).catch(() => ({}) as { permalink?: string });
   return { id: published.id, url: link.permalink ?? null };

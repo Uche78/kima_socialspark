@@ -76,7 +76,7 @@ async function uploadImage(token: string, owner: string, imageUrl: string) {
   return image;
 }
 
-export async function publishLinkedIn(authorUrn: string, token: string, imageUrls: string[], commentary: string, altText: string) {
+export async function publishLinkedIn(authorUrn: string, token: string, imageUrls: string[], commentary: string, altText: string, beforeGoLive: () => Promise<void> = async () => {}) {
   const images = await mapLimit(imageUrls.slice(0, 9), 5, (url) => uploadImage(token, authorUrn, url));
 
   const content =
@@ -84,6 +84,7 @@ export async function publishLinkedIn(authorUrn: string, token: string, imageUrl
       ? { media: { id: images[0], altText } }
       : { multiImage: { images: images.map((id) => ({ id, altText })) } };
 
+  await beforeGoLive();
   const res = await fetch("https://api.linkedin.com/rest/posts", {
     method: "POST",
     headers: headers(token, { "Content-Type": "application/json" }),

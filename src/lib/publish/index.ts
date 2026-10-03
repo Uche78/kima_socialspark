@@ -6,6 +6,8 @@ import { publishFacebook, publishInstagram } from "./meta";
 import { publishLinkedIn } from "./linkedin";
 
 
+class PublishCancelled extends Error {}
+
 /**
  * Publishes a post using the service-role client (reads server-only tokens)
  * and records the outcome on the post row.
@@ -34,10 +36,16 @@ export async function publishPost(admin: SupabaseClient, post: Post) {
     const imageUrls = post.image_paths.map((p) => publicMediaUrl(admin, p));
     const text = fullCaption(post);
 
+    // If the user cancelled while photos were uploading, stop before anything becomes visible.
+    const beforeGoLive = async () => {
+      const { data } = await admin.from("posts").select("status").eq("id", post.id).single();
+      if (data?.status !== "publishing") throw new PublishCancelled();
+    };
+
     let result: { id: string; url: string | null };
-    if (post.platform === "facebook") result = await publishFacebook(account.external_id, token.access_token, imageUrls, text);
-    else if (post.platform === "instagram") result = await publishInstagram(account.external_id, token.access_token, imageUrls, text);
-    else result = await publishLinkedIn(account.external_id, token.access_token, imageUrls, text, post.slides[0]?.headline ?? "Property photo");
+    if (post.platform === "facebook") result = await publishFacebook(account.external_id, token.access_token, imageUrls, text, beforeGoLive);
+    else if (post.platform === "instagram") result = await publishInstagram(account.external_id, token.access_token, imageUrls, text, beforeGoLive);
+    else result = await publishLinkedIn(account.external_id, token.access_token, imageUrls, text, post.slides[0]?.headline ?? "Property photo", beforeGoLive);
 
     await admin
       .from("posts")
@@ -51,6 +59,7 @@ export async function publishPost(admin: SupabaseClient, post: Post) {
       .eq("id", post.id);
     return { ok: true as const, ...result };
   } catch (e) {
+    if (e instanceof PublishCancelled) return { ok: false as const, error: "Publishing was cancelled." };
     const message = e instanceof Error ? e.message : "Publishing failed.";
     await admin.from("posts").update({ status: "failed", error: message }).eq("id", post.id);
     return { ok: false as const, error: message };
