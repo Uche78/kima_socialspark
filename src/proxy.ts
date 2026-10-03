@@ -3,16 +3,6 @@ import { NextResponse, type NextRequest } from "next/server";
 
 // Keeps the Supabase session cookie fresh on every request.
 export async function proxy(request: NextRequest) {
-  // If Supabase sends a sign-in code to any page other than /auth/callback (e.g. when it falls
-  // back to the Site URL), forward it there so the sign-in still completes.
-  const { pathname, searchParams } = request.nextUrl;
-  if (searchParams.has("code") && pathname !== "/auth/callback" && !pathname.startsWith("/api/")) {
-    const callback = request.nextUrl.clone();
-    callback.pathname = "/auth/callback";
-    if (!callback.searchParams.has("next")) callback.searchParams.set("next", pathname);
-    return NextResponse.redirect(callback);
-  }
-
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -32,7 +22,21 @@ export async function proxy(request: NextRequest) {
     },
   );
 
-  await supabase.auth.getUser();
+  const { data } = await supabase.auth.getUser();
+
+  // If Supabase sends a sign-in code to a page other than /auth/callback (e.g. when it falls back
+  // to the Site URL), forward it there so the sign-in completes. Skip this once the user is signed
+  // in with a real account: the code is spent, and Netlify carries the query string onto redirects,
+  // so forwarding again would loop between the callback and the page.
+  const { pathname, searchParams } = request.nextUrl;
+  const signedIn = !!data.user && !data.user.is_anonymous;
+  if (searchParams.has("code") && !signedIn && pathname !== "/auth/callback" && !pathname.startsWith("/api/")) {
+    const callback = request.nextUrl.clone();
+    callback.pathname = "/auth/callback";
+    if (!callback.searchParams.has("next")) callback.searchParams.set("next", pathname);
+    return NextResponse.redirect(callback);
+  }
+
   return response;
 }
 
