@@ -11,6 +11,7 @@ import { dataUrlToBlob } from "@/lib/render";
 import { usePostExport } from "@/components/usePostExport";
 import { SortableSlideStrip } from "@/components/SortableSlideStrip";
 import { ScaledSlide } from "@/components/ScaledSlide";
+import { formatLocal, LocalTime } from "@/components/LocalTime";
 import { arrayMove } from "@dnd-kit/sortable";
 import { fullCaption } from "@/lib/caption";
 import { isLowRes, uniqueSuffix } from "@/lib/media";
@@ -141,13 +142,18 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest }:
   const onPublish = () =>
     run("publish", async () => {
       if (!accountId) throw new Error("Choose an account to publish to.");
+      const wasScheduled = post.status === "scheduled";
+      if (wasScheduled) {
+        const when = post.scheduled_at ? new Date(post.scheduled_at).toLocaleString([], { dateStyle: "medium", timeStyle: "short" }) : "later";
+        if (!window.confirm(`This post is scheduled for ${when}.\n\nPublish it now instead? The schedule will be cancelled.`)) return;
+      }
       // Retrying a stuck post: its images were saved when publishing started, and re-saving would
       // reset the stuck timer, so only render and save for drafts and failed posts.
       if (post.status !== "publishing") await saveWithImages();
-      const res = await fetch(`/api/posts/${post.id}/publish`, { method: "POST", body: JSON.stringify({ social_account_id: accountId }) });
+      const res = await fetch(`/api/posts/${post.id}/publish`, { method: "POST", body: JSON.stringify({ social_account_id: accountId, override_schedule: wasScheduled }) });
       const json = await res.json();
       if (!json.ok) throw new Error(json.error ?? "Publishing failed.");
-      setPost((p) => ({ ...p, status: "publishing" }));
+      setPost((p) => ({ ...p, status: "publishing", scheduled_at: null }));
 
       // Publishing runs in the background; check the post until it's done (up to ~5 minutes).
       for (let i = 0; i < 100; i++) {
@@ -176,7 +182,7 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest }:
       const json = await res.json();
       if (!res.ok) throw new Error(json.error);
       setPost((p) => ({ ...p, status: "scheduled", scheduled_at: when.toISOString() }));
-      return `Scheduled for ${when.toLocaleString()}.`;
+      return `Scheduled for ${formatLocal(when.toISOString())}.`;
     });
 
   const onReopen = () =>
@@ -239,7 +245,7 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest }:
           </h1>
           <div className="text-sm text-muted">
             Status: <span className={`font-medium ${isStuck(post) ? "text-red-700" : "text-foreground"}`}>{statusLabel(post)}</span>
-            {post.status === "scheduled" && post.scheduled_at && ` for ${new Date(post.scheduled_at).toLocaleString()}`}
+            {post.status === "scheduled" && post.scheduled_at && <> for <LocalTime iso={post.scheduled_at} /></>}
             {post.external_url && (
               <> · <a className="underline" href={post.external_url} target="_blank" rel="noreferrer">View post</a></>
             )}
@@ -456,7 +462,7 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest }:
         ) : post.status === "published" ? (
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-sm">
-              Published{post.published_at ? ` ${new Date(post.published_at).toLocaleString()}` : ""}.
+              Published{post.published_at && <> <LocalTime iso={post.published_at} /></>}.
               {post.external_url && (
                 <> <a className="underline" href={post.external_url} target="_blank" rel="noreferrer">View on {spec.label}</a></>
               )}
@@ -495,6 +501,14 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest }:
               <button className="btn-secondary" onClick={onCancelPublishing} disabled={busy === "cancel"}>
                 {busy === "cancel" ? "Cancelling…" : "Cancel publishing"}
               </button>
+            </div>
+          )}
+          {post.status === "scheduled" && post.scheduled_at && (
+            <div className="mb-4 rounded-lg bg-blue-50 p-3 text-sm text-blue-900">
+              Scheduled for{" "}
+              <strong><LocalTime iso={post.scheduled_at} /></strong>
+              {platformAccounts.find((a) => a.id === post.social_account_id) && <> on {platformAccounts.find((a) => a.id === post.social_account_id)!.account_name}</>}.
+              {" "}Change the time and click Reschedule, cancel the schedule, or publish now instead.
             </div>
           )}
           <div className="flex flex-wrap items-end gap-3">
