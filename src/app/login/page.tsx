@@ -1,9 +1,12 @@
+import { redirect } from "next/navigation";
 import { getUser } from "@/lib/supabase/server";
 import { LoginForm } from "./LoginForm";
 
 export default async function LoginPage({ searchParams }: { searchParams: Promise<{ next?: string; error?: string }> }) {
   const { user } = await getUser();
   const { next, error } = await searchParams;
+  // Already signed in with a real account: nothing to do here.
+  if (user && !user.is_anonymous) redirect(next?.startsWith("/") && !next.startsWith("//") ? next : "/");
   return (
     <div className="mx-auto px-4 max-w-md">
       <div className="card p-8">
