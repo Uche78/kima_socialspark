@@ -1,3 +1,5 @@
+import { mapLimit } from "./limit";
+
 // LinkedIn Posts API (versioned REST). Personal posting needs the
 // "Share on LinkedIn" + "Sign In with LinkedIn using OpenID Connect" products.
 
@@ -75,8 +77,7 @@ async function uploadImage(token: string, owner: string, imageUrl: string) {
 }
 
 export async function publishLinkedIn(authorUrn: string, token: string, imageUrls: string[], commentary: string, altText: string) {
-  const images = [];
-  for (const url of imageUrls.slice(0, 9)) images.push(await uploadImage(token, authorUrn, url));
+  const images = await mapLimit(imageUrls.slice(0, 9), 5, (url) => uploadImage(token, authorUrn, url));
 
   const content =
     images.length === 1

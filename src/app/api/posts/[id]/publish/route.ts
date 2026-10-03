@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createAdminClient, getUser } from "@/lib/supabase/server";
-import { publishPost } from "@/lib/publish";
+import { queuePublish } from "@/lib/publish/queue";
 import type { Post } from "@/lib/types";
 
 export const maxDuration = 60;
@@ -12,16 +12,24 @@ export async function POST(req: NextRequest, ctx: RouteContext<"/api/posts/[id]/
 
   const { social_account_id } = (await req.json().catch(() => ({}))) as { social_account_id?: string };
 
-  // Ownership check through RLS, then claim the post so it can't double-publish.
+  // Ownership check through RLS, then claim the post so it can't double-publish. A post stuck on
+  // "publishing" for over 5 minutes (e.g. the publisher was cut off) can be claimed again.
+  const stuckBefore = new Date(Date.now() - 5 * 60 * 1000).toISOString();
   const { data: claimed } = await supabase
     .from("posts")
     .update({ status: "publishing", social_account_id: social_account_id ?? undefined, error: null })
     .eq("id", id)
-    .in("status", ["draft", "failed", "scheduled"])
+    .or(`status.in.(draft,failed,scheduled),and(status.eq.publishing,updated_at.lt.${stuckBefore})`)
     .select("*")
     .maybeSingle<Post>();
   if (!claimed) return NextResponse.json({ error: "Post not found or already publishing." }, { status: 409 });
 
-  const result = await publishPost(createAdminClient(), claimed);
-  return NextResponse.json(result, { status: result.ok ? 200 : 502 });
+  // Publishing runs in a background function (large albums take longer than a request may run).
+  // The editor polls the post's status until it's published or failed.
+  try {
+    const { queued } = await queuePublish(createAdminClient(), [claimed.id]);
+    return NextResponse.json({ ok: true, queued }, { status: 202 });
+  } catch (e) {
+    return NextResponse.json({ ok: false, error: e instanceof Error ? e.message : "Couldn't start publishing." }, { status: 502 });
+  }
 }

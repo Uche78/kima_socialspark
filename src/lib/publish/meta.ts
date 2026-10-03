@@ -1,3 +1,5 @@
+import { mapLimit } from "./limit";
+
 // Meta Graph API: Facebook Pages + Instagram professional accounts.
 // Requires app review for pages_manage_posts and instagram_content_publish.
 
@@ -104,11 +106,11 @@ export async function publishFacebook(pageId: string, token: string, imageUrls: 
     const postId = res.post_id ?? res.id;
     return { id: postId, url: `https://www.facebook.com/${postId}` };
   }
-  const media = [];
-  for (const url of imageUrls) {
+  // Upload unpublished photos a few at a time (order preserved), then attach them to one post.
+  const media = await mapLimit(imageUrls, 5, async (url) => {
     const photo = await post<{ id: string }>(`/${pageId}/photos`, { url, published: "false", access_token: token });
-    media.push({ media_fbid: photo.id });
-  }
+    return { media_fbid: photo.id };
+  });
   const res = await post<{ id: string }>(`/${pageId}/feed`, {
     message,
     attached_media: JSON.stringify(media),
@@ -133,11 +135,10 @@ export async function publishInstagram(igUserId: string, token: string, imageUrl
   if (imageUrls.length === 1) {
     containerId = (await post<{ id: string }>(`/${igUserId}/media`, { image_url: imageUrls[0], caption, access_token: token })).id;
   } else {
-    const children: string[] = [];
-    for (const url of imageUrls.slice(0, 10)) {
-      children.push((await post<{ id: string }>(`/${igUserId}/media`, { image_url: url, is_carousel_item: "true", access_token: token })).id);
-    }
-    for (const c of children) await waitForContainer(c, token);
+    const children = await mapLimit(imageUrls.slice(0, 10), 5, async (url) =>
+      (await post<{ id: string }>(`/${igUserId}/media`, { image_url: url, is_carousel_item: "true", access_token: token })).id,
+    );
+    await Promise.all(children.map((c) => waitForContainer(c, token)));
     containerId = (
       await post<{ id: string }>(`/${igUserId}/media`, {
         media_type: "CAROUSEL",

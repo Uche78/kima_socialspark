@@ -144,10 +144,21 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest }:
       await saveWithImages();
       const res = await fetch(`/api/posts/${post.id}/publish`, { method: "POST", body: JSON.stringify({ social_account_id: accountId }) });
       const json = await res.json();
-      router.refresh();
       if (!json.ok) throw new Error(json.error ?? "Publishing failed.");
-      setPost((p) => ({ ...p, status: "published", external_url: json.url }));
-      return "Published!";
+      setPost((p) => ({ ...p, status: "publishing" }));
+
+      // Publishing runs in the background; check the post until it's done (up to ~5 minutes).
+      for (let i = 0; i < 100; i++) {
+        const { data } = await supabase.from("posts").select("status, error, external_url, published_at").eq("id", post.id).single();
+        if (data && data.status !== "publishing") {
+          setPost((p) => ({ ...p, ...data }));
+          router.refresh();
+          if (data.status === "failed") throw new Error(data.error ?? "Publishing failed.");
+          return "Published!";
+        }
+        await new Promise((r) => setTimeout(r, 3000));
+      }
+      return "Still publishing in the background. Check back in a few minutes.";
     });
 
   const onSchedule = () =>
@@ -436,7 +447,7 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest }:
                 {platformAccounts.map((a) => <option key={a.id} value={a.id}>{a.account_name}</option>)}
               </select>
             </label>
-            <button className="btn-primary" onClick={onPublish} disabled={!!busy}>{busy === "publish" ? "Publishing…" : "Publish now"}</button>
+            <button className="btn-primary" onClick={onPublish} disabled={!!busy}>{busy === "publish" ? "Publishing… (large albums take up to a minute)" : "Publish now"}</button>
             <span className="px-1 pb-2 text-sm text-muted">or</span>
             <label className="block">
               <span className="label">Schedule for</span>

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/server";
-import { publishPost } from "@/lib/publish";
+import { queuePublish } from "@/lib/publish/queue";
 import type { Post } from "@/lib/types";
 
 export const maxDuration = 60;
@@ -23,6 +23,7 @@ export async function POST(request: Request) {
     .returns<Post[]>();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  const results = await Promise.all((due ?? []).map((p) => publishPost(admin, p)));
-  return NextResponse.json({ processed: results.length, failed: results.filter((r) => !r.ok).length });
+  const ids = (due ?? []).map((p) => p.id);
+  if (ids.length) await queuePublish(admin, ids).catch((e) => console.error("queuePublish", e));
+  return NextResponse.json({ queued: ids.length });
 }
