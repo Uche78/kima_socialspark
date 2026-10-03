@@ -3,9 +3,11 @@
 import Link from "next/link";
 import { SlideCanvas } from "@/components/SlideCanvas";
 import { canvasPropsFor, slideSize } from "@/components/usePostExport";
-import { PLATFORM_SPECS, POST_TYPES, type Listing, type Post, type Profile } from "@/lib/types";
+import { PLATFORM_SPECS, POST_TYPES, isStuck, statusLabel, type Listing, type Post, type Profile } from "@/lib/types";
 
 const THUMB_WIDTH = 180;
+
+const STUCK_STYLE = "bg-red-50 text-red-800";
 
 const STATUS_STYLE: Record<Post["status"], string> = {
   draft: "bg-black/5 text-muted",
@@ -37,7 +39,7 @@ export function PostGrid({ posts, listing, profile }: { posts: Post[]; listing: 
               </div>
               <div className="flex items-center justify-between gap-2 text-xs text-muted">
                 <span>{POST_TYPES[post.post_type]} · {post.language.toUpperCase()}</span>
-                <span className={`rounded-full px-2 py-0.5 font-medium ${STATUS_STYLE[post.status]}`}>{post.status}</span>
+                <span className={`rounded-full px-2 py-0.5 font-medium ${isStuck(post) ? STUCK_STYLE : STATUS_STYLE[post.status]}`}>{statusLabel(post)}</span>
               </div>
             </Link>
           );

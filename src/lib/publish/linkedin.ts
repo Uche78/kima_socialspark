@@ -105,3 +105,14 @@ export async function publishLinkedIn(authorUrn: string, token: string, imageUrl
   const id = res.headers.get("x-restli-id") ?? "";
   return { id, url: id ? `https://www.linkedin.com/feed/update/${id}` : null };
 }
+
+/** Deletes a post published through SocialSpark. Already-deleted posts count as success. */
+export async function deleteLinkedInPost(postUrn: string, token: string) {
+  const res = await fetch(`https://api.linkedin.com/rest/posts/${encodeURIComponent(postUrn)}`, {
+    method: "DELETE",
+    headers: headers(token),
+  });
+  if (res.ok || res.status === 404 || res.status === 410) return;
+  const err = await res.json().catch(() => ({}));
+  throw new Error(`LinkedIn: ${err.message ?? `HTTP ${res.status}`}`);
+}

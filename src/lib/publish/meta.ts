@@ -159,3 +159,13 @@ export async function publishInstagram(igUserId: string, token: string, imageUrl
   const link = await call<{ permalink?: string }>(graph(`/${published.id}?fields=permalink&access_token=${token}`)).catch(() => ({}) as { permalink?: string });
   return { id: published.id, url: link.permalink ?? null };
 }
+
+/** Deletes a Page post published through SocialSpark. Already-deleted posts count as success. */
+export async function deleteFacebookPost(postId: string, token: string) {
+  const res = await fetch(graph(`/${postId}?access_token=${encodeURIComponent(token)}`), { method: "DELETE" });
+  const json = await res.json().catch(() => ({}));
+  if (res.ok && json.success !== false) return;
+  // Error 100 / subcode 33: the object no longer exists (already deleted on Facebook).
+  if (json.error?.code === 100) return;
+  throw new Error(`Facebook: ${json.error?.message ?? `HTTP ${res.status}`}`);
+}

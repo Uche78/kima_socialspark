@@ -14,7 +14,7 @@ import { ScaledSlide } from "@/components/ScaledSlide";
 import { arrayMove } from "@dnd-kit/sortable";
 import { fullCaption } from "@/lib/caption";
 import { isLowRes, uniqueSuffix } from "@/lib/media";
-import { ASPECT_LABELS, aspectOf, textModeOf, textModeOptions, type TextMode, PLATFORM_SPECS, POST_TYPES, type Design, type Listing, type Post, type Profile, type Slide, type SocialAccount, type Aspect } from "@/lib/types";
+import { ASPECT_LABELS, aspectOf, isStuck, statusLabel, textModeOf, textModeOptions, type TextMode, PLATFORM_SPECS, POST_TYPES, type Design, type Listing, type Post, type Profile, type Slide, type SocialAccount, type Aspect } from "@/lib/types";
 
 type Props = { initialPost: Post; listing: Listing; profile: Profile; accounts: SocialAccount[]; isGuest: boolean };
 
@@ -193,6 +193,20 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest }:
       return "Reopened. Edit anything you like, then publish again.";
     });
 
+  const onUnpublish = () =>
+    run("unpublish", async () => {
+      const ok = window.confirm(
+        `Remove this post from ${spec.label}?\n\nIt will be deleted from ${spec.label} (this can't be undone there) and returned to draft here, so you can edit and publish it again.`,
+      );
+      if (!ok) return;
+      const res = await fetch(`/api/posts/${post.id}/unpublish`, { method: "POST" });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error ?? "Couldn't remove the post.");
+      setPost((p) => ({ ...p, status: "draft", published_at: null, external_post_id: null, external_url: null }));
+      router.refresh();
+      return `Removed from ${spec.label}. The post is back to draft.`;
+    });
+
   const onCancelPublishing = () =>
     run("cancel", async () => {
       const ok = window.confirm(
@@ -224,7 +238,7 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest }:
             {spec.label} {post.format === "carousel" ? "carousel" : "post"} · {POST_TYPES[post.post_type]}
           </h1>
           <div className="text-sm text-muted">
-            Status: <span className="font-medium text-foreground">{post.status}</span>
+            Status: <span className={`font-medium ${isStuck(post) ? "text-red-700" : "text-foreground"}`}>{statusLabel(post)}</span>
             {post.status === "scheduled" && post.scheduled_at && ` for ${new Date(post.scheduled_at).toLocaleString()}`}
             {post.external_url && (
               <> · <a className="underline" href={post.external_url} target="_blank" rel="noreferrer">View post</a></>
@@ -448,9 +462,22 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest }:
               )}
               <span className="mt-1 block text-muted">Deleted it on {spec.label}, or want to make changes? Reopen it to edit and publish again.</span>
             </p>
-            <button className="btn-secondary" onClick={onReopen} disabled={!!busy}>
-              {busy === "reopen" ? "Reopening…" : "Edit & republish"}
-            </button>
+            <div className="flex flex-wrap gap-2">
+              {post.platform === "instagram" ? (
+                post.external_url && (
+                  <a className="btn-ghost" href={post.external_url} target="_blank" rel="noreferrer" title="Instagram doesn't let apps delete posts">
+                    Delete on Instagram ↗
+                  </a>
+                )
+              ) : (
+                <button className="btn-ghost text-red-700" onClick={onUnpublish} disabled={!!busy}>
+                  {busy === "unpublish" ? "Removing…" : `Remove from ${spec.label}`}
+                </button>
+              )}
+              <button className="btn-secondary" onClick={onReopen} disabled={!!busy}>
+                {busy === "reopen" ? "Reopening…" : "Edit & republish"}
+              </button>
+            </div>
           </div>
         ) : platformAccounts.length === 0 ? (
           <p className="text-sm text-muted">
@@ -460,7 +487,11 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest }:
           <>
           {post.status === "publishing" && (
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">
-              <span>Publishing to {spec.label}… If it seems stuck for more than a few minutes, cancel and try again.</span>
+              <span>
+                {isStuck(post)
+                  ? `Publishing to ${spec.label} seems to have stopped. Cancel publishing, then publish again.`
+                  : `Publishing to ${spec.label}… If it seems stuck for more than a few minutes, cancel and try again.`}
+              </span>
               <button className="btn-secondary" onClick={onCancelPublishing} disabled={busy === "cancel"}>
                 {busy === "cancel" ? "Cancelling…" : "Cancel publishing"}
               </button>

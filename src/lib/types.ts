@@ -139,6 +139,7 @@ export type Post = {
   error: string | null;
   image_paths: string[];
   created_at: string;
+  updated_at?: string;
 };
 
 export type SocialAccount = {
@@ -244,4 +245,16 @@ export function textModeOptions(format: PostFormat): Record<string, string> {
   return format === "single"
     ? { all: "Text on photo", none: "Clean photo" }
     : { all: TEXT_MODE_LABELS.all, cover: TEXT_MODE_LABELS.cover, none: TEXT_MODE_LABELS.none };
+}
+
+/** A post left on "publishing" this long was almost certainly interrupted (see the publish route). */
+export const STUCK_AFTER_MS = 5 * 60 * 1000;
+
+export function isStuck(post: { status: PostStatus; updated_at?: string | null }, now = Date.now()) {
+  return post.status === "publishing" && !!post.updated_at && now - new Date(post.updated_at).getTime() > STUCK_AFTER_MS;
+}
+
+/** The status label shown to users ("stuck, retry" for interrupted publishes). */
+export function statusLabel(post: { status: PostStatus; updated_at?: string | null }) {
+  return isStuck(post) ? "stuck, retry" : post.status;
 }

@@ -2,8 +2,8 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { fullCaption } from "../caption";
 import { publicMediaUrl } from "../photos";
 import type { Post } from "../types";
-import { publishFacebook, publishInstagram } from "./meta";
-import { publishLinkedIn } from "./linkedin";
+import { deleteFacebookPost, publishFacebook, publishInstagram } from "./meta";
+import { deleteLinkedInPost, publishLinkedIn } from "./linkedin";
 
 
 class PublishCancelled extends Error {}
@@ -64,4 +64,26 @@ export async function publishPost(admin: SupabaseClient, post: Post) {
     await admin.from("posts").update({ status: "failed", error: message }).eq("id", post.id);
     return { ok: false as const, error: message };
   }
+}
+
+/**
+ * Removes a published post from Facebook or LinkedIn and returns it to draft in SocialSpark.
+ * Instagram's API doesn't allow deleting posts, so those must be removed in the Instagram app.
+ */
+export async function unpublishPost(admin: SupabaseClient, post: Post) {
+  if (post.platform === "instagram") throw new Error("Instagram doesn't let apps delete posts. Delete it in the Instagram app.");
+  if (!post.external_post_id || !post.social_account_id) throw new Error("This post has no record of where it was published.");
+
+  const { data: account } = await admin.from("social_accounts").select("id, user_id, platform").eq("id", post.social_account_id).single();
+  if (!account || account.user_id !== post.user_id) throw new Error("The account this was published to is no longer connected. Delete it on the platform.");
+  const { data: token } = await admin.from("social_tokens").select("access_token").eq("social_account_id", account.id).single();
+  if (!token) throw new Error("Reconnect the account, then try again.");
+
+  if (post.platform === "facebook") await deleteFacebookPost(post.external_post_id, token.access_token);
+  else await deleteLinkedInPost(post.external_post_id, token.access_token);
+
+  await admin
+    .from("posts")
+    .update({ status: "draft", published_at: null, external_post_id: null, external_url: null, error: null })
+    .eq("id", post.id);
 }

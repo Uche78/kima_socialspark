@@ -2,7 +2,9 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getUser } from "@/lib/supabase/server";
-import { PLATFORM_SPECS, POST_TYPES, type Photo, type Post } from "@/lib/types";
+import { PLATFORM_SPECS, POST_TYPES, isStuck, statusLabel, type Photo, type Post } from "@/lib/types";
+
+const STUCK_STYLE = "bg-red-50 text-red-800";
 
 const STATUS_STYLE: Record<Post["status"], string> = {
   draft: "bg-black/5 text-muted",
@@ -48,7 +50,7 @@ export default async function PostsPage() {
         </div>
         <div className="flex items-center gap-3 text-sm">
           {p.status === "scheduled" && p.scheduled_at && <span className="text-muted">{new Date(p.scheduled_at).toLocaleString()}</span>}
-          <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_STYLE[p.status]}`}>{p.status}</span>
+          <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${isStuck(p) ? STUCK_STYLE : STATUS_STYLE[p.status]}`}>{statusLabel(p)}</span>
         </div>
       </Link>
     </li>
