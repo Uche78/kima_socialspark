@@ -11,6 +11,7 @@ import { Chips } from "@/components/Chips";
 import { LocalTime } from "@/components/LocalTime";
 import { PlanButton } from "@/components/PlanButton";
 import { PAID_PLANS, type Usage } from "@/lib/plans";
+import { connectUrl, daysUntil, EXPIRY_WARN_DAYS, formatDay } from "@/lib/connection-expiry";
 import { PLATFORM_SPECS, TONE_PRESETS, type Profile, type SocialAccount } from "@/lib/types";
 
 type Props = {
@@ -29,6 +30,7 @@ export function SettingsForm({ profile: initial, accounts, isGuest, usage, billi
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
   const [p, setP] = useState(initial);
+  const [now] = useState(() => Date.now());
   const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
@@ -227,15 +229,34 @@ export function SettingsForm({ profile: initial, accounts, isGuest, usage, billi
           <>
             {accounts.length > 0 && (
               <ul className="divide-y divide-border rounded-lg border border-border">
-                {accounts.map((a) => (
-                  <li key={a.id} className="flex items-center justify-between px-3 py-2 text-sm">
-                    <span className="flex items-center gap-2">
-                      {a.avatar_url && <img src={a.avatar_url} alt="" className="h-6 w-6 rounded-full" />}
-                      <strong>{PLATFORM_SPECS[a.platform].label}</strong> {a.account_name}
-                    </span>
-                    <button className="btn-ghost text-red-700" onClick={() => disconnect(a.id)}>Disconnect</button>
-                  </li>
-                ))}
+                {accounts.map((a) => {
+                  const days = daysUntil(a.expires_at, now);
+                  const expired = days !== null && days < 0;
+                  const expiring = days !== null && !expired && days <= EXPIRY_WARN_DAYS;
+                  return (
+                    <li key={a.id} className="px-3 py-2 text-sm">
+                      <div className="flex items-center justify-between">
+                        <span className="flex items-center gap-2">
+                          {a.avatar_url && <img src={a.avatar_url} alt="" className="h-6 w-6 rounded-full" />}
+                          <strong>{PLATFORM_SPECS[a.platform].label}</strong> {a.account_name}
+                        </span>
+                        <button className="btn-ghost text-red-700" onClick={() => disconnect(a.id)}>Disconnect</button>
+                      </div>
+                      {(expired || expiring) && a.expires_at && (
+                        <div className={`mt-1 flex flex-wrap items-center justify-between gap-2 rounded-md px-2.5 py-1.5 ${expired ? "bg-red-50 text-red-800" : "bg-amber-50 text-amber-900"}`}>
+                          <span>
+                            {expired
+                              ? `Connection expired on ${formatDay(a.expires_at)}. Posts to this account will fail until you reconnect.`
+                              : days === 0
+                                ? "Connection expires today. Reconnect to keep publishing."
+                                : `Connection expires in ${days} day${days === 1 ? "" : "s"} (${formatDay(a.expires_at)}). Reconnect to keep publishing.`}
+                          </span>
+                          <a href={connectUrl(a.platform)} className="font-semibold underline">Reconnect</a>
+                        </div>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             )}
             <div className="flex flex-wrap gap-2">

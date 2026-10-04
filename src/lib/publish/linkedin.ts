@@ -7,6 +7,9 @@ const apiVersion = () => process.env.LINKEDIN_API_VERSION || "202509";
 
 export const LINKEDIN_SCOPES = "openid profile w_member_social";
 
+/** LinkedIn rejected the token (expired after ~60 days, or revoked): the member must reconnect. */
+export class LinkedInAuthError extends Error {}
+
 function headers(token: string, extra: Record<string, string> = {}) {
   return {
     Authorization: `Bearer ${token}`,
@@ -67,6 +70,7 @@ async function uploadImage(token: string, owner: string, imageUrl: string) {
     body: JSON.stringify({ initializeUploadRequest: { owner } }),
   });
   const initJson = await init.json();
+  if (init.status === 401) throw new LinkedInAuthError(initJson.message ?? "Unauthorized");
   if (!init.ok) throw new Error(`LinkedIn image init: ${initJson.message ?? init.status}`);
   const { uploadUrl, image } = initJson.value as { uploadUrl: string; image: string };
 
@@ -100,6 +104,7 @@ export async function publishLinkedIn(authorUrn: string, token: string, imageUrl
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
+    if (res.status === 401) throw new LinkedInAuthError(err.message ?? "Unauthorized");
     throw new Error(`LinkedIn: ${err.message ?? `HTTP ${res.status}`}`);
   }
   const id = res.headers.get("x-restli-id") ?? "";

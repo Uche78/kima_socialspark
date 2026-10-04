@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { getUser } from "@/lib/supabase/server";
+import { createAdminClient, getUser } from "@/lib/supabase/server";
+import { formatDay, PLATFORM_LABEL, RECONNECT_HINT } from "@/lib/connection-expiry";
 
 export async function POST(req: NextRequest, ctx: RouteContext<"/api/posts/[id]/schedule">) {
   const { id } = await ctx.params;
@@ -24,6 +25,16 @@ export async function POST(req: NextRequest, ctx: RouteContext<"/api/posts/[id]/
   if (account.platform !== post.platform) return NextResponse.json({ error: "That account is for a different platform." }, { status: 400 });
   if (!post.image_paths?.length) return NextResponse.json({ error: "Save the design before scheduling." }, { status: 400 });
   if (post.status === "published" || post.status === "publishing") return NextResponse.json({ error: "Already published." }, { status: 409 });
+
+  // The account row above was read with the user's own client (RLS), so it's theirs.
+  const { data: token } = await createAdminClient().from("social_tokens").select("expires_at").eq("social_account_id", social_account_id).maybeSingle();
+  if (token?.expires_at && new Date(token.expires_at) < when) {
+    const label = PLATFORM_LABEL[account.platform as keyof typeof PLATFORM_LABEL];
+    return NextResponse.json(
+      { error: `Your ${label} connection expires on ${formatDay(token.expires_at)}, before this post's scheduled time. Reconnect ${label} in ${RECONNECT_HINT} first, or pick an earlier time.` },
+      { status: 400 },
+    );
+  }
 
   const { error } = await supabase
     .from("posts")

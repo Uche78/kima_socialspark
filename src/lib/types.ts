@@ -149,6 +149,8 @@ export type SocialAccount = {
   account_name: string;
   account_type: string | null;
   avatar_url: string | null;
+  /** When the connection's token expires (LinkedIn ~60 days); null = doesn't expire. Server-filled. */
+  expires_at?: string | null;
 };
 
 export type Aspect = "portrait" | "square";

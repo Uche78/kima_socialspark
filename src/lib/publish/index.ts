@@ -2,8 +2,9 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { fullCaption } from "../caption";
 import { publicMediaUrl } from "../photos";
 import type { Post } from "../types";
-import { deleteFacebookPost, publishFacebook, publishInstagram } from "./meta";
-import { deleteLinkedInPost, publishLinkedIn } from "./linkedin";
+import { reconnectMessage } from "../connection-expiry";
+import { deleteFacebookPost, MetaError, publishFacebook, publishInstagram } from "./meta";
+import { deleteLinkedInPost, LinkedInAuthError, publishLinkedIn } from "./linkedin";
 
 
 class PublishCancelled extends Error {}
@@ -30,8 +31,8 @@ export async function publishPost(admin: SupabaseClient, post: Post) {
       .select("access_token, expires_at")
       .eq("social_account_id", account.id)
       .single();
-    if (!token) throw new Error("Account needs to be reconnected.");
-    if (token.expires_at && new Date(token.expires_at) < new Date()) throw new Error("Account connection expired. Please reconnect.");
+    if (!token) throw new Error(reconnectMessage(post.platform));
+    if (token.expires_at && new Date(token.expires_at) < new Date()) throw new Error(reconnectMessage(post.platform, token.expires_at));
 
     const imageUrls = post.image_paths.map((p) => publicMediaUrl(admin, p));
     const text = fullCaption(post);
@@ -60,7 +61,9 @@ export async function publishPost(admin: SupabaseClient, post: Post) {
     return { ok: true as const, ...result };
   } catch (e) {
     if (e instanceof PublishCancelled) return { ok: false as const, error: "Publishing was cancelled." };
-    const message = e instanceof Error ? e.message : "Publishing failed.";
+    // Meta code 190 = token expired or revoked; LinkedIn answers 401.
+    const needsReconnect = (e instanceof MetaError && e.code === 190) || e instanceof LinkedInAuthError;
+    const message = needsReconnect ? reconnectMessage(post.platform) : e instanceof Error ? e.message : "Publishing failed.";
     await admin.from("posts").update({ status: "failed", error: message }).eq("id", post.id);
     return { ok: false as const, error: message };
   }

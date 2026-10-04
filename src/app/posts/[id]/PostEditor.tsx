@@ -14,6 +14,7 @@ import { ScaledSlide } from "@/components/ScaledSlide";
 import { formatLocal, LocalTime } from "@/components/LocalTime";
 import { arrayMove } from "@dnd-kit/sortable";
 import { fullCaption } from "@/lib/caption";
+import { connectUrl, RECONNECT_HINT } from "@/lib/connection-expiry";
 import { isLowRes, uniqueSuffix } from "@/lib/media";
 import { ASPECT_LABELS, aspectOf, isStuck, statusLabel, textModeOf, textModeOptions, type TextMode, PLATFORM_SPECS, POST_TYPES, type Design, type Listing, type Post, type Profile, type Slide, type SocialAccount, type Aspect } from "@/lib/types";
 
@@ -250,7 +251,14 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest }:
               <> · <a className="underline" href={post.external_url} target="_blank" rel="noreferrer">View post</a></>
             )}
           </div>
-          {post.status === "failed" && post.error && <div className="text-sm text-red-700">{post.error}</div>}
+          {post.status === "failed" && post.error && (
+            <div className="text-sm text-red-700">
+              {post.error}
+              {post.error.includes(RECONNECT_HINT) && (
+                <> <a href={connectUrl(post.platform)} className="font-semibold underline">Reconnect {PLATFORM_SPECS[post.platform].label}</a></>
+              )}
+            </div>
+          )}
         </div>
         <div className="flex flex-wrap gap-2">
           <button className="btn-secondary" onClick={onCopy} disabled={!!busy}>Copy caption</button>

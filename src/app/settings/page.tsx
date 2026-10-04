@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getUser } from "@/lib/supabase/server";
+import { createAdminClient, getUser } from "@/lib/supabase/server";
 import { usageFrom, type EntitlementRow } from "@/lib/plans";
 import type { Profile, SocialAccount } from "@/lib/types";
 import { SettingsForm } from "./SettingsForm";
@@ -16,10 +16,17 @@ export default async function SettingsPage({ searchParams }: PageProps<"/setting
   ]);
   if (!profile) redirect("/");
 
+  // Token expiry lives in the service-only tokens table; read it for this user's own accounts.
+  const ids = (accounts ?? []).map((a) => a.id);
+  const { data: tokens } = ids.length
+    ? await createAdminClient().from("social_tokens").select("social_account_id, expires_at").in("social_account_id", ids)
+    : { data: [] };
+  const expiry = new Map((tokens ?? []).map((t) => [t.social_account_id as string, t.expires_at as string | null]));
+
   return (
     <SettingsForm
       profile={profile}
-      accounts={accounts ?? []}
+      accounts={(accounts ?? []).map((a) => ({ ...a, expires_at: expiry.get(a.id) ?? null }))}
       isGuest={!!user.is_anonymous}
       usage={usageFrom(entitlement, !!user.is_anonymous)}
       billingSuccess={sp.billing === "success"}
