@@ -4,7 +4,8 @@ import { useState } from "react";
 import { Chips } from "@/components/Chips";
 import { FocusChips } from "@/components/FocusChips";
 import { estimateMortgage, formatCurrency } from "@/lib/mortgage";
-import type { Usage } from "@/lib/plans";
+import Link from "next/link";
+import { remaining as left, type Usage } from "@/lib/plans";
 import { MAX_FOCUS } from "@/lib/focus";
 import { ASPECT_LABELS, PLATFORM_SPECS, POST_TYPES, textModeOptions, type Aspect, type TextMode, type Design, type Language, type Listing, type MortgageInputs, type Platform, type PostFormat, type PostType, type Profile } from "@/lib/types";
 
@@ -69,7 +70,7 @@ export function CreatePostCard({ listing, profile, usage, generating, error, onG
 
   const mortgagePrice = mortgage.price || listing.price || 0;
   const est = mortgagePrice > 0 ? estimateMortgage(mortgagePrice, mortgage.down_payment_percent, mortgage.rate_percent, mortgage.amortization_years) : null;
-  const remaining = usage.limit == null ? null : Math.max(usage.limit - usage.used, 0);
+  const remaining = left(usage, "post");
 
   function submit() {
     onGenerate({
@@ -186,9 +187,11 @@ export function CreatePostCard({ listing, profile, usage, generating, error, onG
         <span className="text-sm text-muted">
           {listing.photos.length === 0
             ? "Add at least one photo to create a post."
-            : remaining == null
-            ? "Unlimited posts on your plan."
-            : `${remaining} of ${usage.limit} free posts left. Each generated post uses one.`}
+            : usage.paid
+            ? `${remaining} of ${usage.posts.limit} new posts left this month${usage.resetsAt ? `, resets ${new Date(usage.resetsAt).toLocaleDateString([], { month: "short", day: "numeric" })}` : ""}.`
+            : usage.isGuest
+            ? remaining > 0 ? "Free preview: generate 1 post." : "Preview used. Create a free account for 2 more."
+            : <>{remaining} of {usage.posts.limit} free generations left. <Link href="/pricing" className="underline">See plans</Link></>}
         </span>
         {error && <span className="w-full text-sm text-red-700">{error}</span>}
       </div>

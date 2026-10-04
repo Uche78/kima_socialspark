@@ -7,6 +7,7 @@ import { ScaledSlide } from "@/components/ScaledSlide";
 import { usePostExport } from "@/components/usePostExport";
 import { FocusChips } from "@/components/FocusChips";
 import { MAX_FOCUS } from "@/lib/focus";
+import type { Usage } from "@/lib/plans";
 import { fullCaption } from "@/lib/caption";
 import { PLATFORM_SPECS, POST_TYPES, type Listing, type Post, type Profile } from "@/lib/types";
 
@@ -39,20 +40,22 @@ type Props = {
   profile: Profile;
   /** Whether this post was just generated (vs. the most recent existing one). */
   fresh: boolean;
-  remaining: number | null;
+  usage: Usage;
+  /** Regenerations left (free users: generations left, since they share one pool). */
+  remaining: number;
   generating: boolean;
   /** Regenerate with the same settings, optionally with a new focus. */
   onRegenerate: (focus?: string[]) => void;
 };
 
 /** Preview + quick actions for the newest post. Full editing lives on the post page. */
-export function LatestResult({ post, listing, profile, fresh, remaining, generating, onRegenerate }: Props) {
+export function LatestResult({ post, listing, profile, fresh, usage, remaining, generating, onRegenerate }: Props) {
   const [active, setActive] = useState(0);
   const [busy, setBusy] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [changingFocus, setChangingFocus] = useState(false);
   const [newFocus, setNewFocus] = useState<string[]>(post.focus ?? []);
-  const cost = remaining != null ? ` (uses 1 of ${remaining} left)` : "";
+  const cost = usage.paid ? ` (${remaining} regeneration${remaining === 1 ? "" : "s"} left)` : ` (uses 1 of ${remaining} free generation${remaining === 1 ? "" : "s"})`;
   const { targets, download, size, canvasProps } = usePostExport(post, listing, profile);
   const slide = post.slides[active] ?? post.slides[0];
   const caption = fullCaption(post);

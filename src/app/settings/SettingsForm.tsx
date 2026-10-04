@@ -8,20 +8,24 @@ import { createClient } from "@/lib/supabase/client";
 import { mediaUrl, uniqueSuffix } from "@/lib/media";
 import { formatPhone, isValidEmail, isValidPhone, normalizeEmail } from "@/lib/contact-format";
 import { Chips } from "@/components/Chips";
+import { LocalTime } from "@/components/LocalTime";
+import { PlanButton } from "@/components/PlanButton";
+import { PAID_PLANS, type Usage } from "@/lib/plans";
 import { PLATFORM_SPECS, TONE_PRESETS, type Profile, type SocialAccount } from "@/lib/types";
 
 type Props = {
   profile: Profile;
   accounts: SocialAccount[];
   isGuest: boolean;
-  usage: { plan: string; used: number; limit: number | null };
+  usage: Usage;
+  billingSuccess: boolean;
   connected: string | null;
   connectError: string | null;
 };
 
 const MAX_SAMPLES = 5;
 
-export function SettingsForm({ profile: initial, accounts, isGuest, usage, connected, connectError }: Props) {
+export function SettingsForm({ profile: initial, accounts, isGuest, usage, billingSuccess, connected, connectError }: Props) {
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
   const [p, setP] = useState(initial);
@@ -245,11 +249,43 @@ export function SettingsForm({ profile: initial, accounts, isGuest, usage, conne
         )}
       </section>
 
-      <section className="card p-5 text-sm">
-        <h2 className="mb-2 font-semibold">Plan</h2>
-        {usage.limit == null
-          ? "Pro: unlimited posts."
-          : `${isGuest ? "Guest" : "Free"} plan: ${Math.min(usage.used, usage.limit)} of ${usage.limit} posts used.`}
+      <section id="billing" className="card scroll-mt-24 p-5 text-sm">
+        <h2 className="mb-2 font-semibold">Plan &amp; billing</h2>
+        {billingSuccess && (
+          <p className="mb-3 rounded-lg bg-green-50 px-3 py-2 text-green-800">
+            Thanks for subscribing! It can take a few seconds for your plan to show here. Refresh if it hasn&apos;t updated.
+          </p>
+        )}
+        {usage.paid ? (
+          <div className="space-y-1.5">
+            <p>
+              <strong>{PAID_PLANS[usage.plan as keyof typeof PAID_PLANS].name}</strong> · {PAID_PLANS[usage.plan as keyof typeof PAID_PLANS].price} CAD/month plus tax
+            </p>
+            <p>New posts: {Math.min(usage.posts.used, usage.posts.limit)} of {usage.posts.limit} used this month</p>
+            {usage.regens && <p>Regenerations: {Math.min(usage.regens.used, usage.regens.limit)} of {usage.regens.limit} used this month</p>}
+            {usage.resetsAt && (
+              <p className="text-muted">
+                {usage.cancelAtPeriodEnd ? "Your plan ends on " : "Allowances reset and your plan renews on "}
+                <LocalTime iso={usage.resetsAt} dateOnly />.
+              </p>
+            )}
+            <div className="pt-2">
+              <PlanButton plan="portal" label="Manage billing" className="btn-secondary rounded-full" signedIn />
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-1.5">
+            <p>
+              <strong>{isGuest ? "Guest" : "Free"}</strong>: {Math.min(usage.posts.used, usage.posts.limit)} of {usage.posts.limit} free generations used.
+            </p>
+            <p className="text-muted">Free generations don&apos;t reset. Paid plans start at {PAID_PLANS.starter.price} CAD/month.</p>
+            <div className="pt-2">
+              <Link href={isGuest ? "/login" : "/pricing"} className="btn-primary rounded-full">
+                {isGuest ? "Create a free account" : "Choose a plan"}
+              </Link>
+            </div>
+          </div>
+        )}
       </section>
     </div>
   );

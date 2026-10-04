@@ -29,6 +29,7 @@ export async function Header() {
               <Link href="/posts" className={`btn-ghost ${ON_PHOTO}`}>Posts</Link>
             </>
           )}
+          <Link href="/pricing" className={`btn-ghost ${ON_PHOTO}`}>Pricing</Link>
         </nav>
         <div className="flex items-center justify-self-end text-sm">
           {/* Signed-in users reach Brand & voice from the avatar menu; guests have no avatar. */}
@@ -49,6 +50,7 @@ export async function Header() {
                 ? [
                     { href: "/", label: "Listings" },
                     { href: "/posts", label: "Posts" },
+                    { href: "/pricing", label: "Pricing" },
                     ...(guest ? [{ href: "/settings", label: "Brand & voice" }] : []),
                   ]
                 : []

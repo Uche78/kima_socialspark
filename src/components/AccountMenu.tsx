@@ -71,6 +71,7 @@ export function AccountMenu({ name, email, avatarUrl }: Props) {
           </div>
           <Link role="menuitem" href="/settings" onClick={() => setOpen(false)} className="block px-4 py-2 text-sm hover:bg-black/5">Brand &amp; voice</Link>
           <Link role="menuitem" href="/settings#accounts" onClick={() => setOpen(false)} className="block px-4 py-2 text-sm hover:bg-black/5">Connected accounts</Link>
+          <Link role="menuitem" href="/settings#billing" onClick={() => setOpen(false)} className="block px-4 py-2 text-sm hover:bg-black/5">Plan &amp; billing</Link>
           <button role="menuitem" onClick={signOut} className="block w-full border-t border-border px-4 py-2 text-left text-sm text-red-700 hover:bg-black/5">
             Sign out
           </button>

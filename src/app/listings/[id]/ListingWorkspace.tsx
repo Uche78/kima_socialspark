@@ -7,7 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Drawer } from "@/components/Drawer";
 import { PaywallDialog } from "@/components/PaywallDialog";
 import { confirmAndDeleteListing } from "@/lib/delete-listing";
-import type { Usage } from "@/lib/plans";
+import { remaining, withUsed, type AllowanceKind, type Usage } from "@/lib/plans";
 import { aspectOf, textModeOf, PLATFORM_SPECS, type Listing, type Post, type Profile } from "@/lib/types";
 import { CreatePostCard, type PostSettings } from "./CreatePostCard";
 import { LatestResult, LatestResultSkeleton } from "./LatestResult";
@@ -29,11 +29,11 @@ export function ListingWorkspace({ listing: initialListing, profile, posts: init
   const [generating, setGenerating] = useState<PostSettings | null>(null);
   const [freshId, setFreshId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [paywall, setPaywall] = useState<{ kind: "signup" | "upgrade"; message: string } | null>(null);
+  const [paywall, setPaywall] = useState<{ kind: "signup" | "upgrade" | "limit"; message: string } | null>(null);
   const [deleting, setDeleting] = useState(false);
 
   const latest = posts[0] ?? null;
-  const remaining = usage.limit == null ? null : Math.max(usage.limit - usage.used, 0);
+  const regensLeft = remaining(usage, "regen");
 
   const closeEditor = useCallback(() => {
     if (editorDirty && !window.confirm("You have unsaved changes. Close without saving?")) return;
@@ -41,11 +41,12 @@ export function ListingWorkspace({ listing: initialListing, profile, posts: init
     setEditorDirty(false);
   }, [editorDirty]);
 
-  async function generate(settings: PostSettings) {
+  /** regenerateOf: the post being rewritten ("Try another version", "Change focus"), which uses a regeneration. */
+  async function generate(settings: PostSettings, regenerateOf?: string) {
     setError(null);
     setGenerating(settings);
     try {
-      const res = await fetch("/api/posts/generate", { method: "POST", body: JSON.stringify({ listing_id: listing.id, ...settings }) });
+      const res = await fetch("/api/posts/generate", { method: "POST", body: JSON.stringify({ listing_id: listing.id, ...settings, regenerate_of: regenerateOf }) });
       const json = await res.json();
       if (res.status === 402) return setPaywall({ kind: json.paywall, message: json.error });
       if (!res.ok) return setError(json.error ?? "Generation failed.");
@@ -54,7 +55,7 @@ export function ListingWorkspace({ listing: initialListing, profile, posts: init
         setPosts((p) => [post, ...p]);
         setFreshId(post.id);
       }
-      setUsage((u) => ({ ...u, used: u.used + 1 }));
+      setUsage((u) => withUsed(u, (json.kind as AllowanceKind) ?? "post"));
     } catch {
       setError("Generation failed. Please try again.");
     } finally {
@@ -113,9 +114,10 @@ export function ListingWorkspace({ listing: initialListing, profile, posts: init
                 listing={listing}
                 profile={profile}
                 fresh={latest.id === freshId}
-                remaining={remaining}
+                usage={usage}
+                remaining={regensLeft}
                 generating={!!generating}
-                onRegenerate={(focus) => generate({ ...settingsFrom(latest), ...(focus ? { focus } : {}) })}
+                onRegenerate={(focus) => generate({ ...settingsFrom(latest), ...(focus ? { focus } : {}) }, latest.id)}
               />
             )
           )}

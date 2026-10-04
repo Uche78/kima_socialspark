@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createAdminClient, getUser } from "@/lib/supabase/server";
 import { generatePost, MAX_FOCUS } from "@/lib/generate";
 import { ClaudeRefusalError } from "@/lib/claude";
+import type { AllowanceKind } from "@/lib/plans";
 import type { Design, Language, Listing, MortgageInputs, Platform, PostFormat, PostType, Profile, Aspect, TextMode } from "@/lib/types";
 import { PLATFORM_SPECS, POST_TYPES } from "@/lib/types";
 
@@ -22,6 +23,8 @@ type Body = {
   include_contact_slide?: boolean;
   mortgage?: MortgageInputs | null;
   template?: Design["template"];
+  /** Set when regenerating an existing post ("Try another version", "Change focus"). */
+  regenerate_of?: string;
   aspect?: Aspect;
   text_mode?: TextMode;
 };
@@ -47,24 +50,34 @@ export async function POST(request: Request) {
   ]);
   if (!listing || !profile) return NextResponse.json({ error: "Listing not found" }, { status: 404 });
 
-  // Paywall: atomically consume one generation.
-  const { data: quota, error: quotaError } = await supabase.rpc("consume_generation").single<{
+  // A regeneration rewrites an existing post of this listing; anything else is a new post.
+  let kind: AllowanceKind = "post";
+  if (body.regenerate_of) {
+    const { data: original } = await supabase.from("posts").select("id").eq("id", body.regenerate_of).eq("listing_id", listing.id).maybeSingle();
+    if (!original) return NextResponse.json({ error: "Post to regenerate not found." }, { status: 404 });
+    kind = "regen";
+  }
+
+  // Paywall: atomically use one allowance (enforced in the database).
+  const { data: quota, error: quotaError } = await supabase.rpc("consume_generation", { p_kind: kind }).single<{
     allowed: boolean;
     used: number;
-    lim: number | null;
+    lim: number;
     is_guest: boolean;
+    plan: string;
+    kind: AllowanceKind;
+    resets_at: string | null;
   }>();
   if (quotaError || !quota) return NextResponse.json({ error: "Couldn't check your plan." }, { status: 500 });
   if (!quota.allowed) {
-    return NextResponse.json(
-      {
-        error: quota.is_guest
-          ? "You've used your free guest posts. Create a free account to keep going."
-          : "You've reached your plan's post limit. Upgrade to keep creating.",
-        paywall: quota.is_guest ? "signup" : "upgrade",
-      },
-      { status: 402 },
-    );
+    const resets = quota.resets_at ? new Date(quota.resets_at).toLocaleDateString("en-CA", { month: "long", day: "numeric" }) : null;
+    const what = kind === "regen" ? "regenerations" : "new posts";
+    const [error, paywall] = quota.is_guest
+      ? ["You've used your free preview. Create a free account to get 2 more generations.", "signup"]
+      : quota.plan === "free"
+        ? ["You've used your 3 free generations. Choose a plan to keep creating.", "upgrade"]
+        : [`You've used this month's ${quota.lim} ${what}${resets ? `. They reset on ${resets}` : ""}. Upgrade for more, or wait for your renewal.`, "limit"];
+    return NextResponse.json({ error, paywall, plan: quota.plan, resets_at: quota.resets_at }, { status: 402 });
   }
 
   const focus = (Array.isArray(body.focus) ? body.focus : [])
@@ -97,7 +110,7 @@ export async function POST(request: Request) {
       mortgage,
     });
   } catch (e) {
-    await refund(user.id);
+    await refund(user.id, kind);
     const message = e instanceof ClaudeRefusalError || e instanceof Error ? e.message : "Generation failed.";
     return NextResponse.json({ error: message }, { status: 502 });
   }
@@ -137,17 +150,17 @@ export async function POST(request: Request) {
     .select("id")
     .single();
   if (error) {
-    await refund(user.id);
+    await refund(user.id, kind);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.json({ id: post.id, remaining: quota.lim == null ? null : quota.lim - quota.used });
+  return NextResponse.json({ id: post.id, kind, remaining: quota.lim - quota.used });
 }
 
 /** Failed generations shouldn't count against the user's allowance. */
-async function refund(userId: string) {
+async function refund(userId: string, kind: AllowanceKind) {
   try {
-    await createAdminClient().rpc("refund_generation", { p_user: userId });
+    await createAdminClient().rpc("refund_generation", { p_user: userId, p_kind: kind });
   } catch (e) {
     console.error("refund_generation failed", e);
   }

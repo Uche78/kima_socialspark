@@ -1,6 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { getUser } from "@/lib/supabase/server";
-import { usageFor } from "@/lib/plans";
+import { usageFrom, type EntitlementRow } from "@/lib/plans";
 import type { Listing, Post, Profile } from "@/lib/types";
 import { ListingWorkspace } from "./ListingWorkspace";
 
@@ -13,7 +13,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
     supabase.from("listings").select("*").eq("id", id).maybeSingle<Listing>(),
     supabase.from("profiles").select("*").eq("id", user.id).single<Profile>(),
     supabase.from("posts").select("*").eq("listing_id", id).order("created_at", { ascending: false }).returns<Post[]>(),
-    supabase.from("entitlements").select("plan, generations_used").eq("user_id", user.id).maybeSingle(),
+    supabase.from("entitlements").select("*").eq("user_id", user.id).maybeSingle<EntitlementRow>(),
   ]);
   if (!listing || !profile) notFound();
 
@@ -24,7 +24,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
         listing={listing}
         profile={profile}
         posts={posts ?? []}
-        usage={usageFor(entitlement?.plan, entitlement?.generations_used ?? 0, !!user.is_anonymous)}
+        usage={usageFrom(entitlement, !!user.is_anonymous)}
       />
     </div>
   );
