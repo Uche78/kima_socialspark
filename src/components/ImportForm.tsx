@@ -149,7 +149,7 @@ export function ImportForm() {
         </div>
       )}
       <div className="mt-2 flex flex-wrap gap-x-6">
-        <button type="button" className="py-2.5 text-sm text-[#f3f1ec]/70 underline underline-offset-4 hover:text-[#f3f1ec]" onClick={() => setPasteOpen(true)} disabled={busy}>
+        <button type="button" className="hidden py-2.5 text-sm sm:inline-block text-[#f3f1ec]/70 underline underline-offset-4 hover:text-[#f3f1ec]" onClick={() => setPasteOpen(true)} disabled={busy}>
           Site blocked? Copy and paste the page
         </button>
         <button type="button" className="py-2.5 text-sm text-[#f3f1ec]/70 underline underline-offset-4 hover:text-[#f3f1ec]" onClick={createManual} disabled={busy}>

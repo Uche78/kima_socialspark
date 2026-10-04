@@ -31,7 +31,7 @@ export default async function Home() {
 
         <div className="relative mx-auto w-full min-w-0 max-w-[1600px] px-4 pb-14 pt-28 sm:pb-20 sm:pt-36 lg:w-[90%] lg:px-0 lg:pt-40">
           <div className="max-w-4xl">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] sm:text-xs sm:tracking-[0.25em] text-[#f3f1ec]/80">For realtors &amp; mortgage brokers</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] sm:text-xs sm:tracking-[0.25em] text-[#f3f1ec]/80">For Canadian realtors</p>
             <h1 className="mt-4 font-[family-name:var(--font-display)] text-[clamp(1.6rem,9vw,2.25rem)] font-medium [overflow-wrap:anywhere] sm:mt-6 leading-[1.08] text-[#f3f1ec] sm:text-6xl lg:text-[4rem]">
               Turn a listing link into <br className="hidden sm:block" />
               <em className="font-normal">
@@ -39,8 +39,14 @@ export default async function Home() {
               </em>
             </h1>
             <p className="mt-4 max-w-3xl text-base leading-relaxed text-[#f3f1ec]/75 sm:mt-6 sm:text-xl">
-              Paste a link from a brokerage site or an agent&apos;s website. We&apos;ll pull in the details and photos so you can
-              create Instagram, Facebook and LinkedIn posts in your voice, with your branding.
+              <span className="sm:hidden">
+                Paste a link from a brokerage or agent site. SocialSpark generates Instagram, Facebook, and LinkedIn posts — in your
+                voice, with your branding.
+              </span>
+              <span className="hidden sm:inline">
+                Paste a link from a brokerage site or an agent&apos;s website. We&apos;ll pull in the details and photos so you can
+                create Instagram, Facebook and LinkedIn posts in your voice, with your branding.
+              </span>
             </p>
             <div className="mt-7 max-w-2xl sm:mt-10">
               <ImportForm />
