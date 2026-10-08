@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createAdminClient, getUser } from "@/lib/supabase/server";
+import { cleanTourUrl } from "@/lib/virtual-tour";
 import { generatePost, MAX_FOCUS } from "@/lib/generate";
 import { ClaudeRefusalError } from "@/lib/claude";
 import type { AllowanceKind } from "@/lib/plans";
@@ -21,6 +22,7 @@ type Body = {
   /** Older clients sent free text here; treated as notes. */
   highlights?: string;
   include_contact_slide?: boolean;
+  include_tour?: boolean;
   mortgage?: MortgageInputs | null;
   template?: Design["template"];
   /** Set when regenerating an existing post ("Try another version", "Change focus"). */
@@ -107,6 +109,7 @@ export async function POST(request: Request) {
       notes,
       textMode,
       includeContactSlide: body.format === "carousel" && includeContact,
+      tourUrl: body.include_tour === false ? null : cleanTourUrl(listing.virtual_tour_url),
       mortgage,
     });
   } catch (e) {

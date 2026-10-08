@@ -54,6 +54,13 @@ You write the caption and the short text that appears on each image (slide). You
 - **Avoid tired real estate clichés** such as "stunning", "nestled", "boasts", "must-see", "dream home", "turnkey" and "won't last long", unless the user's own writing samples use them.
 - **Describe the property, never the ideal buyer's identity.** Canadian human rights codes prohibit discriminatory housing ads. Say "three bedrooms on one floor" or "fenced backyard", never "perfect for young families", "ideal for a single professional", "adult lifestyle" or anything about age, family status, religion, ethnicity, gender or disability.
 
+## Virtual tour
+
+When the request includes a virtual tour link, mention the tour once, as part of (or right next to) the call to action. Never mention a tour when the request says "not included".
+- **Facebook and LinkedIn**: include the exact URL on its own line with a short lead-in, e.g. "Take the 3D tour: <url>". Don't shorten or change the URL.
+- **Instagram**: links in captions aren't clickable, so never paste the URL. Use a keyword-DM CTA instead, e.g. "DM 'TOUR' and I'll send you the 3D walkthrough", or "Virtual tour link in bio" if that suits the user's style.
+- Describe it by what it is if the link makes that clear (a "3D tour" for Matterport or iGUIDE, a "video tour" for YouTube or Vimeo), otherwise just "virtual tour".
+
 ## Post type: the goal of each post
 
 - **Just Listed**: first-look excitement. Lead with the property's single strongest hook. CTA: book a private showing, or DM for details or the floor plan.
@@ -163,6 +170,8 @@ export type GenerateRequest = {
   /** Agent's notes: facts not in the listing. */
   notes: string;
   includeContactSlide: boolean;
+  /** The listing's virtual tour link to mention, or null to leave it out. */
+  tourUrl: string | null;
   /** Which slides get on-image text. */
   textMode: TextMode;
   mortgage: MortgageInputs | null;
@@ -204,6 +213,7 @@ export async function generatePost(
       `Agent's notes: ${notes.trim() || "(none)"}`,
       mortgageLine,
       `Contact slide: ${req.includeContactSlide ? "requested" : "not requested"}`,
+      `Virtual tour: ${req.tourUrl ?? "not included"}`,
       `Text on photos: ${req.textMode}`,
       `Photos available: ${photos.length} (indices 0-${Math.max(photos.length - 1, 0)})`,
       `</request>`,
@@ -231,10 +241,22 @@ export async function generatePost(
 
   return {
     focusedOn: out.focused_on.map((f) => f.trim()).filter(Boolean).slice(0, 4),
-    caption: out.caption.trim(),
+    caption: withTour(out.caption.trim(), req.tourUrl, platform, language),
     hashtags: out.hashtags.map((h) => h.replace(/^#/, "").replace(/\s+/g, "")).filter(Boolean),
     slides,
   };
+}
+
+/**
+ * Guarantees the tour rule regardless of what the model wrote: Facebook and LinkedIn
+ * captions carry the exact link; Instagram captions never contain it (not clickable there).
+ */
+function withTour(caption: string, tourUrl: string | null, platform: Platform, language: Language): string {
+  if (!tourUrl) return caption;
+  if (platform === "instagram") return caption.split(tourUrl).join("").replace(/\n{3,}/g, "\n\n").trim();
+  if (caption.includes(tourUrl)) return caption;
+  const lead = language === "fr" ? "Visite virtuelle :" : language === "bilingual" ? "Virtual tour / Visite virtuelle :" : "Take the virtual tour:";
+  return `${caption}\n\n${lead} ${tourUrl}`;
 }
 
 /**

@@ -36,6 +36,7 @@ export default async function NewListingPage({ searchParams }: PageProps<"/listi
     features: [],
     listing_brokerage: null,
     open_house: null,
+    virtual_tour_url: null,
     photos: [],
     created_at: "",
   };

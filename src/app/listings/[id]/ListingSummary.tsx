@@ -3,6 +3,7 @@
 
 import { formatCurrency } from "@/lib/mortgage";
 import type { Listing } from "@/lib/types";
+import { cleanTourUrl } from "@/lib/virtual-tour";
 
 const STRIP_COUNT = 4; // cover + 4 thumbnails = 5 photos, then "+n"
 
@@ -19,6 +20,7 @@ export function ListingSummary({ listing, onEdit }: { listing: Listing; onEdit: 
     listing.mls_number && ["MLS®", listing.mls_number],
     listing.year_built && ["Built", String(listing.year_built)],
   ].filter(Boolean) as [string, string][];
+  const tourUrl = cleanTourUrl(listing.virtual_tour_url);
   const missing = [!listing.price && "price", !listing.bedrooms && "bedrooms", !listing.photos.length && "photos"].filter(Boolean);
 
   return (
@@ -72,6 +74,11 @@ export function ListingSummary({ listing, onEdit }: { listing: Listing; onEdit: 
           </ul>
         )}
         {listing.listing_brokerage && <div className="text-xs text-muted">Listed by {listing.listing_brokerage}</div>}
+        {tourUrl && (
+          <a href={tourUrl} target="_blank" rel="noreferrer" className="inline-block text-sm font-medium text-brand underline">
+            Virtual tour ↗
+          </a>
+        )}
         {missing.length > 0 && (
           <div className="rounded-lg bg-amber-50 p-2.5 text-xs text-amber-900">Missing: {missing.join(", ")}. Add them for better posts.</div>
         )}

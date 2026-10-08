@@ -208,6 +208,9 @@ export function ListingEditor({ listing: initial, isDraft, onSaved, onDirtyChang
           {field("lot_size", "Lot size")}
           {field("listing_brokerage", "Listing brokerage")}
           {field("open_house", "Open house")}
+          <div className="sm:col-span-2">
+            {field("virtual_tour_url", "Virtual tour link (Matterport, iGUIDE, YouTube…)", { type: "url", placeholder: "https://" })}
+          </div>
         </div>
         <label className="mt-3 block">
           <span className="label">Features (one per line)</span>

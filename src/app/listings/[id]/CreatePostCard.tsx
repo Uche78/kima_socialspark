@@ -22,6 +22,8 @@ export type PostSettings = {
   /** Agent's notes: facts not in the listing. */
   notes: string;
   include_contact_slide: boolean;
+  /** Mention the listing's virtual tour (link on Facebook/LinkedIn, "DM TOUR" on Instagram). */
+  include_tour: boolean;
   mortgage: MortgageInputs | null;
 };
 
@@ -59,6 +61,8 @@ export function CreatePostCard({ listing, profile, usage, generating, error, onG
   const [notes, setNotes] = useState("");
   const [showNotes, setShowNotes] = useState(false);
   const [contactSlide, setContactSlide] = useState(profile.include_contact);
+  const hasTour = !!listing.virtual_tour_url;
+  const [includeTour, setIncludeTour] = useState(true);
   const [mortgage, setMortgage] = useState<MortgageInputs>({
     enabled: isBroker,
     price: 0, // 0 = use the listing price
@@ -84,6 +88,7 @@ export function CreatePostCard({ listing, profile, usage, generating, error, onG
       focus,
       notes,
       include_contact_slide: format === "carousel" && contactSlide,
+      include_tour: hasTour && includeTour,
       mortgage: isBroker ? { ...mortgage, price: mortgagePrice } : null,
     });
   }
@@ -109,11 +114,21 @@ export function CreatePostCard({ listing, profile, usage, generating, error, onG
         <Chips label="Post type" value={postType} onChange={setPostType} options={POST_TYPES} />
       </div>
 
-      {format === "carousel" && (
-        <label className="mt-4 flex items-center gap-2 text-sm">
-          <input type="checkbox" checked={contactSlide} onChange={(e) => setContactSlide(e.target.checked)} />
-          Add a contact slide at the end
-        </label>
+      {(format === "carousel" || hasTour) && (
+        <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2">
+          {format === "carousel" && (
+            <label className="flex items-center gap-2 text-sm">
+              <input type="checkbox" checked={contactSlide} onChange={(e) => setContactSlide(e.target.checked)} />
+              Add a contact slide at the end
+            </label>
+          )}
+          {hasTour && (
+            <label className="flex items-center gap-2 text-sm" title={platform === "instagram" ? "Instagram captions can't hold clickable links, so the post invites people to DM for the tour." : undefined}>
+              <input type="checkbox" checked={includeTour} onChange={(e) => setIncludeTour(e.target.checked)} />
+              Include virtual tour{platform === "instagram" ? " (as a “DM for the tour” invite)" : " link"}
+            </label>
+          )}
+        </div>
       )}
 
       <div className="mt-4 space-y-4">

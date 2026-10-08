@@ -44,7 +44,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: message, manualEntry: true }, { status: 422 });
   }
 
-  const { listing: l, photoUrls } = extracted;
+  const { listing: l, photoUrls, tourUrl } = extracted;
   if (!l.is_property_listing) {
     return NextResponse.json(
       { error: "That page doesn't look like a single property listing.", manualEntry: true },
@@ -75,6 +75,7 @@ export async function POST(request: Request) {
       features: l.features.slice(0, 15),
       listing_brokerage: l.listing_brokerage,
       open_house: l.open_house,
+      virtual_tour_url: tourUrl,
       extraction_notes: l.notes,
     })
     .select("id")

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { anthropic, ClaudeRefusalError, MODEL } from "./claude";
 import { safeFetch } from "./safe-fetch";
+import { findTourLinks } from "./virtual-tour";
 
 export class ExtractionBlockedError extends Error {}
 
@@ -31,6 +32,10 @@ const ListingSchema = z.object({
   photo_indices: z
     .array(z.number())
     .describe("Indices into the IMAGE CANDIDATES list of photos of THIS property, in gallery order. Exclude logos, agent headshots, maps, icons, and other listings."),
+  // Not nullable: structured outputs allow at most 16 nullable fields.
+  virtual_tour_index: z
+    .number()
+    .describe("Index into the TOUR LINK CANDIDATES list of THIS property's virtual tour or video tour; -1 if none clearly belongs to this property. Ignore tours of other listings (a link naming a different address or unit is not this property), brokerage channels and marketing pages."),
   notes: z.string().nullable().describe("Anything important you could not find or were unsure about"),
 });
 export type ExtractedListing = z.infer<typeof ListingSchema>;
@@ -140,7 +145,17 @@ function prioritizeForListing(urls: string[], page: URL): string[] {
   return [...urls.filter(matches), ...urls.filter((u) => !matches(u))];
 }
 
-export type PageData = { url: URL; title: string; text: string; jsonLd: unknown[]; meta: Record<string, string>; images: string[]; truncated: boolean };
+export type PageData = {
+  url: URL;
+  title: string;
+  text: string;
+  jsonLd: unknown[];
+  meta: Record<string, string>;
+  images: string[];
+  /** Links from known virtual-tour providers found anywhere on the page. */
+  tours: string[];
+  truncated: boolean;
+};
 
 export async function fetchListingPage(rawUrl: string): Promise<PageData> {
   const res = await safeFetch(rawUrl);
@@ -212,6 +227,7 @@ function parseListingHtml(html: string, url: URL): PageData {
   });
 
   const images = collectImages($, html, url, jsonLd);
+  const tours = findTourLinks(html, url.hostname);
 
   $("script, style, noscript, svg, iframe, template").remove();
   const fullText = $("body").text().replace(/\s+/g, " ").trim();
@@ -224,12 +240,14 @@ function parseListingHtml(html: string, url: URL): PageData {
     jsonLd,
     meta,
     images,
+    tours,
     truncated,
   };
 }
 
-export async function extractListing(page: PageData): Promise<{ listing: ExtractedListing; photoUrls: string[] }> {
+export async function extractListing(page: PageData): Promise<{ listing: ExtractedListing; photoUrls: string[]; tourUrl: string | null }> {
   const imageList = page.images.map((u, i) => `[${i}] ${u}`).join("\n");
+  const tourList = page.tours.map((u, i) => `[${i}] ${u}`).join("\n");
 
   const response = await anthropic().messages.parse({
     model: MODEL,
@@ -247,6 +265,7 @@ export async function extractListing(page: PageData): Promise<{ listing: Extract
           `META TAGS:\n${JSON.stringify(page.meta)}\n\n` +
           `STRUCTURED DATA (JSON-LD):\n${JSON.stringify(page.jsonLd).slice(0, 40_000)}\n\n` +
           `IMAGE CANDIDATES:\n${imageList || "(none found)"}\n\n` +
+          `TOUR LINK CANDIDATES:\n${tourList || "(none found)"}\n\n` +
           `PAGE TEXT${page.truncated ? " (first part only; the page was very long)" : ""}:\n${page.text}`,
       },
     ],
@@ -261,7 +280,9 @@ export async function extractListing(page: PageData): Promise<{ listing: Extract
     .map((i) => page.images[i]);
 
   const photoUrls = await expandNumberedSeries(preferLargest(chosen, page.images));
-  return { listing, photoUrls };
+  const ti = listing.virtual_tour_index;
+  const tourUrl = ti != null && Number.isInteger(ti) && ti >= 0 && ti < page.tours.length ? page.tours[ti] : null;
+  return { listing, photoUrls, tourUrl };
 }
 
 // ---------------------------------------------------------------------------

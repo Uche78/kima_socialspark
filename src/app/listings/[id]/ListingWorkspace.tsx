@@ -117,7 +117,7 @@ export function ListingWorkspace({ listing: initialListing, profile, posts: init
                 usage={usage}
                 remaining={regensLeft}
                 generating={!!generating}
-                onRegenerate={(focus) => generate({ ...settingsFrom(latest), ...(focus ? { focus } : {}) }, latest.id)}
+                onRegenerate={(focus) => generate({ ...settingsFrom(latest, listing), ...(focus ? { focus } : {}) }, latest.id)}
               />
             )
           )}
@@ -143,7 +143,7 @@ export function ListingWorkspace({ listing: initialListing, profile, posts: init
 }
 
 /** Rebuilds generation settings from an existing post, for "Try another version". */
-function settingsFrom(post: Post): PostSettings {
+function settingsFrom(post: Post, listing: Listing): PostSettings {
   return {
     platform: post.platform,
     format: post.format,
@@ -155,6 +155,7 @@ function settingsFrom(post: Post): PostSettings {
     focus: post.focus ?? [],
     notes: post.highlights ?? "",
     include_contact_slide: post.slides.some((s) => s.kind === "contact"),
+    include_tour: !!listing.virtual_tour_url,
     mortgage: post.mortgage,
   };
 }

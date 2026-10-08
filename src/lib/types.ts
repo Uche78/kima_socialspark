@@ -49,6 +49,8 @@ export type Listing = {
   features: string[];
   listing_brokerage: string | null;
   open_house: string | null;
+  /** 3D or video tour link (Matterport, iGUIDE, YouTube…). */
+  virtual_tour_url: string | null;
   photos: Photo[];
   created_at: string;
 };
