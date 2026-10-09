@@ -1,13 +1,17 @@
 import { NextResponse } from "next/server";
 import { createAdminClient, getUser } from "@/lib/supabase/server";
-import { cleanTourUrl } from "@/lib/virtual-tour";
-import { generatePost, MAX_FOCUS } from "@/lib/generate";
-import { ClaudeRefusalError } from "@/lib/claude";
-import type { AllowanceKind } from "@/lib/plans";
+import { MAX_FOCUS } from "@/lib/generate";
+import type { JobParams } from "@/lib/generation-job";
+import { queueGeneration } from "@/lib/generation-queue";
+import { paywallFor } from "@/lib/paywall";
+import { remaining, usageFrom, type AllowanceKind, type EntitlementRow } from "@/lib/plans";
 import type { Design, Language, Listing, MortgageInputs, Platform, PostFormat, PostType, Profile, Aspect, TextMode } from "@/lib/types";
 import { PLATFORM_SPECS, POST_TYPES } from "@/lib/types";
 
-export const maxDuration = 60;
+/**
+ * Starts writing a post. Generation runs as a background job (it can take longer than the 30 s
+ * a request gets); the client watches the job and loads the post when it's done.
+ */
 
 type Body = {
   listing_id: string;
@@ -60,27 +64,27 @@ export async function POST(request: Request) {
     kind = "regen";
   }
 
-  // Paywall: atomically use one allowance (enforced in the database).
-  const { data: quota, error: quotaError } = await supabase.rpc("consume_generation", { p_kind: kind }).single<{
-    allowed: boolean;
-    used: number;
-    lim: number;
-    is_guest: boolean;
-    plan: string;
-    kind: AllowanceKind;
-    resets_at: string | null;
-  }>();
-  if (quotaError || !quota) return NextResponse.json({ error: "Couldn't check your plan." }, { status: 500 });
-  if (!quota.allowed) {
-    const resets = quota.resets_at ? new Date(quota.resets_at).toLocaleDateString("en-CA", { month: "long", day: "numeric" }) : null;
-    const what = kind === "regen" ? "regenerations" : "new posts";
-    const [error, paywall] = quota.is_guest
-      ? ["You've used your free preview. Create a free account to get 2 more generations.", "signup"]
-      : quota.plan === "free"
-        ? ["You've used your 3 free generations. Choose a plan to keep creating.", "upgrade"]
-        : [`You've used this month's ${quota.lim} ${what}${resets ? `. They reset on ${resets}` : ""}. Upgrade for more, or wait for your renewal.`, "limit"];
-    return NextResponse.json({ error, paywall, plan: quota.plan, resets_at: quota.resets_at }, { status: 402 });
+  // Paywall pre-check only: the allowance is used when the post is actually written (see generation-job).
+  const { data: entitlement } = await supabase.from("entitlements").select("*").eq("user_id", user.id).maybeSingle<EntitlementRow>();
+  const isGuest = !!user.is_anonymous;
+  const usage = usageFrom(entitlement, isGuest);
+  if (remaining(usage, kind) <= 0) {
+    const pool = kind === "regen" && usage.regens ? usage.regens : usage.posts;
+    const { error, paywall } = paywallFor({ isGuest, plan: usage.plan, lim: pool.limit, resetsAt: usage.resetsAt }, kind);
+    return NextResponse.json({ error, paywall, plan: usage.plan, resets_at: usage.resetsAt }, { status: 402 });
   }
+
+  // One post at a time per user, so double clicks don't run (and bill) twice.
+  const admin = createAdminClient();
+  const since = new Date(Date.now() - 5 * 60_000).toISOString();
+  const { data: busy } = await admin
+    .from("generation_jobs")
+    .select("id")
+    .eq("user_id", user.id)
+    .in("status", ["queued", "running"])
+    .gte("created_at", since)
+    .limit(1);
+  if (busy?.length) return NextResponse.json({ error: "A post is already being written. Wait for it to finish, then try again." }, { status: 409 });
 
   const focus = (Array.isArray(body.focus) ? body.focus : [])
     .filter((f): f is string => typeof f === "string")
@@ -93,78 +97,32 @@ export async function POST(request: Request) {
   const requested = body.text_mode && ["all", "cover", "none"].includes(body.text_mode) ? body.text_mode : PLATFORM_SPECS[body.platform].defaultTextMode;
   const textMode: TextMode = body.format === "single" && requested === "cover" ? "all" : requested;
 
-  const mortgage = profile.role === "mortgage_broker" && body.mortgage?.enabled ? body.mortgage : null;
-  const includeContact = body.include_contact_slide ?? profile.include_contact;
-
-  let generated;
-  try {
-    generated = await generatePost({
-      listing,
-      profile,
-      platform: body.platform,
-      format: body.format,
-      postType: body.post_type,
-      language: body.language,
-      focus,
-      notes,
-      textMode,
-      includeContactSlide: body.format === "carousel" && includeContact,
-      tourUrl: body.include_tour === false ? null : cleanTourUrl(listing.virtual_tour_url),
-      mortgage,
-    });
-  } catch (e) {
-    await refund(user.id, kind);
-    const message = e instanceof ClaudeRefusalError || e instanceof Error ? e.message : "Generation failed.";
-    return NextResponse.json({ error: message }, { status: 502 });
-  }
-
-  const design: Design = {
-    template: body.template ?? "classic",
-    aspect: body.aspect && PLATFORM_SPECS[body.platform].aspects.includes(body.aspect) ? body.aspect : PLATFORM_SPECS[body.platform].defaultAspect,
+  const params: JobParams = {
+    platform: body.platform,
+    format: body.format,
+    post_type: body.post_type,
+    language: body.language,
+    focus,
+    notes,
     text_mode: textMode,
-    primary: profile.brand_primary,
-    secondary: profile.brand_secondary,
-    accent: profile.brand_accent,
-    show_logo: profile.include_logo && !!profile.logo_path,
-    show_headshot: profile.include_headshot && !!profile.headshot_path,
-    show_contact: profile.include_contact,
-    show_brokerage: true,
-    show_price: listing.price != null,
+    include_contact_slide: body.include_contact_slide ?? profile.include_contact,
+    include_tour: body.include_tour !== false,
+    mortgage: profile.role === "mortgage_broker" && body.mortgage?.enabled ? body.mortgage : null,
+    template: body.template ?? "classic",
+    aspect: body.aspect ?? null,
   };
 
-  const { data: post, error } = await supabase
-    .from("posts")
-    .insert({
-      user_id: user.id,
-      listing_id: listing.id,
-      platform: body.platform,
-      format: body.format,
-      post_type: body.post_type,
-      language: body.language,
-      highlights: notes || null,
-      focus,
-      focused_on: generated.focusedOn,
-      caption: generated.caption,
-      hashtags: generated.hashtags,
-      slides: generated.slides,
-      design,
-      mortgage,
-    })
+  const { data: job, error } = await admin
+    .from("generation_jobs")
+    .insert({ user_id: user.id, listing_id: listing.id, kind, is_guest: isGuest, params })
     .select("id")
     .single();
-  if (error) {
-    await refund(user.id, kind);
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
+  if (error || !job) return NextResponse.json({ error: "Couldn't start writing the post. Please try again." }, { status: 500 });
 
-  return NextResponse.json({ id: post.id, kind, remaining: quota.lim - quota.used });
-}
-
-/** Failed generations shouldn't count against the user's allowance. */
-async function refund(userId: string, kind: AllowanceKind) {
   try {
-    await createAdminClient().rpc("refund_generation", { p_user: userId, p_kind: kind });
-  } catch (e) {
-    console.error("refund_generation failed", e);
+    await queueGeneration(admin, job.id);
+  } catch {
+    return NextResponse.json({ error: "Couldn't start writing the post. Please try again." }, { status: 502 });
   }
+  return NextResponse.json({ job_id: job.id, kind }, { status: 202 });
 }

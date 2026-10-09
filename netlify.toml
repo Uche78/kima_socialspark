@@ -11,6 +11,8 @@
 
 [functions]
   directory = "netlify/functions"
+  # Native image library used to shrink photos before Claude sees them; ship it unbundled.
+  external_node_modules = ["sharp"]
 
 # Send visitors on the default Netlify address to the primary custom domain.
 # Exact-host match, so deploy previews (deploy-preview-N--kima-socialspark.netlify.app) are unaffected.

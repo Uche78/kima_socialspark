@@ -50,7 +50,15 @@ export function ListingWorkspace({ listing: initialListing, profile, posts: init
       const json = await res.json();
       if (res.status === 402) return setPaywall({ kind: json.paywall, message: json.error });
       if (!res.ok) return setError(json.error ?? "Generation failed.");
-      const { data: post } = await supabase.from("posts").select("*").eq("id", json.id).single<Post>();
+
+      // The post is written in the background; watch the job until it's done.
+      const job = await waitForJob(json.job_id);
+      if (!job) return setError("This is taking longer than usual. Refresh the page in a minute to see your post. You won't be charged if it doesn't finish.");
+      if (job.status === "failed") {
+        if (job.paywall) return setPaywall({ kind: job.paywall, message: job.error ?? "" });
+        return setError(job.error ?? "Generation failed. You weren't charged. Please try again.");
+      }
+      const { data: post } = await supabase.from("posts").select("*").eq("id", job.post_id!).single<Post>();
       if (post) {
         setPosts((p) => [post, ...p]);
         setFreshId(post.id);
@@ -61,6 +69,21 @@ export function ListingWorkspace({ listing: initialListing, profile, posts: init
     } finally {
       setGenerating(null);
     }
+  }
+
+  /** Polls the generation job (every 2 s, up to 4 minutes). Null = still not finished. */
+  async function waitForJob(jobId: string) {
+    const deadline = Date.now() + 4 * 60_000;
+    while (Date.now() < deadline) {
+      await new Promise((r) => setTimeout(r, 2000));
+      const { data } = await supabase
+        .from("generation_jobs")
+        .select("status, post_id, error, paywall")
+        .eq("id", jobId)
+        .maybeSingle<{ status: string; post_id: string | null; error: string | null; paywall: "signup" | "upgrade" | "limit" | null }>();
+      if (data && (data.status === "done" || data.status === "failed")) return data;
+    }
+    return null;
   }
 
   async function removeListing() {

@@ -158,6 +158,30 @@ function describeProfile(p: Profile): string {
     .join("\n");
 }
 
+/** Long edge of the copy Claude looks at. Claude scales larger images down anyway (~1,500 px). */
+const VISION_MAX_EDGE = 1200;
+
+/**
+ * A smaller JPEG copy of a photo for Claude to look at: faster and cheaper, with no effect on the
+ * post, whose slides use the original. Falls back to the original URL if anything goes wrong.
+ */
+async function visionSource(url: string): Promise<Anthropic.ImageBlockParam["source"]> {
+  try {
+    const { default: sharp } = await import("sharp");
+    const res = await fetch(url, { signal: AbortSignal.timeout(15_000) });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const small = await sharp(Buffer.from(await res.arrayBuffer()))
+      .rotate()
+      .resize({ width: VISION_MAX_EDGE, height: VISION_MAX_EDGE, fit: "inside", withoutEnlargement: true })
+      .jpeg({ quality: 80 })
+      .toBuffer();
+    return { type: "base64", media_type: "image/jpeg", data: small.toString("base64") };
+  } catch (e) {
+    console.warn("Sending original photo to Claude:", e instanceof Error ? e.message : e);
+    return { type: "url", url };
+  }
+}
+
 export type GenerateRequest = {
   listing: Listing;
   profile: Profile;
@@ -193,11 +217,13 @@ export async function generatePost(
       `Call to action: ${mortgage.cta || "Get pre-approved"}`;
   }
 
+  const sources = await Promise.all(photos.map((p) => visionSource(p.url)));
   const content: Anthropic.ContentBlockParam[] = [];
   photos.forEach((p, i) => {
+    // Sizes describe the original photo (what the post uses), not the smaller copy Claude sees.
     const size = p.width && p.height ? ` (${p.width}×${p.height}px${isLowRes(p) ? ", low resolution" : ""})` : "";
     content.push({ type: "text", text: `Photo ${i}${size}:` });
-    content.push({ type: "image", source: { type: "url", url: p.url } });
+    content.push({ type: "image", source: sources[i] });
   });
   content.push({
     type: "text",
@@ -221,6 +247,7 @@ export async function generatePost(
     ].join("\n"),
   });
 
+  const started = Date.now();
   const response = await anthropic().messages.parse({
     model: MODEL,
     max_tokens: 16000,
@@ -229,6 +256,11 @@ export async function generatePost(
     messages: [{ role: "user", content }],
   });
 
+  const u = response.usage;
+  console.log(
+    "generate usage",
+    JSON.stringify({ platform, format, photos: photos.length, ms: Date.now() - started, input: u.input_tokens, cache_read: u.cache_read_input_tokens, cache_write: u.cache_creation_input_tokens, output: u.output_tokens }),
+  );
   if (response.stop_reason === "refusal") throw new ClaudeRefusalError("Couldn't generate this post. Try rewording your highlights.");
   const out = response.parsed_output;
   if (!out) throw new Error("Generation failed. Please try again.");
