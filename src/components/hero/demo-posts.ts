@@ -35,7 +35,7 @@ export const demoProfile: Profile = {
   include_contact: true,
 };
 
-const photo = (name: string) => ({ path: `hero/${name}.jpg`, url: `/hero/${name}.jpg`, width: 1600, height: 1067 });
+const photo = (name: string) => ({ path: `hero/${name}.webp`, url: `/hero/${name}.webp`, width: 1600, height: 1067 });
 
 function listing(id: string, fields: Partial<Listing>, photos: string[]): Listing {
   return {

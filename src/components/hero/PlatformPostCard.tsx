@@ -10,7 +10,7 @@ export function PlatformPostCard({ post, className = "", captionLines = 2 }: { p
   const clamp = captionLines === 5 ? "line-clamp-5" : "line-clamp-2";
   const size = PLATFORM_SPECS[post.platform].sizes[post.aspect];
   const image = (
-    <ScaledSlide width={size.w} height={size.h} maxWidth={2000}>
+    <ScaledSlide width={size.w} height={size.h} maxWidth={2000} initialWidth={230}>
       <SlideCanvas
         slide={post.slide}
         index={0}
@@ -65,9 +65,9 @@ function Instagram({ post, image, clamp }: { post: DemoPost; image: React.ReactN
         <Avatar ring />
         <div className="min-w-0 flex-1">
           <div className="truncate font-semibold">{DEMO_AGENT.handle}</div>
-          <div className="truncate text-[10px] text-black/50">{post.listing.city}, Ontario</div>
+          <div className="truncate text-[10px] text-black/60">{post.listing.city}, Ontario</div>
         </div>
-        <span className="text-black/50">•••</span>
+        <span className="text-black/60">•••</span>
       </header>
       {image}
       <div className="space-y-1.5 px-2.5 pb-3 pt-2">
@@ -94,9 +94,9 @@ function Facebook({ post, image, clamp }: { post: DemoPost; image: React.ReactNo
         <Avatar />
         <div className="min-w-0 flex-1">
           <div className="truncate font-semibold">{DEMO_AGENT.name}, {DEMO_AGENT.title}</div>
-          <div className="text-[10px] text-black/50">2h · 🌐</div>
+          <div className="text-[10px] text-black/60">2h · 🌐</div>
         </div>
-        <span className="text-black/50">•••</span>
+        <span className="text-black/60">•••</span>
       </header>
       <div className="px-3 py-2">
         <p className={clamp}>{post.caption}</p>
@@ -122,10 +122,10 @@ function LinkedIn({ post, image, clamp }: { post: DemoPost; image: React.ReactNo
         <Avatar />
         <div className="min-w-0 flex-1">
           <div className="truncate font-semibold">
-            {DEMO_AGENT.name} <span className="font-normal text-black/50">· 1st</span>
+            {DEMO_AGENT.name} <span className="font-normal text-black/60">· 1st</span>
           </div>
           <div className="truncate text-[10px] text-black/55">{DEMO_AGENT.title} at {DEMO_AGENT.brokerage}</div>
-          <div className="text-[10px] text-black/45">1d · 🌐</div>
+          <div className="text-[10px] text-black/60">1d · 🌐</div>
         </div>
       </header>
       <div className="px-3 py-2">

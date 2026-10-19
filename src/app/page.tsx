@@ -54,7 +54,7 @@ export default async function Home() {
       ) : (
         <section className="mx-auto w-full min-w-0 max-w-[1600px] px-4 lg:w-[90%] lg:px-0">
           <HeroShowcase>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#141414]/60 sm:text-xs sm:tracking-[0.25em]">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#141414]/70 sm:text-xs sm:tracking-[0.25em]">
               For Canadian realtors
             </p>
             <h1 className="mt-4 font-[family-name:var(--font-heading)] tracking-[-0.02em] text-[clamp(1.9rem,8vw,2.4rem)] font-medium leading-[1.1] text-[#000103]/90 [overflow-wrap:anywhere] sm:mt-5 sm:text-6xl lg:text-[3.3rem] 2xl:text-[4rem]">

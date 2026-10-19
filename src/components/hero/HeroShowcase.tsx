@@ -1,3 +1,4 @@
+import { preload } from "react-dom";
 import { DEMO_POSTS } from "./demo-posts";
 import { PlatformPostCard } from "./PlatformPostCard";
 
@@ -28,9 +29,12 @@ const LAYOUT: { id: string; left: string; top: string; width: string }[] = [
 
 /** The post cards for the home page hero. `children` is the headline and import form. */
 export function HeroShowcase({ children }: { children: React.ReactNode }) {
+  // The first card's photo is the largest thing on a phone's first screen: fetch it right away.
+  const first = DEMO_POSTS[0];
+  preload(first.listing.photos[first.slide.photo_index ?? 0].url, { as: "image", fetchPriority: "high" });
   return (
     <div className="relative overflow-hidden rounded-3xl bg-[#eeebe4] lg:h-[clamp(780px,56vw,920px)]">
-      <div className="hero-fade relative z-10 px-5 pb-8 pt-10 sm:px-10 sm:pt-14 lg:max-w-[58%] lg:px-[5%] lg:pt-[5.5%]">{children}</div>
+      <div className="relative z-10 px-5 pb-8 pt-10 sm:px-10 sm:pt-14 lg:max-w-[58%] lg:px-[5%] lg:pt-[5.5%]">{children}</div>
 
       {/* Desktop: scattered cards */}
       <div className="pointer-events-none absolute inset-0 hidden lg:block">

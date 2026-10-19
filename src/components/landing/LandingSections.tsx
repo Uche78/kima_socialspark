@@ -7,7 +7,7 @@ import { FREE_LIMITS, PAID_PLANS } from "@/lib/plans";
 import { FAQ } from "@/lib/faq";
 
 const WRAP = "mx-auto w-full min-w-0 max-w-[1600px] px-4 lg:w-[90%] lg:px-0";
-const EYEBROW = "text-[11px] font-semibold uppercase tracking-[0.2em] text-[#141414]/55 sm:text-xs";
+const EYEBROW = "text-[11px] font-semibold uppercase tracking-[0.2em] text-[#141414]/70 sm:text-xs";
 const H2 = "mt-3 font-[family-name:var(--font-heading)] tracking-[-0.02em] text-3xl font-medium leading-tight text-[#141414] sm:text-5xl";
 
 const STEPS = [

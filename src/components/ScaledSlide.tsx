@@ -11,17 +11,20 @@ export function ScaledSlide({
   width,
   height,
   maxWidth,
+  initialWidth,
   className = "",
   children,
 }: {
   width: number;
   height: number;
   maxWidth: number;
+  /** Expected rendered width: renders the slide in the server HTML (corrected after measuring). */
+  initialWidth?: number;
   className?: string;
   children: ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [shown, setShown] = useState<number | null>(null);
+  const [shown, setShown] = useState<number | null>(initialWidth ?? null);
 
   useLayoutEffect(() => {
     const el = ref.current;

@@ -30,6 +30,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
   openGraph: { type: "website", siteName: SITE_NAME, locale: "en_CA", url: "/", title: SITE_TITLE, description: SITE_DESCRIPTION },
   twitter: { card: "summary_large_image", title: SITE_TITLE, description: SITE_DESCRIPTION },
+  // Search engine ownership checks (Bing Webmaster Tools).
+  verification: { other: { "msvalidate.01": "903CBEB5EE3EC52D8A94F0C0E41ABB8D" } },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 } },
 };
 
