@@ -26,12 +26,12 @@ function photoUrl(listing: Listing, i: number | null) {
   return listing.photos[i]?.url ?? null;
 }
 
-function Bg({ src, style }: { src: string | null; style?: CSSProperties }) {
+function Bg({ src, alt, style }: { src: string | null; alt: string; style?: CSSProperties }) {
   if (!src) return null;
   return (
     <img
       src={src}
-      alt=""
+      alt={alt}
       crossOrigin="anonymous"
       style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", ...style }}
     />
@@ -104,6 +104,8 @@ export const SlideCanvas = forwardRef<HTMLDivElement, SlideCanvasProps>(function
   const { slide, listing, profile, design, mortgage, language, postType, width, height, index, total } = props;
   const s = width / 1080; // scale factor so every template works at any output size
   const photo = photoUrl(listing, slide.photo_index);
+  const address = fullAddress(listing);
+  const photoAlt = [slide.headline, address ? `photo of ${address}` : "property photo"].filter(Boolean).join(", ");
   const root: CSSProperties = {
     position: "relative",
     width,
@@ -141,11 +143,11 @@ export const SlideCanvas = forwardRef<HTMLDivElement, SlideCanvasProps>(function
 
   if (!slideHasText(design.text_mode ?? "all", slide, index)) {
     // Clean listing photo: no overlays, badge, counter or branding.
-    body = <Bg src={photo} />;
+    body = <Bg src={photo} alt={photoAlt} />;
   } else if (slide.kind === "details") {
     body = (
       <>
-        <Bg src={photo} style={{ opacity: 0.18, filter: "blur(2px)" }} />
+        <Bg src={photo} alt={photoAlt} style={{ opacity: 0.18, filter: "blur(2px)" }} />
         <div style={{ position: "absolute", inset: 0, padding: pad, display: "flex", flexDirection: "column", justifyContent: "space-between", color: design.secondary }}>
           <div>
             <div style={{ width: 80 * s, height: 6 * s, background: design.accent, marginBottom: 32 * s }} />
@@ -167,7 +169,7 @@ export const SlideCanvas = forwardRef<HTMLDivElement, SlideCanvasProps>(function
     const est = estimateMortgage(mortgage.price, mortgage.down_payment_percent, mortgage.rate_percent, mortgage.amortization_years);
     body = (
       <>
-        <Bg src={photo} style={{ opacity: 0.15 }} />
+        <Bg src={photo} alt={photoAlt} style={{ opacity: 0.15 }} />
         <div style={{ position: "absolute", inset: 0, padding: pad, display: "flex", flexDirection: "column", justifyContent: "space-between", color: design.secondary }}>
           <div>
             <div style={{ fontFamily: SERIF, fontSize: 68 * s, lineHeight: 1.05 }}>{slide.headline}</div>
@@ -226,7 +228,7 @@ export const SlideCanvas = forwardRef<HTMLDivElement, SlideCanvasProps>(function
     body = (
       <>
         <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: split, overflow: "hidden" }}>
-          <Bg src={photo} />
+          <Bg src={photo} alt={photoAlt} />
         </div>
         <div style={{ position: "absolute", left: 0, right: 0, top: split, height: 8 * s, background: design.accent }} />
         <div style={{ position: "absolute", left: 0, right: 0, top: split + 8 * s, bottom: 0, padding: `${40 * s}px ${pad}px`, display: "flex", flexDirection: "column", justifyContent: "space-between", color: design.secondary }}>
@@ -257,7 +259,7 @@ export const SlideCanvas = forwardRef<HTMLDivElement, SlideCanvasProps>(function
     body = (
       <div style={{ position: "absolute", inset: 0, background: design.secondary, color: design.primary }}>
         <div style={{ position: "absolute", left: frame, right: frame, top: frame, height: photoH, overflow: "hidden" }}>
-          <Bg src={photo} />
+          <Bg src={photo} alt={photoAlt} />
         </div>
         <div style={{ position: "absolute", left: frame, right: frame, top: frame + photoH + 32 * s, bottom: frame, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
           <div>
@@ -277,7 +279,7 @@ export const SlideCanvas = forwardRef<HTMLDivElement, SlideCanvasProps>(function
     // classic: full-bleed photo with gradient and bottom brand band
     body = (
       <>
-        <Bg src={photo} />
+        <Bg src={photo} alt={photoAlt} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0.1) 55%, rgba(0,0,0,0.78) 100%)" }} />
         {slide.kind === "cover" && <div style={{ position: "absolute", top: pad, left: pad }}>{badge}</div>}
         <div style={{ position: "absolute", left: pad, right: pad, bottom: pad, color: "#fff", display: "flex", flexDirection: "column", gap: 28 * s }}>
