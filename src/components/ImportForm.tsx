@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
 import { PastePageDialog } from "./PastePageDialog";
 
 async function ensureSession() {
+  // Loaded on first use: keeps the Supabase client out of the landing page's initial JavaScript.
+  const { createClient } = await import("@/lib/supabase/client");
   const supabase = createClient();
   const { data } = await supabase.auth.getUser();
   if (data.user) return;

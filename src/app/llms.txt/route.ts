@@ -12,16 +12,16 @@ export function GET() {
 
 > ${SITE_DESCRIPTION}
 
-${SITE_NAME} is made by ${COMPANY.name} (${COMPANY.url}), a Canadian company.
+${SITE_NAME} is made by [${COMPANY.name}](${COMPANY.url}), a Canadian company.
 
 ## What it does
-- Paste a listing link from a brokerage or agent website; ${SITE_NAME} imports the price, details, features and photos.
+- Paste a listing link from a brokerage or agent website on the [home page](${SITE_URL}/); ${SITE_NAME} imports the price, details, features and photos.
 - Choose a platform (Instagram, Facebook Pages or LinkedIn), a format (single image or carousel) and a post type (Just Listed, Open House, Price Reduced, Coming Soon, Sold or Featured Property).
 - Get branded images with the agent's name and brokerage, plus a caption written in the agent's voice, in English, Québec French or bilingual.
 - Edit, download, publish now or schedule. Nothing is posted without the agent's action.
 - REALTOR.ca blocks automated tools; agents can copy and paste the listing page instead.
 
-## Pricing (CAD, plus applicable tax)
+## [Pricing](${SITE_URL}/pricing) (CAD, plus applicable tax)
 - Free: ${FREE_LIMITS.registered} posts in total, one-time, no credit card.
 - ${s.name}: ${s.price}/month: ${s.posts} new posts and ${s.regens} regenerations a month.
 - ${p.name}: ${p.price}/month: ${p.posts} new posts and ${p.regens} regenerations a month.
@@ -31,11 +31,11 @@ ${SITE_NAME} is made by ${COMPANY.name} (${COMPANY.url}), a Canadian company.
 ${FAQ.map((f) => `### ${f.q}\n${f.a}`).join("\n\n")}
 
 ## Links
-- Home: ${SITE_URL}/
-- Pricing: ${SITE_URL}/pricing
-- Privacy policy: ${COMPANY.url}/privacy/
-- Terms of service: ${COMPANY.url}/terms/
-- Contact: ${COMPANY.email}
+- [Home](${SITE_URL}/): what SocialSpark does, how it works, examples and FAQ
+- [Pricing](${SITE_URL}/pricing): plans and what counts as a post
+- [Privacy policy](${COMPANY.url}/privacy/)
+- [Terms of service](${COMPANY.url}/terms/)
+- [Contact](mailto:${COMPANY.email})
 `;
   return new Response(body, { headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=3600" } });
 }

@@ -4,7 +4,6 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
 
 type Props = { name: string | null; email: string | null; avatarUrl: string | null };
 
@@ -36,6 +35,8 @@ export function AccountMenu({ name, email, avatarUrl }: Props) {
   }, [open]);
 
   async function signOut() {
+    // Loaded on click: keeps the Supabase client out of every page's initial JavaScript.
+    const { createClient } = await import("@/lib/supabase/client");
     await createClient().auth.signOut();
     setOpen(false);
     router.push("/");
