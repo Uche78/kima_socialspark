@@ -3,6 +3,9 @@ import { getUser } from "@/lib/supabase/server";
 import type { Listing, Post, Profile, SocialAccount } from "@/lib/types";
 import { PostEditor } from "./PostEditor";
 
+// Private or utility page: keep it out of search results.
+export const metadata = { title: "Post", robots: { index: false, follow: false } };
+
 export default async function PostPage({ params }: PageProps<"/posts/[id]">) {
   const { id } = await params;
   const { supabase, user } = await getUser();

@@ -15,6 +15,9 @@ const STATUS_STYLE: Record<Post["status"], string> = {
   failed: "bg-red-50 text-red-800",
 };
 
+// Private or utility page: keep it out of search results.
+export const metadata = { title: "Posts", robots: { index: false, follow: false } };
+
 export default async function PostsPage() {
   const { supabase, user } = await getUser();
   if (!user) redirect("/");

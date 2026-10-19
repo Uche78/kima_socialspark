@@ -8,7 +8,7 @@ export function PaywallDialog({ kind, message, onClose }: { kind: "signup" | "up
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
       <div className="card w-full max-w-md p-6" onClick={(e) => e.stopPropagation()}>
-        <h2 className="font-[family-name:var(--font-display)] text-2xl text-brand">{title}</h2>
+        <h2 className="font-[family-name:var(--font-heading)] tracking-[-0.02em] text-2xl text-brand">{title}</h2>
         <p className="mt-2 text-sm text-muted">{message}</p>
         <div className="mt-6 flex justify-end gap-2">
           <button className="btn-ghost" onClick={onClose}>Not now</button>

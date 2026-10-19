@@ -6,6 +6,9 @@ import type { Listing } from "@/lib/types";
 import { ListingEditor } from "../[id]/ListingEditor";
 
 // Manual entry: an unsaved draft that only becomes a listing when the user clicks Save listing.
+// Private or utility page: keep it out of search results.
+export const metadata = { title: "New listing", robots: { index: false, follow: false } };
+
 export default async function NewListingPage({ searchParams }: PageProps<"/listings/new">) {
   const { user } = await getUser();
   if (!user) redirect("/");

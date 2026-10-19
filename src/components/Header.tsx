@@ -5,6 +5,7 @@ import { AccountMenu } from "./AccountMenu";
 import { HeaderShell } from "./HeaderShell";
 import { MobileNav } from "./MobileNav";
 import { LoginLink } from "./LoginLink";
+import { TryFreeButton } from "./TryFreeButton";
 
 // Text and button styles when the header floats over the home page hero.
 const ON_PHOTO = "group-data-[overlay=true]:text-[#f3f1ec] group-data-[overlay=true]:hover:bg-white/10";
@@ -29,7 +30,6 @@ export async function Header() {
               <Link href="/posts" className={`btn-ghost ${ON_PHOTO}`}>Posts</Link>
             </>
           )}
-          <Link href="/pricing" className={`btn-ghost ${ON_PHOTO}`}>Pricing</Link>
         </nav>
         <div className="flex items-center justify-self-end text-sm">
           {/* Signed-in users reach Brand & voice from the avatar menu; guests have no avatar. */}
@@ -41,16 +41,16 @@ export async function Header() {
             >
               {user ? "Save your work" : "Sign in"}
             </LoginLink>
-          ) : (
-            <AccountMenu name={profile?.full_name ?? null} email={user.email ?? null} avatarUrl={mediaUrl(profile?.headshot_path)} />
-          )}
+          ) : null}
+          {/* Signed-out visitors: no menu, just a clear call to action. */}
+          {!user && <TryFreeButton className="btn ml-2 h-10 whitespace-nowrap rounded-full bg-[#141414] px-4 text-white hover:bg-black sm:px-5" />}
+          {!guest && <AccountMenu name={profile?.full_name ?? null} email={user.email ?? null} avatarUrl={mediaUrl(profile?.headshot_path)} />}
           <MobileNav
             items={
               user
                 ? [
                     { href: "/", label: "Listings" },
                     { href: "/posts", label: "Posts" },
-                    { href: "/pricing", label: "Pricing" },
                     ...(guest ? [{ href: "/settings", label: "Brand & voice" }] : []),
                   ]
                 : []

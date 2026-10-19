@@ -20,6 +20,7 @@
   --color-accent: var(--accent);
   --font-sans: var(--font-sans);
   --font-display: var(--font-display);
+  --font-heading: var(--font-heading);
 }
 
 body {
@@ -37,3 +38,18 @@ body {
 @utility label { @apply mb-1 block text-xs font-medium uppercase tracking-wide text-muted; }
 @utility chip { @apply rounded-full border border-border px-3 py-1.5 text-sm transition hover:bg-black/5; }
 @utility chip-active { @apply border-brand bg-brand text-white hover:bg-brand/90; }
+
+/* Home hero entrance: text fades up, then the example posts rise in one after another. */
+@keyframes hero-rise {
+  from { opacity: 0; transform: translateY(28px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes hero-fade {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+@utility hero-rise { animation: hero-rise 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+@utility hero-fade { animation: hero-fade 0.7s ease-out both; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-rise, .hero-fade { animation: none; }
+}

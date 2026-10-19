@@ -1,6 +1,5 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 
 /**
@@ -9,7 +8,9 @@ import type { ReactNode } from "react";
  * with `group-data-[overlay=true]:` variants.
  */
 export function HeaderShell({ children }: { children: ReactNode }) {
-  const overlay = usePathname() === "/";
+  // The home hero used to be a full-bleed photo under a transparent header; it's now a light
+  // panel, so the header is the regular white bar everywhere (overlay styles kept for reuse).
+  const overlay = false;
   return (
     <header
       data-overlay={overlay}

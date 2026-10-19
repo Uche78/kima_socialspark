@@ -4,6 +4,9 @@ import { usageFrom, type EntitlementRow } from "@/lib/plans";
 import type { Profile, SocialAccount } from "@/lib/types";
 import { SettingsForm } from "./SettingsForm";
 
+// Private or utility page: keep it out of search results.
+export const metadata = { title: "Settings", robots: { index: false, follow: false } };
+
 export default async function SettingsPage({ searchParams }: PageProps<"/settings">) {
   const { supabase, user } = await getUser();
   if (!user) redirect("/");

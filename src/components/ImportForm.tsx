@@ -63,18 +63,6 @@ export function ImportForm() {
     </button>
   );
 
-  async function createManual() {
-    setBusy(true);
-    try {
-      await ensureSession();
-      router.push(`/listings/new${url ? `?source_url=${encodeURIComponent(url.trim())}` : ""}`);
-      router.refresh(); // the header is in the layout; refresh it so it reflects the new guest session
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong.");
-      setBusy(false);
-    }
-  }
-
   const realtorCa = isRealtorCa(url);
 
   async function submit(e: React.FormEvent) {
@@ -106,7 +94,7 @@ export function ImportForm() {
     <div>
       <form onSubmit={submit} className="flex flex-col gap-3 sm:flex-row">
         <input
-          className="h-14 w-full rounded-full sm:flex-1 border border-white/25 bg-white/10 px-6 text-base text-[#f3f1ec] placeholder:text-[#f3f1ec]/50 outline-none backdrop-blur-sm transition focus:border-white/60 focus:bg-white/15 disabled:opacity-60"
+          className="h-14 w-full rounded-full border border-black/15 bg-white px-6 text-base text-[#141414] placeholder:text-[#141414]/45 outline-none transition focus:border-[#141414]/50 disabled:opacity-60 sm:flex-1"
           type="url"
           required
           aria-label="Listing link"
@@ -116,44 +104,33 @@ export function ImportForm() {
           disabled={busy}
         />
         <button
-          className="inline-flex h-14 items-center justify-center gap-2 rounded-full bg-[#f3f1ec] px-8 text-base font-medium text-[#141414] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex h-14 items-center justify-center gap-2 rounded-full bg-[#141414] px-8 text-base font-medium text-white transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-60"
           disabled={busy}
         >
           {busy ? "Retrieving listing…" : <>Get listing <span aria-hidden>→</span></>}
         </button>
       </form>
-      {busy && <p className="mt-3 text-sm text-[#f3f1ec]/70">Reading the page and collecting photos. This usually takes 15–40 seconds.</p>}
+      {busy && <p className="mt-3 text-sm text-[#141414]/65">Reading the page and collecting photos. This usually takes 15–40 seconds.</p>}
       {realtorCa && !busy && (
-        <div role="status" className="mt-3 rounded-2xl border border-amber-200/40 bg-black/50 p-3 text-sm text-[#f3f1ec] backdrop-blur-sm">
-          REALTOR.ca doesn&apos;t allow automatic retrieval yet. {pasteLink("Copy and paste the page instead")}, try the same listing on the
-          brokerage&apos;s or agent&apos;s website, or{" "}
-          <button type="button" className="font-semibold underline underline-offset-2" onClick={createManual}>
-            enter it manually
-          </button>
-          .
+        <div role="status" className="mt-3 rounded-2xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+          REALTOR.ca doesn&apos;t allow automatic retrieval yet. {pasteLink("Copy and paste the page instead")}, or try the same listing on
+          the brokerage&apos;s or agent&apos;s website.
         </div>
       )}
       {error && (
-        <div className="mt-3 rounded-2xl border border-red-300/40 bg-red-950/60 p-3 text-sm text-red-100 backdrop-blur-sm">
+        <div className="mt-3 rounded-2xl border border-red-200 bg-red-50 p-3 text-sm text-red-800">
           {error}
           {offerManual && (
             <>
               {" "}
-              {pasteLink("Copy and paste the page instead")}, or{" "}
-              <button type="button" className="font-semibold underline" onClick={createManual} disabled={busy}>
-                enter details manually
-              </button>
-              .
+              {pasteLink("Copy and paste the page instead")}.
             </>
           )}
         </div>
       )}
       <div className="mt-2 flex flex-wrap gap-x-6">
-        <button type="button" className="hidden py-2.5 text-sm sm:inline-block text-[#f3f1ec]/70 underline underline-offset-4 hover:text-[#f3f1ec]" onClick={() => setPasteOpen(true)} disabled={busy}>
+        <button type="button" className="hidden py-2.5 text-sm text-[#141414]/65 underline underline-offset-4 hover:text-[#141414] sm:inline-block" onClick={() => setPasteOpen(true)} disabled={busy}>
           Site blocked? Copy and paste the page
-        </button>
-        <button type="button" className="py-2.5 text-sm text-[#f3f1ec]/70 underline underline-offset-4 hover:text-[#f3f1ec]" onClick={createManual} disabled={busy}>
-          No link? Enter a listing manually
         </button>
       </div>
       {pasteOpen && (

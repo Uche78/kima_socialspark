@@ -3,7 +3,11 @@ import { getUser } from "@/lib/supabase/server";
 import { PlanButton } from "@/components/PlanButton";
 import { FREE_LIMITS, PAID_PLANS, usageFrom, type EntitlementRow, type PaidPlanId } from "@/lib/plans";
 
-export const metadata = { title: "Pricing — SocialSpark" };
+export const metadata = {
+  title: "Pricing",
+  description: `Try ${FREE_LIMITS.registered} SocialSpark posts free, no credit card. Starter is ${PAID_PLANS.starter.price}/month and Professional ${PAID_PLANS.professional.price}/month (CAD, plus tax). Both include every feature.`,
+  alternates: { canonical: "/pricing" },
+};
 
 const FEATURES = [
   "Full-quality property photos and optional personal branding",
@@ -30,7 +34,7 @@ export default async function PricingPage({ searchParams }: PageProps<"/pricing"
           {highlight && <span className="rounded-full bg-brand px-2.5 py-0.5 text-xs font-semibold text-white">Most popular</span>}
         </div>
         <div className="mt-3">
-          <span className="font-[family-name:var(--font-display)] text-4xl text-brand">{p.price}</span>
+          <span className="font-[family-name:var(--font-heading)] tracking-[-0.02em] text-4xl text-brand">{p.price}</span>
           <span className="text-muted"> CAD/month</span>
           <div className="text-xs text-muted">plus applicable tax</div>
         </div>
@@ -55,7 +59,7 @@ export default async function PricingPage({ searchParams }: PageProps<"/pricing"
   return (
     <div className="mx-auto max-w-5xl space-y-8 px-4">
       <div className="text-center">
-        <h1 className="font-[family-name:var(--font-display)] text-3xl text-brand sm:text-4xl">Simple pricing for busy agents</h1>
+        <h1 className="font-[family-name:var(--font-heading)] tracking-[-0.02em] text-3xl text-brand sm:text-4xl">Simple pricing for busy agents</h1>
         <p className="mt-2 text-muted">Both plans include every feature. Choose the allowance that fits how often you post.</p>
         {billing === "cancelled" && <p className="mt-3 text-sm text-muted">Checkout was cancelled. You haven&apos;t been charged.</p>}
       </div>
@@ -64,7 +68,7 @@ export default async function PricingPage({ searchParams }: PageProps<"/pricing"
         <div className="card flex flex-col p-6">
           <h2 className="text-xl font-semibold">Free</h2>
           <div className="mt-3">
-            <span className="font-[family-name:var(--font-display)] text-4xl text-brand">$0</span>
+            <span className="font-[family-name:var(--font-heading)] tracking-[-0.02em] text-4xl text-brand">$0</span>
           </div>
           <ul className="mt-5 space-y-2 text-sm">
             <li><strong>Guest:</strong> preview {FREE_LIMITS.guest} post, no account needed</li>

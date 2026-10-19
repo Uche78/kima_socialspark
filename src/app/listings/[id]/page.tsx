@@ -4,6 +4,9 @@ import { usageFrom, type EntitlementRow } from "@/lib/plans";
 import type { Listing, Post, Profile } from "@/lib/types";
 import { ListingWorkspace } from "./ListingWorkspace";
 
+// Private or utility page: keep it out of search results.
+export const metadata = { title: "Listing", robots: { index: false, follow: false } };
+
 export default async function ListingPage({ params }: PageProps<"/listings/[id]">) {
   const { id } = await params;
   const { supabase, user } = await getUser();

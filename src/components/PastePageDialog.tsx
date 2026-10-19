@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 type Captured = { content: string; isHtml: boolean; chars: number; images: number };
 
@@ -53,7 +54,9 @@ export function PastePageDialog({
     <kbd className="rounded border border-border bg-black/5 px-1.5 py-0.5 font-mono text-xs">{mac ? `⌘${k}` : `Ctrl+${k}`}</kbd>
   );
 
-  return (
+  // Rendered into <body>: an ancestor with a transform (e.g. the home hero's entrance
+  // animation) would otherwise trap this fixed overlay inside it.
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 p-0 sm:items-center sm:p-4" onClick={() => !busy && onClose()}>
       <div
         role="dialog"
@@ -63,7 +66,7 @@ export function PastePageDialog({
       >
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h2 className="font-[family-name:var(--font-display)] text-2xl text-brand">Paste the listing page</h2>
+            <h2 className="font-[family-name:var(--font-heading)] tracking-[-0.02em] text-2xl text-brand">Paste the listing page</h2>
             <p className="mt-1 text-sm text-muted">For sites that block automatic retrieval, like REALTOR.ca. Copy the page in your browser and paste it here.</p>
           </div>
           <button className="btn-ghost -mr-2 -mt-1" onClick={onClose} disabled={busy} aria-label="Close">✕</button>
@@ -123,6 +126,7 @@ export function PastePageDialog({
         </div>
         {busy && <p className="mt-3 text-sm text-muted">Reading the page and collecting photos. This usually takes 15–40 seconds.</p>}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

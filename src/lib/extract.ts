@@ -164,7 +164,7 @@ export async function fetchListingPage(rawUrl: string): Promise<PageData> {
 
   if (isBlockedPage(res.status, html)) {
     throw new ExtractionBlockedError(
-      `${url.hostname} blocked automated access to this page. You can enter the details and upload photos manually.`,
+      `${url.hostname} blocked automated access to this page. Copy and paste the page instead.`,
     );
   }
   if (!res.ok) throw new Error(`The page returned an error (HTTP ${res.status}).`);
