@@ -13,7 +13,7 @@ export function Chips<T extends string>({
 }) {
   return (
     <div>
-      <span className="label">{label}</span>
+      {label && <span className="label">{label}</span>}
       <div className="flex flex-wrap gap-1.5">
         {(Object.entries(options) as [T, string][]).map(([k, v]) => (
           <button key={k} type="button" className={k === value ? "chip chip-active" : "chip"} onClick={() => onChange(k)}>

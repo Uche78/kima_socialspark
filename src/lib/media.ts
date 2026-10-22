@@ -35,6 +35,7 @@ const POST_TYPE_LABELS: Record<string, { en: string; fr: string }> = {
   coming_soon: { en: "Coming Soon", fr: "Bientôt disponible" },
   sold: { en: "Sold", fr: "Vendu" },
   featured: { en: "Featured Property", fr: "Propriété en vedette" },
+  feature_sheet: { en: "Mortgage Feature Sheet", fr: "Fiche hypothécaire" },
 };
 
 export function postTypeLabel(type: string, lang: Lang) {

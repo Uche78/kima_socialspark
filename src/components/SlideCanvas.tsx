@@ -1,8 +1,13 @@
 /* eslint-disable @next/next/no-img-element -- html-to-image needs plain <img> with CORS */
 import { forwardRef, type CSSProperties, type ReactNode } from "react";
+import dynamic from "next/dynamic";
 import { estimateMortgage, formatCurrency } from "@/lib/mortgage";
 import { mediaUrl, postTypeLabel, t } from "@/lib/media";
 import { slideHasText, type Design, type Language, type Listing, type MortgageInputs, type PostType, type Profile, type Slide } from "@/lib/types";
+
+// Loaded only when a feature sheet slide is shown, so other pages don't carry its code (QR encoder etc.).
+const FeatureSheetSlide = dynamic(() => import("./FeatureSheet").then((m) => m.FeatureSheetSlide));
+const SHEET_KINDS = new Set(["sheet", "scenarios", "broker"]);
 
 export type SlideCanvasProps = {
   slide: Slide;
@@ -140,6 +145,14 @@ export const SlideCanvas = forwardRef<HTMLDivElement, SlideCanvasProps>(function
     ) : null;
 
   let body: ReactNode;
+
+  if (SHEET_KINDS.has(slide.kind)) {
+    return (
+      <div ref={ref} style={root}>
+        <FeatureSheetSlide slide={slide} listing={listing} profile={profile} design={design} language={language} width={width} height={height} />
+      </div>
+    );
+  }
 
   if (!slideHasText(design.text_mode ?? "all", slide, index)) {
     // Clean listing photo: no overlays, badge, counter or branding.

@@ -7,7 +7,13 @@ import { estimateMortgage, formatCurrency } from "@/lib/mortgage";
 import Link from "next/link";
 import { remaining as left, type Usage } from "@/lib/plans";
 import { MAX_FOCUS } from "@/lib/focus";
+import type { PartnerRealtor } from "@/lib/broker";
+import type { FeatureSheet, SheetConfig } from "@/lib/feature-sheet";
+import { FeatureSheetForm } from "./FeatureSheetForm";
 import { ASPECT_LABELS, PLATFORM_SPECS, POST_TYPES, textModeOptions, type Aspect, type TextMode, type Design, type Language, type Listing, type MortgageInputs, type Platform, type PostFormat, type PostType, type Profile } from "@/lib/types";
+
+/** Post types for listing posts (feature sheets have their own form). */
+const { feature_sheet: _sheet, ...LISTING_POST_TYPES } = POST_TYPES; // eslint-disable-line @typescript-eslint/no-unused-vars
 
 export type PostSettings = {
   platform: Platform;
@@ -25,6 +31,10 @@ export type PostSettings = {
   /** Mention the listing's virtual tour (link on Facebook/LinkedIn, "DM TOUR" on Instagram). */
   include_tour: boolean;
   mortgage: MortgageInputs | null;
+  /** Feature sheets: the saved partner realtor to co-brand with. */
+  realtor_id?: string | null;
+  /** Feature sheets: settings to reuse (regenerating keeps the sheet's numbers). */
+  sheet?: SheetConfig;
 };
 
 type Props = {
@@ -34,10 +44,15 @@ type Props = {
   generating: boolean;
   error: string | null;
   onGenerate: (settings: PostSettings) => void;
+  /** Mortgage brokers' saved partner realtors (for feature sheets). */
+  realtors?: PartnerRealtor[];
+  /** Mortgage brokers' feature sheets for this listing. */
+  sheets?: FeatureSheet[];
 };
 
-export function CreatePostCard({ listing, profile, usage, generating, error, onGenerate }: Props) {
+export function CreatePostCard({ listing, profile, usage, generating, error, onGenerate, sheets = [] }: Props) {
   const isBroker = profile.role === "mortgage_broker";
+  const [kind, setKind] = useState<"sheet" | "post">(isBroker ? "sheet" : "post");
   const [platform, setPlatform] = useState<Platform>("instagram");
   const [format, setFormat] = useState<PostFormat>("carousel");
   const [postType, setPostType] = useState<PostType>(listing.open_house ? "open_house" : "just_listed");
@@ -95,7 +110,17 @@ export function CreatePostCard({ listing, profile, usage, generating, error, onG
 
   return (
     <section className="card p-5">
-      <h2 className="mb-4 text-lg font-semibold">Create a post</h2>
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-lg font-semibold">{kind === "sheet" ? "Feature sheets" : "Create a post"}</h2>
+        {isBroker && <Chips label="" value={kind} onChange={setKind} options={{ sheet: "Feature sheet", post: "Listing post" }} />}
+      </div>
+      {kind === "sheet" ? (
+        <>
+          <FeatureSheetForm listing={listing} profile={profile} sheets={sheets} />
+          {error && <p className="mt-2 text-sm text-red-700">{error}</p>}
+        </>
+      ) : (
+      <>
       {/* Options across the top */}
       <div className="flex flex-wrap gap-x-8 gap-y-4">
         <Chips label="Platform" value={platform} onChange={choosePlatform} options={{ instagram: "Instagram", facebook: "Facebook", linkedin: "LinkedIn" }} />
@@ -111,7 +136,7 @@ export function CreatePostCard({ listing, profile, usage, generating, error, onG
         />
         <Chips label="Design" value={template} onChange={setTemplate} options={{ classic: "Classic", modern: "Modern", minimal: "Minimal" }} />
         <Chips label="Language" value={language} onChange={setLanguage} options={{ en: "English", fr: "Français (QC)", bilingual: "Bilingual" }} />
-        <Chips label="Post type" value={postType} onChange={setPostType} options={POST_TYPES} />
+        <Chips label="Post type" value={postType} onChange={setPostType} options={LISTING_POST_TYPES as Record<PostType, string>} />
       </div>
 
       {(format === "carousel" || hasTour) && (
@@ -210,6 +235,8 @@ export function CreatePostCard({ listing, profile, usage, generating, error, onG
         </span>
         {error && <span className="w-full text-sm text-red-700">{error}</span>}
       </div>
+      </>
+      )}
     </section>
   );
 }

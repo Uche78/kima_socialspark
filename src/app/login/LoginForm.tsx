@@ -11,7 +11,7 @@ const RESEND_SECONDS = 60;
  * stay in the browser they started in (links can open elsewhere or be pre-clicked by scanners).
  * Guests use the same flow to turn their session into an account, keeping their work.
  */
-export function LoginForm({ isGuest, next }: { isGuest: boolean; next: string }) {
+export function LoginForm({ isGuest, next, role }: { isGuest: boolean; next: string; role?: "mortgage_broker" }) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
@@ -31,7 +31,7 @@ export function LoginForm({ isGuest, next }: { isGuest: boolean; next: string })
     setBusy(true);
     const supabase = createClient();
     // The link in the email (if the template still has one) also works, via /auth/callback.
-    const redirect = `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`;
+    const redirect = `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}${role ? `&role=${role}` : ""}`;
     const { error } = isGuest
       ? await supabase.auth.updateUser({ email }, { emailRedirectTo: redirect })
       : await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: redirect } });
@@ -52,7 +52,8 @@ export function LoginForm({ isGuest, next }: { isGuest: boolean; next: string })
       setBusy(false);
       return setError(/expired|invalid/i.test(error.message) ? "That code is incorrect or has expired. Check the latest email, or send a new code." : error.message);
     }
-    router.replace(next);
+    // New accounts choose Realtor or Mortgage broker first; /welcome passes everyone else straight on.
+    router.replace(`/welcome?next=${encodeURIComponent(next)}${role ? `&role=${role}` : ""}`);
     router.refresh();
   }
 

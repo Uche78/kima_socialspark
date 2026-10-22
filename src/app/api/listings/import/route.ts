@@ -76,6 +76,8 @@ export async function POST(request: Request) {
       listing_brokerage: l.listing_brokerage,
       open_house: l.open_house,
       virtual_tour_url: tourUrl,
+      monthly_fee: l.monthly_fee > 0 ? Math.round(l.monthly_fee * 100) / 100 : null,
+      property_tax_yearly: l.property_tax_yearly > 0 ? Math.round(l.property_tax_yearly) : null,
       extraction_notes: l.notes,
     })
     .select("id")
@@ -90,5 +92,7 @@ export async function POST(request: Request) {
     .update({ photos, extraction_status: partial ? "partial" : "complete" })
     .eq("id", row.id);
 
-  return NextResponse.json({ id: row.id });
+  // Mortgage brokers go straight to the Sheet Builder.
+  const { data: me } = await supabase.from("profiles").select("role").eq("id", user.id).maybeSingle<{ role: string }>();
+  return NextResponse.json({ id: row.id, broker: me?.role === "mortgage_broker" });
 }

@@ -1,10 +1,15 @@
+import { redirect } from "next/navigation";
 import { getUser } from "@/lib/supabase/server";
+import { AudienceSwitch } from "@/components/landing/AudienceSwitch";
 import { ImportForm } from "@/components/ImportForm";
+import { GettingStarted, type SetupState } from "@/components/GettingStarted";
 import { ListingCard } from "@/components/ListingCard";
 import { HeroShowcase } from "@/components/hero/HeroShowcase";
 import { LandingSections } from "@/components/landing/LandingSections";
 import { HomeStructuredData } from "@/components/StructuredData";
-import type { Listing, Post } from "@/lib/types";
+import { readMortgageSettings } from "@/lib/broker";
+import { remaining, usageFrom, type EntitlementRow } from "@/lib/plans";
+import type { Listing, Post, Profile } from "@/lib/types";
 
 export default async function Home() {
   const { supabase, user } = await getUser();
@@ -18,17 +23,22 @@ export default async function Home() {
   const listings = (data ?? []) as (Listing & { posts: Pick<Post, "status" | "platform">[] })[];
   const totalListings = count ?? listings.length;
 
-  // People who already have listings came to work: give them a slim welcome bar instead of
-  // the marketing hero (whose example posts could be mistaken for their own).
-  const returning = listings.length > 0;
   const { data: profile } =
-    returning && user && !user.is_anonymous
+    user && !user.is_anonymous
       ? await supabase
           .from("profiles")
-          .select("full_name")
+          .select("full_name, role, role_chosen, license_number, logo_path, headshot_path, mortgage_settings")
           .eq("id", user.id)
-          .maybeSingle<{ full_name: string | null }>()
+          .maybeSingle<Pick<Profile, "full_name" | "role" | "role_chosen" | "license_number" | "logo_path" | "headshot_path" | "mortgage_settings">>()
       : { data: null };
+  // New accounts choose Realtor or Mortgage broker before anything else.
+  if (profile && !profile.role_chosen) redirect("/welcome");
+  const broker = profile?.role === "mortgage_broker";
+
+  // People who already have listings, or an account, came to work: give them a slim welcome bar
+  // instead of the marketing hero (whose example posts could be mistaken for their own).
+  const returning = listings.length > 0 || !!profile;
+  const setup = profile && listings.length === 0 ? await setupState(supabase, user!.id, profile, broker) : null;
   const firstName = profile?.full_name?.trim().split(/\s+/)[0];
 
   return (
@@ -39,20 +49,27 @@ export default async function Home() {
             <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
               <div className="lg:max-w-md">
                 <h1 className="font-[family-name:var(--font-heading)] tracking-[-0.02em] text-3xl font-medium text-[#141414] sm:text-4xl">
-                  {firstName ? `Welcome back, ${firstName}` : "Welcome back"}
+                  {listings.length === 0 ? (firstName ? `Welcome, ${firstName}` : "Welcome") : firstName ? `Welcome back, ${firstName}` : "Welcome back"}
                 </h1>
                 <p className="mt-2 text-[#141414]/70">
-                  Paste a listing link to create your next posts.
+                  {broker ? "Paste a listing link to build a feature sheet." : "Paste a listing link to create your next posts."}
                 </p>
               </div>
               <div className="w-full lg:max-w-2xl">
                 <ImportForm />
+                {setup && (
+                  <p className="mt-1 text-sm text-[#141414]/65">
+                    <strong className="font-semibold text-[#141414]/80">Tip:</strong> use the listing page on a brokerage or agent website. REALTOR.ca blocks automatic retrieval, so
+                    use the brokerage&apos;s copy of the listing, or &ldquo;Copy and paste the page&rdquo;.
+                  </p>
+                )}
               </div>
             </div>
           </div>
         </section>
       ) : (
         <section className="mx-auto w-full min-w-0 max-w-[1600px] px-4 lg:w-[90%] lg:px-0">
+          <AudienceSwitch current="realtor" className="mb-4" />
           <HeroShowcase>
             <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#141414]/70 sm:text-xs sm:tracking-[0.25em]">
               For Canadian realtors
@@ -79,6 +96,7 @@ export default async function Home() {
         </section>
       )}
 
+      {setup && <GettingStarted {...setup} />}
       {!returning && <LandingSections />}
       {!returning && <HomeStructuredData />}
 
@@ -102,4 +120,29 @@ export default async function Home() {
       )}
     </div>
   );
+}
+
+/** What a new account has set up so far, for the Get started checklist. */
+async function setupState(
+  supabase: Awaited<ReturnType<typeof getUser>>["supabase"],
+  userId: string,
+  profile: Pick<Profile, "license_number" | "logo_path" | "headshot_path" | "mortgage_settings">,
+  broker: boolean,
+): Promise<SetupState> {
+  const [{ count: partners }, { count: social }, { data: entitlement }] = await Promise.all([
+    supabase.from("partner_realtors").select("id", { count: "exact", head: true }),
+    supabase.from("social_accounts").select("id", { count: "exact", head: true }),
+    supabase.from("entitlements").select("*").eq("user_id", userId).maybeSingle<EntitlementRow>(),
+  ]);
+  const { rates } = readMortgageSettings(profile.mortgage_settings);
+  return {
+    broker,
+    hasLicence: !!profile.license_number?.trim(),
+    hasRates: [rates.insured.fixed, rates.insured.variable, rates.conventional.fixed, rates.conventional.variable].some((r) => r !== null),
+    hasLogo: !!profile.logo_path,
+    hasHeadshot: !!profile.headshot_path,
+    hasPartner: (partners ?? 0) > 0,
+    hasSocial: (social ?? 0) > 0,
+    postsLeft: remaining(usageFrom(entitlement, false), "post"),
+  };
 }

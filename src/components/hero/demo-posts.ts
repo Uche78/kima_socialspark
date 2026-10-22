@@ -33,6 +33,9 @@ export const demoProfile: Profile = {
   include_logo: false,
   include_headshot: false,
   include_contact: true,
+  province: "ON",
+  mortgage_settings: {},
+  role_chosen: true,
 };
 
 const photo = (name: string) => ({ path: `hero/${name}.webp`, url: `/hero/${name}.webp`, width: 1600, height: 1067 });
@@ -63,6 +66,9 @@ function listing(id: string, fields: Partial<Listing>, photos: string[]): Listin
     listing_brokerage: DEMO_AGENT.brokerage,
     open_house: null,
     virtual_tour_url: null,
+    monthly_fee: null,
+    property_tax_yearly: null,
+    monthly_rent: null,
     photos: photos.map(photo),
     created_at: "",
     ...fields,
@@ -254,3 +260,48 @@ export const SAME_LISTING_POSTS: DemoPost[] = [
     comments: 9,
   },
 ];
+
+/** Made-up broker and sheet for the /mortgage-brokers page. */
+export const DEMO_BROKER: Profile = {
+  ...demoProfile,
+  role: "mortgage_broker",
+  full_name: "Priya Shah",
+  title: "Mortgage Agent Level 2",
+  brokerage_name: "Northline Mortgages",
+  license_number: "M23001234",
+  phone: "416-555-0142",
+  email: "priya@northlinemortgages.ca",
+  website: "northlinemortgages.ca",
+};
+
+export const DEMO_SHEET_LISTING: Listing = {
+  ...DEMO_POSTS.find((p) => p.id === "ig-harbour")!.listing,
+  price: 899_000,
+  monthly_fee: 612,
+  property_tax_yearly: 3_880,
+  mls_number: "C1234567",
+};
+
+export const DEMO_SHEET_DESIGN: Design = {
+  ...demoDesign(DEMO_POSTS[0]),
+  sheet: {
+    rates: { insured: { fixed: 4.29, variable: 4.05 }, conventional: { fixed: 4.59, variable: 4.35 } },
+    ratesAsOf: "2026-10-20",
+    showRate: true,
+    showMinimumIncome: false,
+    frequency: "monthly",
+    firstTimeOrNewBuild: false,
+    feeLabel: "condo",
+    rentDisplay: "offset",
+    scenarios: [
+      { down: "5", amortizationYears: 25, rateType: "fixed" },
+      { down: "10", amortizationYears: 25, rateType: "fixed" },
+      { down: "20", amortizationYears: 25, rateType: "fixed" },
+    ],
+    disclaimer: "",
+    footer: { color: "white", shape: "straight", stripe: true, line: "" },
+    shading: "natural",
+    showQr: true,
+    realtor: { full_name: "Alex Morgan", title: "REALTOR®", brokerage_name: "Lakeview Realty", phone: "416-555-0199", email: "alex@lakeview.ca", website: "lakeviewrealty.ca", headshot_path: null },
+  },
+};

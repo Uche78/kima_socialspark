@@ -5,7 +5,7 @@ import { SITE_URL } from "@/lib/site";
 // including to AI assistants' crawlers so they can answer questions about SocialSpark.
 // /login is linked from every page, so it's crawlable but kept out of results with a noindex tag
 // (a robots.txt block would hide that tag and be reported as an error by Bing).
-const PRIVATE = ["/api/", "/auth/", "/settings", "/listings", "/posts"];
+const PRIVATE = ["/api/", "/auth/", "/settings", "/listings", "/posts", "/sheets", "/shared/"];
 
 export default function robots(): MetadataRoute.Robots {
   return {

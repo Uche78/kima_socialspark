@@ -2,16 +2,24 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import type { Role } from "@/lib/types";
 import { PastePageDialog } from "./PastePageDialog";
 
-async function ensureSession() {
+/**
+ * Signs visitors in as a guest. `role` is the landing page they came from: guests from the
+ * mortgage broker page are set up as brokers (accounts confirm it on the welcome step).
+ */
+async function ensureSession(role?: Role) {
   // Loaded on first use: keeps the Supabase client out of the landing page's initial JavaScript.
   const { createClient } = await import("@/lib/supabase/client");
   const supabase = createClient();
-  const { data } = await supabase.auth.getUser();
-  if (data.user) return;
-  const { error } = await supabase.auth.signInAnonymously();
-  if (error) throw new Error("Couldn't start a guest session. " + error.message);
+  let { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    const { data, error } = await supabase.auth.signInAnonymously();
+    if (error || !data.user) throw new Error("Couldn't start a guest session. " + (error?.message ?? ""));
+    user = data.user;
+  }
+  if (role && user.is_anonymous) await supabase.from("profiles").update({ role }).eq("id", user.id);
 }
 
 /** REALTOR.ca blocks automated retrieval (until CREA DDF® access is in place). */
@@ -24,7 +32,7 @@ function isRealtorCa(raw: string) {
   }
 }
 
-export function ImportForm() {
+export function ImportForm({ role }: { role?: Role } = {}) {
   const router = useRouter();
   const [url, setUrl] = useState("");
   const [busy, setBusy] = useState(false);
@@ -34,12 +42,26 @@ export function ImportForm() {
   const [pasteBusy, setPasteBusy] = useState(false);
   const [pasteError, setPasteError] = useState<string | null>(null);
 
+  /** Opens what was just imported: mortgage brokers go straight to a new sheet in the Sheet Builder. */
+  async function openImported(json: { id: string; broker?: boolean }) {
+    if (json.broker) {
+      const sheet = await fetch("/api/sheets", { method: "POST", body: JSON.stringify({ listing_id: json.id }) }).then((r) => r.json()).catch(() => null);
+      if (sheet?.id) {
+        router.push(`/sheets/${sheet.id}`);
+        router.refresh();
+        return;
+      }
+    }
+    router.push(`/listings/${json.id}`);
+    router.refresh();
+  }
+
   /** Imports a page the user copied in their own browser. */
   async function importPasted(content: string) {
     setPasteError(null);
     setPasteBusy(true);
     try {
-      await ensureSession();
+      await ensureSession(role);
       const res = await fetch("/api/listings/import", {
         method: "POST",
         body: JSON.stringify({ html: content, url: url.trim() || undefined }),
@@ -50,8 +72,7 @@ export function ImportForm() {
         setPasteBusy(false);
         return;
       }
-      router.push(`/listings/${json.id}`);
-      router.refresh();
+      await openImported(json);
     } catch (e) {
       setPasteError(e instanceof Error ? e.message : "Something went wrong.");
       setPasteBusy(false);
@@ -73,7 +94,7 @@ export function ImportForm() {
     if (realtorCa) return; // explained inline below the field; nothing to retrieve
     setBusy(true);
     try {
-      await ensureSession();
+      await ensureSession(role);
       const res = await fetch("/api/listings/import", { method: "POST", body: JSON.stringify({ url: url.trim() }) });
       const json = await res.json();
       if (!res.ok) {
@@ -82,8 +103,7 @@ export function ImportForm() {
         setBusy(false);
         return;
       }
-      router.push(`/listings/${json.id}`);
-      router.refresh();
+      await openImported(json);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Something went wrong.");
       setBusy(false);

@@ -19,6 +19,7 @@ export default async function SettingsPage({ searchParams }: PageProps<"/setting
   ]);
   if (!profile) redirect("/");
 
+
   // Token expiry lives in the service-only tokens table; read it for this user's own accounts.
   const ids = (accounts ?? []).map((a) => a.id);
   const { data: tokens } = ids.length
@@ -33,6 +34,7 @@ export default async function SettingsPage({ searchParams }: PageProps<"/setting
       isGuest={!!user.is_anonymous}
       usage={usageFrom(entitlement, !!user.is_anonymous)}
       billingSuccess={sp.billing === "success"}
+      suggestBroker={sp.broker === "1" && profile.role !== "mortgage_broker"}
       connected={typeof sp.connected === "string" ? sp.connected : null}
       connectError={typeof sp.connect_error === "string" ? sp.connect_error : null}
     />

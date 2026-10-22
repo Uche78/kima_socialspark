@@ -10,14 +10,17 @@ import { confirmAndDeleteListing } from "@/lib/delete-listing";
 import { remaining, withUsed, type AllowanceKind, type Usage } from "@/lib/plans";
 import { aspectOf, textModeOf, PLATFORM_SPECS, type Listing, type Post, type Profile } from "@/lib/types";
 import { CreatePostCard, type PostSettings } from "./CreatePostCard";
+import { ShareWithBroker } from "./ShareWithBroker";
+import type { PartnerRealtor } from "@/lib/broker";
+import type { FeatureSheet } from "@/lib/feature-sheet";
 import { LatestResult, LatestResultSkeleton } from "./LatestResult";
 import { ListingEditor } from "./ListingEditor";
 import { ListingSummary } from "./ListingSummary";
 import { PostGrid } from "./PostGrid";
 
-type Props = { listing: Listing; profile: Profile; posts: Post[]; usage: Usage };
+type Props = { listing: Listing; profile: Profile; posts: Post[]; usage: Usage; realtors?: PartnerRealtor[]; sheets?: FeatureSheet[] };
 
-export function ListingWorkspace({ listing: initialListing, profile, posts: initialPosts, usage: initialUsage }: Props) {
+export function ListingWorkspace({ listing: initialListing, profile, posts: initialPosts, usage: initialUsage, realtors = [], sheets = [] }: Props) {
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
   const [listing, setListing] = useState(initialListing);
@@ -108,9 +111,12 @@ export function ListingWorkspace({ listing: initialListing, profile, posts: init
             <a href={listing.source_url} target="_blank" rel="noreferrer" className="text-sm text-muted underline">{listing.source_site}</a>
           )}
         </div>
-        <button className="btn-ghost text-red-700" onClick={removeListing} disabled={deleting}>
-          {deleting ? "Deleting…" : "Delete listing"}
-        </button>
+        <div className="flex flex-wrap items-center gap-1">
+          {profile.role === "realtor" && !usage.isGuest && <ShareWithBroker listingId={listing.id} brokers={realtors} />}
+          <button className="btn-ghost text-red-700" onClick={removeListing} disabled={deleting}>
+            {deleting ? "Deleting…" : "Delete listing"}
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(300px,3fr)_7fr]">
@@ -126,6 +132,8 @@ export function ListingWorkspace({ listing: initialListing, profile, posts: init
             generating={!!generating}
             error={error}
             onGenerate={generate}
+            realtors={profile.role === "mortgage_broker" ? realtors : []}
+            sheets={sheets}
           />
           {generating ? (
             <LatestResultSkeleton label={`${PLATFORM_SPECS[generating.platform].label} ${generating.format === "carousel" ? "carousel" : "post"}`} />
@@ -152,6 +160,7 @@ export function ListingWorkspace({ listing: initialListing, profile, posts: init
         <ListingEditor
           listing={listing}
           isDraft={false}
+          isBroker={profile.role === "mortgage_broker"}
           onDirtyChange={setEditorDirty}
           onSaved={(l) => {
             setListing(l);
@@ -180,5 +189,6 @@ function settingsFrom(post: Post, listing: Listing): PostSettings {
     include_contact_slide: post.slides.some((s) => s.kind === "contact"),
     include_tour: !!listing.virtual_tour_url,
     mortgage: post.mortgage,
+    sheet: post.design.sheet,
   };
 }

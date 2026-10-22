@@ -117,7 +117,7 @@ The design already renders the post-type badge, price, address, beds/baths/size,
   - With "cover" or "none", choose as many strong photos as the platform allows, in showing order.
 - Choose photo_index values by looking at the photos. Use each photo at most once, and pick the most striking, well-lit shots. Photos marked "low resolution" will look soft when enlarged: never use them for the cover, and avoid them elsewhere when a sharper photo shows the same thing. The details, mortgage and contact slides may reuse a photo as a subtle background or use null.`;
 
-function describeListing(l: Listing): string {
+export function describeListing(l: Listing): string {
   const lines = [
     ["Address", [l.address, l.city, l.province, l.postal_code].filter(Boolean).join(", ")],
     ["Price", l.price != null ? `${formatCurrency(l.price)}${l.transaction_type === "rent" ? " / month" : ""}` : null],
@@ -131,6 +131,8 @@ function describeListing(l: Listing): string {
     ["MLS®", l.mls_number],
     ["Listing brokerage", l.listing_brokerage],
     ["Open house", l.open_house],
+    ["Monthly condo / maintenance fee", l.monthly_fee ? formatCurrency(l.monthly_fee) : null],
+    ["Property tax (yearly)", l.property_tax_yearly ? formatCurrency(l.property_tax_yearly) : null],
     ["Features", l.features.join("; ")],
     ["Description", l.description],
   ];
@@ -140,7 +142,7 @@ function describeListing(l: Listing): string {
     .join("\n");
 }
 
-function describeProfile(p: Profile): string {
+export function describeProfile(p: Profile): string {
   const tone = TONE_PRESETS[p.tone_preset as keyof typeof TONE_PRESETS] ?? p.tone_preset;
   const samples = p.writing_samples.filter((s) => s.trim());
   return [

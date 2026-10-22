@@ -5,9 +5,9 @@ import { LoginForm } from "./LoginForm";
 // Private or utility page: keep it out of search results.
 export const metadata = { title: "Sign in", robots: { index: false, follow: false } };
 
-export default async function LoginPage({ searchParams }: { searchParams: Promise<{ next?: string; error?: string }> }) {
+export default async function LoginPage({ searchParams }: { searchParams: Promise<{ next?: string; error?: string; role?: string }> }) {
   const { user } = await getUser();
-  const { next, error } = await searchParams;
+  const { next, error, role } = await searchParams;
   // Already signed in with a real account: nothing to do here.
   if (user && !user.is_anonymous) redirect(next?.startsWith("/") && !next.startsWith("//") ? next : "/");
   return (
@@ -22,7 +22,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
             : "We'll email you a one-time code. No password needed."}
         </p>
         {error && <p className="mt-3 text-sm text-red-700">That link has expired. Enter your email to get a sign-in code instead.</p>}
-        <LoginForm isGuest={!!user?.is_anonymous} next={next?.startsWith("/") ? next : "/"} />
+        <LoginForm isGuest={!!user?.is_anonymous} next={next?.startsWith("/") ? next : "/"} role={role === "mortgage_broker" ? role : undefined} />
       </div>
     </div>
   );

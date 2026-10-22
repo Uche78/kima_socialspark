@@ -1,3 +1,4 @@
+import type { SheetConfig } from "./feature-sheet";
 export type Platform = "instagram" | "facebook" | "linkedin";
 export type PostFormat = "single" | "carousel";
 export type Language = "en" | "fr" | "bilingual";
@@ -11,6 +12,7 @@ export const POST_TYPES = {
   coming_soon: "Coming Soon",
   sold: "Sold",
   featured: "Featured Property",
+  feature_sheet: "Mortgage Feature Sheet",
 } as const;
 export type PostType = keyof typeof POST_TYPES;
 
@@ -51,6 +53,11 @@ export type Listing = {
   open_house: string | null;
   /** 3D or video tour link (Matterport, iGUIDE, YouTube…). */
   virtual_tour_url: string | null;
+  /** Condo / strata / maintenance fee per month. */
+  monthly_fee: number | null;
+  property_tax_yearly: number | null;
+  /** Expected rent (e.g. a suite), entered by brokers for feature sheets. */
+  monthly_rent: number | null;
   photos: Photo[];
   created_at: string;
 };
@@ -77,12 +84,19 @@ export type Profile = {
   include_logo: boolean;
   include_headshot: boolean;
   include_contact: boolean;
+  /** Two-letter province code; brokers' titles and compliance wording depend on it. */
+  province: string | null;
+  /** Mortgage broker feature-sheet defaults (read with readMortgageSettings). */
+  mortgage_settings: unknown;
+  /** Set on the welcome step after sign-up (Realtor or Mortgage broker). */
+  role_chosen: boolean;
 };
 
 export type Slide = {
   /** Stable id for reordering in the editor (older posts get one on load). */
   id?: string;
-  kind: "cover" | "photo" | "details" | "mortgage" | "contact";
+  /** "sheet" (whole feature sheet), "scenarios" and "broker" are mortgage feature sheet slides. */
+  kind: "cover" | "photo" | "details" | "mortgage" | "contact" | "sheet" | "scenarios" | "broker";
   headline: string;
   subtext: string;
   photo_index: number | null;
@@ -102,6 +116,8 @@ export type Design = {
   show_contact: boolean;
   show_brokerage: boolean;
   show_price: boolean;
+  /** Mortgage feature sheet settings (posts of type "feature_sheet" only). */
+  sheet?: SheetConfig;
 };
 
 export type MortgageInputs = {
@@ -127,6 +143,8 @@ export type Post = {
   focus: string[];
   /** Selling points Claude actually led with. */
   focused_on: string[];
+  /** The feature sheet this post was made from (mortgage brokers). */
+  sheet_id?: string | null;
   caption: string;
   hashtags: string[];
   slides: Slide[];
@@ -238,7 +256,7 @@ export function textModeOf(post: { design: { text_mode?: TextMode } }): TextMode
 
 /** Whether a given slide shows text overlays under the post's text mode. */
 export function slideHasText(mode: TextMode, slide: { kind: string }, index: number): boolean {
-  if (slide.kind === "details" || slide.kind === "mortgage" || slide.kind === "contact") return true; // info cards are text by nature
+  if (["details", "mortgage", "contact", "sheet", "scenarios", "broker"].includes(slide.kind)) return true; // info cards are text by nature
   return mode === "all" || (mode === "cover" && index === 0);
 }
 

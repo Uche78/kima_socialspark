@@ -40,6 +40,9 @@ export default async function NewListingPage({ searchParams }: PageProps<"/listi
     listing_brokerage: null,
     open_house: null,
     virtual_tour_url: null,
+    monthly_fee: null,
+    property_tax_yearly: null,
+    monthly_rent: null,
     photos: [],
     created_at: "",
   };

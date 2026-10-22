@@ -15,7 +15,7 @@ export async function Header() {
   const guest = !user || user.is_anonymous;
   const profile = guest
     ? null
-    : (await supabase.from("profiles").select("full_name, headshot_path").eq("id", user.id).maybeSingle()).data;
+    : (await supabase.from("profiles").select("full_name, headshot_path, role").eq("id", user.id).maybeSingle()).data;
   return (
     <HeaderShell>
       {/* Phones: logo left, actions right. From md: three columns so the main nav stays centred. */}
@@ -28,6 +28,8 @@ export async function Header() {
             <>
               <Link href="/" className={`btn-ghost ${ON_PHOTO}`}>Listings</Link>
               <Link href="/posts" className={`btn-ghost ${ON_PHOTO}`}>Posts</Link>
+              {profile?.role === "mortgage_broker" && <Link href="/sheets" className={`btn-ghost ${ON_PHOTO}`}>Sheets</Link>}
+              {!guest && <Link href="/partners" className={`btn-ghost ${ON_PHOTO}`}>Partners</Link>}
             </>
           )}
         </nav>
@@ -51,6 +53,8 @@ export async function Header() {
                 ? [
                     { href: "/", label: "Listings" },
                     { href: "/posts", label: "Posts" },
+                    ...(profile?.role === "mortgage_broker" ? [{ href: "/sheets", label: "Feature sheets" }] : []),
+                    ...(!guest ? [{ href: "/partners", label: "Partners" }] : []),
                     ...(guest ? [{ href: "/settings", label: "Brand & voice" }] : []),
                   ]
                 : []

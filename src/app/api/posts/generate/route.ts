@@ -5,7 +5,9 @@ import type { JobParams } from "@/lib/generation-job";
 import { queueGeneration } from "@/lib/generation-queue";
 import { paywallFor } from "@/lib/paywall";
 import { remaining, usageFrom, type AllowanceKind, type EntitlementRow } from "@/lib/plans";
-import type { Design, Language, Listing, MortgageInputs, Platform, PostFormat, PostType, Profile, Aspect, TextMode } from "@/lib/types";
+import { readMortgageSettings, type PartnerRealtor } from "@/lib/broker";
+import { readSheetConfig, sheetConfigFrom, type SheetConfig } from "@/lib/feature-sheet";
+import type { Design, Language, Listing, MortgageInputs, Platform, Post, PostFormat, PostType, Profile, Aspect, TextMode } from "@/lib/types";
 import { PLATFORM_SPECS, POST_TYPES } from "@/lib/types";
 
 /**
@@ -33,6 +35,15 @@ type Body = {
   regenerate_of?: string;
   aspect?: Aspect;
   text_mode?: TextMode;
+  /** Feature sheets: per-sheet settings (defaults to the broker's saved ones) and an optional saved realtor. */
+  sheet?: unknown;
+  realtor_id?: string | null;
+  /** Posts made from a saved sheet (Sheet Builder). */
+  sheet_id?: string;
+  sheet_headline?: string;
+  sheet_photo_index?: number | null;
+  /** Write (or rewrite) the caption of an existing sheet post: the first caption uses a post, rewrites a regeneration. */
+  post_id?: string;
 };
 
 export async function POST(request: Request) {
@@ -40,6 +51,28 @@ export async function POST(request: Request) {
   if (!user) return NextResponse.json({ error: "Not signed in" }, { status: 401 });
 
   const body = (await request.json().catch(() => null)) as Body | null;
+
+  // Captioning a draft sheet post: everything comes from the post itself.
+  let target: Post | null = null;
+  if (body?.post_id) {
+    const { data } = await supabase.from("posts").select("*").eq("id", body.post_id).maybeSingle<Post>();
+    if (!data || data.post_type !== "feature_sheet") return NextResponse.json({ error: "Post not found." }, { status: 404 });
+    if (data.status === "published" || data.status === "publishing") return NextResponse.json({ error: "This post is already published." }, { status: 409 });
+    target = data;
+    const cover = data.slides[0];
+    Object.assign(body, {
+      listing_id: data.listing_id,
+      platform: data.platform,
+      format: data.format,
+      post_type: "feature_sheet",
+      language: data.language,
+      aspect: data.design.aspect,
+      sheet: data.design.sheet,
+      sheet_headline: cover?.headline ?? "",
+      sheet_photo_index: cover?.photo_index ?? null,
+    });
+  }
+
   if (
     !body?.listing_id ||
     !["instagram", "facebook", "linkedin"].includes(body.platform) ||
@@ -56,8 +89,22 @@ export async function POST(request: Request) {
   ]);
   if (!listing || !profile) return NextResponse.json({ error: "Listing not found" }, { status: 404 });
 
+  // Mortgage feature sheets: brokers only; start from the sheet sent, or the broker's saved defaults.
+  let sheet: SheetConfig | null = null;
+  if (body.post_type === "feature_sheet") {
+    if (profile.role !== "mortgage_broker") return NextResponse.json({ error: "Feature sheets are for mortgage broker accounts." }, { status: 403 });
+    if (!listing.price) return NextResponse.json({ error: "Add the listing price first. The sheet's payments are based on it." }, { status: 400 });
+    if (body.sheet) sheet = readSheetConfig(body.sheet);
+    else {
+      const { data: realtor } = body.realtor_id
+        ? await supabase.from("partner_realtors").select("*").eq("id", body.realtor_id).maybeSingle<PartnerRealtor>()
+        : { data: null };
+      sheet = sheetConfigFrom(readMortgageSettings(profile.mortgage_settings), realtor);
+    }
+  }
+
   // A regeneration rewrites an existing post of this listing; anything else is a new post.
-  let kind: AllowanceKind = "post";
+  let kind: AllowanceKind = target?.caption.trim() ? "regen" : "post";
   if (body.regenerate_of) {
     const { data: original } = await supabase.from("posts").select("id").eq("id", body.regenerate_of).eq("listing_id", listing.id).maybeSingle();
     if (!original) return NextResponse.json({ error: "Post to regenerate not found." }, { status: 404 });
@@ -110,7 +157,19 @@ export async function POST(request: Request) {
     mortgage: profile.role === "mortgage_broker" && body.mortgage?.enabled ? body.mortgage : null,
     template: body.template ?? "classic",
     aspect: body.aspect ?? null,
+    sheet,
+    sheet_id: null as string | null,
+    sheet_headline: typeof body.sheet_headline === "string" ? body.sheet_headline.slice(0, 80) : "",
+    sheet_photo_index: Number.isInteger(body.sheet_photo_index) ? body.sheet_photo_index! : null,
   };
+  if (target) {
+    params.target_post_id = target.id;
+    params.sheet_id = target.sheet_id ?? null;
+  }
+  if (sheet && body.sheet_id && !target) {
+    const { data: own } = await supabase.from("feature_sheets").select("id").eq("id", body.sheet_id).maybeSingle();
+    if (own) params.sheet_id = own.id;
+  }
 
   const { data: job, error } = await admin
     .from("generation_jobs")

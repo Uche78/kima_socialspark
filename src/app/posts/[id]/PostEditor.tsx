@@ -9,6 +9,11 @@ import { SlideCanvas } from "@/components/SlideCanvas";
 import { Chips } from "@/components/Chips";
 import { dataUrlToBlob } from "@/lib/render";
 import { usePostExport } from "@/components/usePostExport";
+import { useSheetExports } from "@/components/useSheetExports";
+import { MortgageDefaults } from "@/app/settings/MortgageDefaults";
+import { readSheetConfig, sheetConfigFrom, sheetProblems, type FeatureSheet, type SheetConfig } from "@/lib/feature-sheet";
+import { SheetPostPanel, type Destination } from "./SheetPostPanel";
+import type { PartnerRealtor } from "@/lib/broker";
 import { SortableSlideStrip } from "@/components/SortableSlideStrip";
 import { ScaledSlide } from "@/components/ScaledSlide";
 import { formatLocal, LocalTime } from "@/components/LocalTime";
@@ -18,17 +23,40 @@ import { connectUrl, RECONNECT_HINT } from "@/lib/connection-expiry";
 import { isLowRes, uniqueSuffix } from "@/lib/media";
 import { ASPECT_LABELS, aspectOf, isStuck, statusLabel, textModeOf, textModeOptions, type TextMode, PLATFORM_SPECS, POST_TYPES, type Design, type Listing, type Post, type Profile, type Slide, type SocialAccount, type Aspect } from "@/lib/types";
 
-type Props = { initialPost: Post; listing: Listing; profile: Profile; accounts: SocialAccount[]; isGuest: boolean };
+type Props = {
+  initialPost: Post;
+  listing: Listing;
+  profile: Profile;
+  accounts: SocialAccount[];
+  isGuest: boolean;
+  realtors?: PartnerRealtor[];
+  /** Posts made from a saved sheet: the sheet (for "Update from sheet") and posts left on the plan. */
+  sheetRow?: FeatureSheet | null;
+  remaining?: number;
+};
 
 const PREVIEW_WIDTH = 480;
-const SLIDE_KINDS: Record<Slide["kind"], string> = { cover: "Cover", photo: "Photo", details: "Details", mortgage: "Mortgage", contact: "Contact" };
+const SLIDE_KINDS: Record<Slide["kind"], string> = {
+  cover: "Cover",
+  photo: "Photo",
+  details: "Details",
+  mortgage: "Mortgage",
+  contact: "Contact",
+  sheet: "Feature sheet",
+  scenarios: "Payment scenarios",
+  broker: "Contact card",
+};
 
 function localDateTimeValue(d: Date) {
   const pad = (n: number) => String(n).padStart(2, "0");
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
-export function PostEditor({ initialPost, listing, profile, accounts, isGuest }: Props) {
+export function PostEditor({ initialPost, listing, profile, accounts, isGuest, realtors = [], sheetRow = null, remaining = 0 }: Props) {
+  const isSheet = initialPost.post_type === "feature_sheet";
+  // Made in the Sheet Builder: a lean page to choose where it goes and write the caption.
+  const isSheetPost = isSheet && !!initialPost.sheet_id;
+  const [destination, setDestination] = useState<Destination>(initialPost.platform);
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
   // Give every slide a stable id so it can be dragged; older posts don't have one.
@@ -37,7 +65,7 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest }:
     slides: initialPost.slides.map((s) => ({ ...s, id: s.id ?? crypto.randomUUID() })),
   }));
   const [active, setActive] = useState(0);
-  const [tab, setTab] = useState<"copy" | "slide" | "design">("copy");
+  const [tab, setTab] = useState<"numbers" | "copy" | "slide" | "design">(isSheet ? "numbers" : "copy");
   const [dirty, setDirty] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
   const [message, setMessage] = useState<{ kind: "ok" | "error"; text: string } | null>(null);
@@ -50,6 +78,8 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest }:
 
   const spec = PLATFORM_SPECS[post.platform];
   const { targets, renderAll, download, size, canvasProps } = usePostExport(post, listing, profile);
+  const sheetExports = useSheetExports(post, listing, profile);
+  const sheet: SheetConfig | null = isSheet ? readSheetConfig(post.design.sheet) : null;
   const slide = post.slides[active] ?? post.slides[0];
   const platformAccounts = accounts.filter((a) => a.platform === post.platform);
   const caption = fullCaption(post);
@@ -132,6 +162,38 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest }:
     run("download", async () => {
       await download();
       return "Downloaded. The caption is copied to your clipboard.";
+    });
+
+  const onDownloadPdf = () => run("pdf", async () => { await sheetExports.downloadPdf(); return "PDF downloaded (letter size). Print at 100% or attach it to an email."; });
+  const onDownloadStory = () => run("story", async () => { await sheetExports.downloadStory(); return "Story image downloaded (1080×1920)."; });
+
+  /** Copies this sheet as a new draft (same home, ready for different scenarios). No generation used. */
+  const onDuplicate = () =>
+    run("duplicate", async () => {
+      const { data: auth } = await supabase.auth.getUser();
+      const { data, error } = await supabase
+        .from("posts")
+        .insert({
+          user_id: auth.user!.id,
+          listing_id: post.listing_id,
+          platform: post.platform,
+          format: post.format,
+          post_type: post.post_type,
+          language: post.language,
+          highlights: post.highlights,
+          focus: post.focus,
+          focused_on: post.focused_on,
+          caption: post.caption,
+          hashtags: post.hashtags,
+          slides: post.slides,
+          design: post.design,
+          mortgage: post.mortgage,
+        })
+        .select("id")
+        .single();
+      if (error || !data) throw new Error(error?.message ?? "Couldn't duplicate.");
+      router.push(`/posts/${data.id}`);
+      return "Duplicated. You're now editing the copy.";
     });
 
   const onCopy = () =>
@@ -240,7 +302,11 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest }:
     <div className="mx-auto max-w-6xl space-y-4 px-4">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <Link href={`/listings/${listing.id}`} className="text-sm text-muted hover:underline">← {listing.address || "Listing"}</Link>
+          {isSheetPost ? (
+            <Link href={`/sheets/${post.sheet_id}`} className="text-sm text-muted hover:underline">← Back to sheet</Link>
+          ) : (
+            <Link href={`/listings/${listing.id}`} className="text-sm text-muted hover:underline">← {listing.address || "Listing"}</Link>
+          )}
           <h1 className="mt-1 text-2xl font-semibold">
             {spec.label} {post.format === "carousel" ? "carousel" : "post"} · {POST_TYPES[post.post_type]}
           </h1>
@@ -261,8 +327,17 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest }:
           )}
         </div>
         <div className="flex flex-wrap gap-2">
-          <button className="btn-secondary" onClick={onCopy} disabled={!!busy}>Copy caption</button>
+          {(!isSheetPost || post.caption.trim()) && <button className="btn-secondary" onClick={onCopy} disabled={!!busy}>Copy caption</button>}
           <button className="btn-secondary" onClick={onDownload} disabled={!!busy}>{busy === "download" ? "Preparing…" : "Download"}</button>
+          {isSheet && !isSheetPost && (
+            <>
+              <button className="btn-secondary" onClick={onDownloadPdf} disabled={!!busy}>{busy === "pdf" ? "Preparing…" : "Download PDF"}</button>
+              <button className="btn-secondary" onClick={onDownloadStory} disabled={!!busy}>{busy === "story" ? "Preparing…" : "Story (9:16)"}</button>
+              <button className="btn-secondary" onClick={onDuplicate} disabled={!!busy || dirty} title={dirty ? "Save your changes first" : "Copy this sheet to try different scenarios"}>
+                {busy === "duplicate" ? "Copying…" : "Duplicate"}
+              </button>
+            </>
+          )}
           <button className="btn-primary" onClick={onSave} disabled={!!busy || locked}>{busy === "save" ? "Saving…" : dirty ? "Save" : "Saved"}</button>
         </div>
       </div>
@@ -299,14 +374,64 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest }:
         </div>
 
         {/* Editor */}
+        {isSheetPost ? (
+          <div className="card min-w-0 p-4 sm:p-5">
+            <SheetPostPanel
+              post={post}
+              profile={profile}
+              sheet={sheetRow}
+              remaining={remaining}
+              locked={locked}
+              destination={destination}
+              onDestination={setDestination}
+              onPost={(p) => setPost((cur) => ({ ...p, slides: p.slides.map((s, i) => ({ ...s, id: s.id ?? cur.slides[i]?.id ?? crypto.randomUUID() })) }))}
+              onStory={onDownloadStory}
+              storyBusy={busy === "story"}
+              onCaptionChange={(caption) => patch({ caption })}
+              onHashtagsChange={(hashtags) => patch({ hashtags })}
+            />
+          </div>
+        ) : (
         <div className="card min-w-0 p-4 sm:p-5">
           <div className="mb-4 flex gap-1 overflow-x-auto border-b border-border">
-            {(["copy", "slide", "design"] as const).map((t) => (
+            {((isSheet ? ["numbers", "copy", "slide", "design"] : ["copy", "slide", "design"]) as ("numbers" | "copy" | "slide" | "design")[]).map((t) => (
               <button key={t} className={`-mb-px shrink-0 whitespace-nowrap border-b-2 px-3 py-2.5 text-sm font-medium ${tab === t ? "border-brand text-brand" : "border-transparent text-muted"}`} onClick={() => setTab(t)}>
-                {t === "copy" ? "Caption" : t === "slide" ? `Slide ${active + 1}` : "Design & branding"}
+                {t === "numbers" ? "Numbers" : t === "copy" ? "Caption" : t === "slide" ? `Slide ${active + 1}` : "Design & branding"}
               </button>
             ))}
           </div>
+
+          {tab === "numbers" && sheet && (
+            <div className="space-y-5">
+              {sheetProblems(listing, sheet).length > 0 && (
+                <ul className="list-disc space-y-0.5 rounded-lg border border-amber-200 bg-amber-50 py-3 pl-8 pr-3 text-sm text-amber-900">
+                  {sheetProblems(listing, sheet).map((p) => <li key={p}>{p}</li>)}
+                </ul>
+              )}
+              <label className="block">
+                <span className="label">Co-branded realtor</span>
+                <select
+                  className="input"
+                  disabled={locked}
+                  value={sheet.realtor ? realtors.find((r) => r.full_name === sheet.realtor!.full_name)?.id ?? "__current" : ""}
+                  onChange={(e) => {
+                    if (e.target.value === "__current") return;
+                    const r = realtors.find((x) => x.id === e.target.value) ?? null;
+                    patchDesign({ sheet: { ...sheet, realtor: sheetConfigFrom(sheet, r).realtor } });
+                  }}
+                >
+                  <option value="">No realtor</option>
+                  {sheet.realtor && !realtors.some((r) => r.full_name === sheet.realtor!.full_name) && <option value="__current">{sheet.realtor.full_name}</option>}
+                  {realtors.map((r) => <option key={r.id} value={r.id}>{r.full_name}{r.brokerage_name ? ` · ${r.brokerage_name}` : ""}</option>)}
+                </select>
+              </label>
+              <p className="text-xs text-muted">
+                Changes update the sheet instantly and don&apos;t use a generation. Price, condo fee, property tax and rent come from the{" "}
+                <Link href={`/listings/${listing.id}`} className="underline">listing details</Link>.
+              </p>
+              <MortgageDefaults embedded disabled={locked} value={sheet} onChange={(next) => patchDesign({ sheet: next })} />
+            </div>
+          )}
 
           {tab === "copy" && (
             <div className="space-y-4">
@@ -393,7 +518,7 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest }:
           {tab === "design" && (
             <div className="space-y-5">
               <Chips label="Template" value={post.design.template} onChange={(template) => patchDesign({ template })} options={{ classic: "Classic", modern: "Modern", minimal: "Minimal" }} />
-              <div>
+              {!isSheet && <div>
                 <Chips
                   label="Text on photos"
                   value={post.format === "single" && textModeOf(post) === "cover" ? "all" : textModeOf(post)}
@@ -405,7 +530,7 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest }:
                     Photos without text show just the listing photo. Your name and brokerage stay in the caption.
                   </p>
                 )}
-              </div>
+              </div>}
               {spec.aspects.length > 1 && (
                 <div>
                   <Chips
@@ -458,9 +583,11 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest }:
             </div>
           )}
         </div>
+        )}
       </div>
 
-      {/* Publish */}
+      {/* Publish (sheet posts: once the caption is written) */}
+      {(!isSheetPost || (post.caption.trim() && destination !== "story")) && (
       <section className="card p-5">
         <h2 className="mb-3 font-semibold">Publish</h2>
         {isGuest ? (
@@ -538,8 +665,10 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest }:
           </>
         )}
       </section>
+      )}
 
       {targets}
+      {isSheet && sheetExports.targets}
     </div>
   );
 }

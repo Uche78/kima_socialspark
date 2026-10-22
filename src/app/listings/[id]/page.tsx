@@ -2,6 +2,8 @@ import { notFound, redirect } from "next/navigation";
 import { getUser } from "@/lib/supabase/server";
 import { usageFrom, type EntitlementRow } from "@/lib/plans";
 import type { Listing, Post, Profile } from "@/lib/types";
+import { PARTNER_COLUMNS, partnerKindFor, type PartnerRealtor } from "@/lib/broker";
+import type { FeatureSheet } from "@/lib/feature-sheet";
 import { ListingWorkspace } from "./ListingWorkspace";
 
 // Private or utility page: keep it out of search results.
@@ -20,6 +22,15 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
   ]);
   if (!listing || !profile) notFound();
 
+  // Brokers' partner realtors (for co-branding sheets), or realtors' partner brokers (for sending listings).
+  const { data: realtors } = !user.is_anonymous
+    ? await supabase.from("partner_realtors").select(PARTNER_COLUMNS).eq("kind", partnerKindFor(profile.role)).order("full_name").returns<PartnerRealtor[]>()
+    : { data: [] as PartnerRealtor[] };
+  const { data: sheets } =
+    profile.role === "mortgage_broker"
+      ? await supabase.from("feature_sheets").select("*").eq("listing_id", id).order("updated_at", { ascending: false }).returns<FeatureSheet[]>()
+      : { data: [] as FeatureSheet[] };
+
   return (
     <div className="mx-auto w-full max-w-[1600px] px-4 lg:w-[90%] lg:px-0">
       <ListingWorkspace
@@ -27,6 +38,8 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
         listing={listing}
         profile={profile}
         posts={posts ?? []}
+        realtors={realtors ?? []}
+        sheets={sheets ?? []}
         usage={usageFrom(entitlement, !!user.is_anonymous)}
       />
     </div>

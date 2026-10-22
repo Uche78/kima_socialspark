@@ -11,6 +11,9 @@ import { Chips } from "@/components/Chips";
 import { LocalTime } from "@/components/LocalTime";
 import { PlanButton } from "@/components/PlanButton";
 import { PAID_PLANS, type Usage } from "@/lib/plans";
+import { brokerTitles, PROVINCES, readMortgageSettings } from "@/lib/broker";
+import { COLOR_PRESETS, colorsFromLogo } from "@/lib/brand-colors";
+import { MortgageDefaults } from "./MortgageDefaults";
 import { connectUrl, daysUntil, EXPIRY_WARN_DAYS, formatDay } from "@/lib/connection-expiry";
 import { PLATFORM_SPECS, TONE_PRESETS, type Profile, type SocialAccount } from "@/lib/types";
 
@@ -20,18 +23,20 @@ type Props = {
   isGuest: boolean;
   usage: Usage;
   billingSuccess: boolean;
+  /** Came from the mortgage broker page: start with the broker role selected. */
+  suggestBroker?: boolean;
   connected: string | null;
   connectError: string | null;
 };
 
 const MAX_SAMPLES = 5;
 
-export function SettingsForm({ profile: initial, accounts, isGuest, usage, billingSuccess, connected, connectError }: Props) {
+export function SettingsForm({ profile: initial, accounts, isGuest, usage, billingSuccess, suggestBroker = false, connected, connectError }: Props) {
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
-  const [p, setP] = useState(initial);
+  const [p, setP] = useState(suggestBroker ? { ...initial, role: "mortgage_broker" as const, title: initial.title === "REALTOR®" ? null : initial.title } : initial);
   const [now] = useState(() => Date.now());
-  const [dirty, setDirty] = useState(false);
+  const [dirty, setDirty] = useState(suggestBroker);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   // Show validation errors only after the user leaves a field (or tries to save).
@@ -82,6 +87,14 @@ export function SettingsForm({ profile: initial, accounts, isGuest, usage, billi
     router.refresh();
   }
 
+  const isBroker = p.role === "mortgage_broker";
+  const setColors = (c: { primary: string; secondary: string; accent: string }) => {
+    setP((cur) => ({ ...cur, brand_primary: c.primary, brand_secondary: c.secondary, brand_accent: c.accent }));
+    setDirty(true);
+  };
+  const titles = brokerTitles(p.province);
+  const mortgageSettings = readMortgageSettings(p.mortgage_settings);
+
   const text = (k: keyof Profile, label: string, placeholder = "") => (
     <label className="block">
       <span className="label">{label}</span>
@@ -96,13 +109,42 @@ export function SettingsForm({ profile: initial, accounts, isGuest, usage, billi
         <button className="btn-primary" onClick={save} disabled={!dirty || saving || !!phoneError || !!emailError}>{saving ? "Saving…" : dirty ? "Save changes" : "Saved"}</button>
       </div>
       {msg && <div className="rounded-lg bg-black/5 p-3 text-sm">{msg}</div>}
+      {suggestBroker && dirty && (
+        <div className="rounded-lg bg-blue-50 p-3 text-sm text-blue-900">
+          Welcome! We&apos;ve set you up as a <strong>mortgage broker</strong>. Add your licence, province and rates below, then click <strong>Save changes</strong>.
+        </div>
+      )}
 
-      <section className="card space-y-4 p-5">
+      <section id="about" className="card scroll-mt-24 space-y-4 p-5">
         <h2 className="font-semibold">About you</h2>
         <Chips label="I am a" value={p.role} onChange={(v) => set("role", v)} options={{ realtor: "Realtor", mortgage_broker: "Mortgage broker" }} />
         <div className="grid gap-3 sm:grid-cols-2">
           {text("full_name", "Full name")}
-          {text("title", "Title", p.role === "mortgage_broker" ? "Mortgage Agent Level 2" : "REALTOR®")}
+          {isBroker ? (
+            <label className="block">
+              <span className="label">Title</span>
+              <select
+                className="input"
+                value={titles.includes(p.title ?? "") ? p.title! : "__other"}
+                onChange={(e) => set("title", e.target.value === "__other" ? "" : e.target.value)}
+              >
+                {titles.map((t) => <option key={t} value={t}>{t}</option>)}
+                <option value="__other">Other…</option>
+              </select>
+              {!titles.includes(p.title ?? "") && (
+                <input className="input mt-2" placeholder="Your title" value={p.title ?? ""} onChange={(e) => set("title", e.target.value || null)} />
+              )}
+            </label>
+          ) : (
+            text("title", "Title", "REALTOR®")
+          )}
+          <label className="block">
+            <span className="label">Province</span>
+            <select className="input" value={p.province ?? ""} onChange={(e) => set("province", e.target.value || null)}>
+              <option value="">Choose…</option>
+              {Object.entries(PROVINCES).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+            </select>
+          </label>
           {text("brokerage_name", "Brokerage")}
           {text("license_number", p.role === "mortgage_broker" ? "Licence # (required on posts)" : "Licence / registration #")}
           <label className="block">
@@ -145,7 +187,7 @@ export function SettingsForm({ profile: initial, accounts, isGuest, usage, billi
         </p>
       </section>
 
-      <section className="card space-y-4 p-5">
+      <section id="branding" className="card scroll-mt-24 space-y-4 p-5">
         <h2 className="font-semibold">Branding</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           {(["logo", "headshot"] as const).map((kind) => {
@@ -165,6 +207,35 @@ export function SettingsForm({ profile: initial, accounts, isGuest, usage, billi
               </div>
             );
           })}
+        </div>
+        <div className="flex flex-wrap items-end gap-3">
+          <label className="block">
+            <span className="label">Colour preset</span>
+            <select
+              className="input w-auto"
+              value=""
+              onChange={(e) => {
+                const c = COLOR_PRESETS[e.target.value];
+                if (c) setColors(c);
+              }}
+            >
+              <option value="">Choose a preset…</option>
+              {Object.entries(COLOR_PRESETS).map(([k, c]) => <option key={k} value={k}>{c.label}</option>)}
+            </select>
+          </label>
+          {p.logo_path && (
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={async () => {
+                const c = await colorsFromLogo(mediaUrl(p.logo_path)!).catch(() => null);
+                if (c) setColors(c);
+                else setMsg("Couldn't find brand colours in your logo. Pick them below.");
+              }}
+            >
+              Get colours from my logo
+            </button>
+          )}
         </div>
         <div className="grid grid-cols-3 gap-3">
           {(
@@ -218,6 +289,17 @@ export function SettingsForm({ profile: initial, accounts, isGuest, usage, billi
           </div>
         </div>
       </section>
+
+      {isBroker && !isGuest && (
+        <>
+          <div id="rates" className="scroll-mt-24">
+            <MortgageDefaults value={mortgageSettings} onChange={(v) => set("mortgage_settings", v)} />
+          </div>
+          <p className="-mt-2 text-sm text-muted">
+            Your partner realtors are on the <Link href="/partners" className="underline">Partners</Link> page.
+          </p>
+        </>
+      )}
 
       <section id="accounts" className="card space-y-4 p-5">
         <h2 className="font-semibold">Connected accounts</h2>

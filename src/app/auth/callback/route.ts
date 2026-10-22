@@ -28,5 +28,7 @@ export async function GET(request: NextRequest) {
     ok = !!data.user && !data.user.is_anonymous;
   }
 
-  return NextResponse.redirect(new URL(ok ? next : "/login?error=link_expired", request.url));
+  // New accounts choose Realtor or Mortgage broker first; /welcome passes everyone else straight on.
+  const role = params.get("role") === "mortgage_broker" ? "&role=mortgage_broker" : "";
+  return NextResponse.redirect(new URL(ok ? `/welcome?next=${encodeURIComponent(next)}${role}` : "/login?error=link_expired", request.url));
 }

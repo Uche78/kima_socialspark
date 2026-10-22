@@ -32,6 +32,9 @@ const ListingSchema = z.object({
   photo_indices: z
     .array(z.number())
     .describe("Indices into the IMAGE CANDIDATES list of photos of THIS property, in gallery order. Exclude logos, agent headshots, maps, icons, and other listings."),
+  // Not nullable (0 = not shown): structured outputs allow at most 16 nullable fields.
+  monthly_fee: z.number().describe("Monthly condo, strata or maintenance fee in CAD; 0 if none or not shown"),
+  property_tax_yearly: z.number().describe("Yearly property taxes in CAD (convert if the page gives another period); 0 if not shown"),
   // Not nullable: structured outputs allow at most 16 nullable fields.
   virtual_tour_index: z
     .number()

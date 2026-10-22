@@ -1,4 +1,5 @@
 import { FAQ } from "@/lib/faq";
+import { BROKER_FAQ } from "@/lib/faq-brokers";
 import { FREE_LIMITS, PAID_PLANS } from "@/lib/plans";
 import { COMPANY, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
@@ -21,6 +22,11 @@ ${SITE_NAME} is made by [${COMPANY.name}](${COMPANY.url}), a Canadian company.
 - Edit, download, publish now or schedule. Nothing is posted without the agent's action.
 - REALTOR.ca blocks automated tools; agents can copy and paste the listing page instead.
 
+## [For mortgage brokers](${SITE_URL}/mortgage-brokers)
+Mortgage brokers turn a listing link into a branded mortgage feature sheet: monthly payments at up to four down payments (with CMHC premiums, property tax and condo fees), their own rates with an "as of" date, their licence number and an optional co-branded realtor. Sheets can be posted, scheduled, downloaded as Stories or printed as letter-size PDFs.
+
+${BROKER_FAQ.map((f) => `### ${f.q}\n${f.a}`).join("\n\n")}
+
 ## [Pricing](${SITE_URL}/pricing) (CAD, plus applicable tax)
 - Free: ${FREE_LIMITS.registered} posts in total, one-time, no credit card.
 - ${s.name}: ${s.price}/month: ${s.posts} new posts and ${s.regens} regenerations a month.
@@ -32,6 +38,7 @@ ${FAQ.map((f) => `### ${f.q}\n${f.a}`).join("\n\n")}
 
 ## Links
 - [Home](${SITE_URL}/): what SocialSpark does, how it works, examples and FAQ
+- [Mortgage brokers](${SITE_URL}/mortgage-brokers): mortgage feature sheets
 - [Pricing](${SITE_URL}/pricing): plans and what counts as a post
 - [Privacy policy](${COMPANY.url}/privacy/)
 - [Terms of service](${COMPANY.url}/terms/)

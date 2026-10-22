@@ -21,6 +21,9 @@ export const EDITABLE_LISTING_FIELDS = [
   "listing_brokerage",
   "open_house",
   "virtual_tour_url",
+  "monthly_fee",
+  "property_tax_yearly",
+  "monthly_rent",
 ] as const satisfies readonly (keyof Listing)[];
 
 export function pickEditable(input: Record<string, unknown>) {

@@ -8,7 +8,7 @@ import { isLowRes, mediaUrl, uniqueSuffix } from "@/lib/media";
 import { pickEditable } from "@/lib/listing-fields";
 import { PROVINCES, type Listing, type Photo } from "@/lib/types";
 
-const NUMERIC = ["price", "bedrooms", "bathrooms", "square_feet", "year_built"] as const;
+const NUMERIC = ["price", "bedrooms", "bathrooms", "square_feet", "year_built", "monthly_fee", "property_tax_yearly", "monthly_rent"] as const;
 
 /** In draft mode, photos stay in the browser (with the picked File) until the listing is saved. */
 type EditorPhoto = Photo & { file?: File };
@@ -20,9 +20,11 @@ type Props = {
   isDraft: boolean;
   onSaved?: (listing: Listing) => void;
   onDirtyChange?: (dirty: boolean) => void;
+  /** Mortgage brokers also see the rent field used by feature sheets. */
+  isBroker?: boolean;
 };
 
-export function ListingEditor({ listing: initial, isDraft, onSaved, onDirtyChange }: Props) {
+export function ListingEditor({ listing: initial, isDraft, onSaved, onDirtyChange, isBroker = false }: Props) {
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
   const [listing, setListing] = useState<EditorListing>(initial);
@@ -208,6 +210,9 @@ export function ListingEditor({ listing: initial, isDraft, onSaved, onDirtyChang
           {field("lot_size", "Lot size")}
           {field("listing_brokerage", "Listing brokerage")}
           {field("open_house", "Open house")}
+          {field("monthly_fee", "Condo / maintenance fee (monthly)", { type: "number", min: 0 })}
+          {field("property_tax_yearly", "Property tax (yearly)", { type: "number", min: 0 })}
+          {isBroker && field("monthly_rent", "Expected rent (monthly, optional)", { type: "number", min: 0 })}
           <div className="sm:col-span-2">
             {field("virtual_tour_url", "Virtual tour link (Matterport, iGUIDE, YouTube…)", { type: "url", placeholder: "https://" })}
           </div>
