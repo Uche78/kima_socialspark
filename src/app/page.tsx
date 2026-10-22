@@ -4,10 +4,11 @@ import { AudienceSwitch } from "@/components/landing/AudienceSwitch";
 import { ImportForm } from "@/components/ImportForm";
 import { GettingStarted, type SetupState } from "@/components/GettingStarted";
 import { ListingCard } from "@/components/ListingCard";
+import type { ListingShare } from "@/components/ShareWithBroker";
 import { HeroShowcase } from "@/components/hero/HeroShowcase";
 import { LandingSections } from "@/components/landing/LandingSections";
 import { HomeStructuredData } from "@/components/StructuredData";
-import { readMortgageSettings } from "@/lib/broker";
+import { PARTNER_COLUMNS, readMortgageSettings, type PartnerRealtor } from "@/lib/broker";
 import { remaining, usageFrom, type EntitlementRow } from "@/lib/plans";
 import type { Listing, Post, Profile } from "@/lib/types";
 
@@ -39,6 +40,18 @@ export default async function Home() {
   // instead of the marketing hero (whose example posts could be mistaken for their own).
   const returning = listings.length > 0 || !!profile;
   const setup = profile && listings.length === 0 ? await setupState(supabase, user!.id, profile, broker) : null;
+  // Realtors with an account can send a listing to a mortgage broker from its card: their saved brokers, loaded once.
+  const { data: partnerBrokers } =
+    profile?.role === "realtor" && listings.length > 0
+      ? await supabase.from("partner_realtors").select(PARTNER_COLUMNS).eq("kind", "broker").order("full_name").returns<PartnerRealtor[]>()
+      : { data: null };
+  const { data: shareRows } =
+    profile?.role === "realtor" && listings.length > 0
+      ? await supabase.from("listing_shares").select("listing_id, to_email, to_name, created_at").in("listing_id", listings.map((l) => l.id)).order("created_at", { ascending: false })
+      : { data: null };
+  // Newest first, so the first row per listing is its latest send.
+  const lastShares = new Map<string, ListingShare>();
+  for (const { listing_id, ...share } of (shareRows ?? []) as (ListingShare & { listing_id: string })[]) if (!lastShares.has(listing_id)) lastShares.set(listing_id, share);
   const firstName = profile?.full_name?.trim().split(/\s+/)[0];
 
   return (
@@ -113,7 +126,7 @@ export default async function Home() {
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {listings.map(({ posts, ...l }) => (
-              <ListingCard key={l.id} listing={l} posts={posts} />
+              <ListingCard key={l.id} listing={l} posts={posts} brokers={profile?.role === "realtor" ? (partnerBrokers ?? []) : undefined} lastShare={lastShares.get(l.id) ?? null} />
             ))}
           </div>
         </section>

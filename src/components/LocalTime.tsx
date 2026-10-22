@@ -8,10 +8,15 @@ const noop = () => () => {};
  * Shows a timestamp in the viewer's own time zone (with its abbreviation, e.g. "EDT").
  * Server-rendered pages would otherwise format it in the server's zone (UTC on Netlify).
  */
-export function LocalTime({ iso, className, dateOnly }: { iso: string; className?: string; dateOnly?: boolean }) {
+export function LocalTime({ iso, className, dateOnly, short }: { iso: string; className?: string; dateOnly?: boolean; /** "Oct 22" */ short?: boolean }) {
   const text = useSyncExternalStore(
     noop,
-    () => (dateOnly ? new Date(iso).toLocaleDateString([], { month: "long", day: "numeric", year: "numeric" }) : formatLocal(iso)),
+    () =>
+      short
+        ? new Date(iso).toLocaleDateString([], { month: "short", day: "numeric" })
+        : dateOnly
+          ? new Date(iso).toLocaleDateString([], { month: "long", day: "numeric", year: "numeric" })
+          : formatLocal(iso),
     () => null, // nothing on the server; filled in by the browser
   );
   return (

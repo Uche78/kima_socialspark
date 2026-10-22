@@ -48,5 +48,13 @@ export async function POST(req: NextRequest, ctx: RouteContext<"/api/listings/[i
     console.error("share email", e);
     return NextResponse.json({ error: "Couldn't send the email. Please try again." }, { status: 502 });
   }
-  return NextResponse.json({ ok: true });
+
+  // Remember the send for the listing card ("Sent to Priya · Oct 22"), named after the saved partner if there is one.
+  const { data: partner } = await supabase.from("partner_realtors").select("full_name").eq("kind", "broker").ilike("email", email.replace(/[%_\\]/g, "\\$&")).limit(1).maybeSingle<{ full_name: string }>();
+  const { data: share } = await supabase
+    .from("listing_shares")
+    .insert({ user_id: user.id, listing_id: listing.id, to_email: email, to_name: partner?.full_name ?? null })
+    .select("to_email, to_name, created_at")
+    .single();
+  return NextResponse.json({ ok: true, share });
 }

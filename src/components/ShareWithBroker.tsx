@@ -5,8 +5,23 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import type { PartnerRealtor } from "@/lib/broker";
 
+/** A listing sent to a broker (the latest one shows on the listing card). */
+export type ListingShare = { to_email: string; to_name: string | null; created_at: string };
+
 /** Realtors send a listing to their mortgage broker, who can add it and make a feature sheet. */
-export function ShareWithBroker({ listingId, brokers = [] }: { listingId: string; brokers?: PartnerRealtor[] }) {
+export function ShareWithBroker({
+  listingId,
+  brokers = [],
+  label = "Send to my mortgage broker",
+  className = "btn-ghost text-sm",
+  onSent,
+}: {
+  listingId: string;
+  brokers?: PartnerRealtor[];
+  label?: string;
+  className?: string;
+  onSent?: (share: ListingShare) => void;
+}) {
   const withEmail = brokers.filter((b) => b.email);
   const [open, setOpen] = useState(false);
   // A saved partner's id, or "" for someone else (type an email).
@@ -25,6 +40,7 @@ export function ShareWithBroker({ listingId, brokers = [] }: { listingId: string
     const json = await res.json().catch(() => ({}));
     setBusy(false);
     if (!res.ok) return setResult({ ok: false, text: json.error ?? "Couldn't send it." });
+    if (json.share) onSent?.(json.share);
     const name = partnerId ? withEmail.find((b) => b.id === partnerId)?.full_name : to;
     setResult({ ok: true, text: `Sent to ${name}. They'll get a link to add this listing and create a mortgage feature sheet.` });
     setEmail("");
@@ -33,8 +49,8 @@ export function ShareWithBroker({ listingId, brokers = [] }: { listingId: string
 
   return (
     <>
-      <button type="button" className="btn-ghost text-sm" onClick={() => { setOpen(true); setResult(null); }}>
-        Send to my mortgage broker
+      <button type="button" className={className} onClick={() => { setOpen(true); setResult(null); }}>
+        {label}
       </button>
       {open &&
         createPortal(

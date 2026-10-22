@@ -10,7 +10,7 @@ import { confirmAndDeleteListing } from "@/lib/delete-listing";
 import { remaining, withUsed, type AllowanceKind, type Usage } from "@/lib/plans";
 import { aspectOf, textModeOf, PLATFORM_SPECS, type Listing, type Post, type Profile } from "@/lib/types";
 import { CreatePostCard, type PostSettings } from "./CreatePostCard";
-import { ShareWithBroker } from "./ShareWithBroker";
+import { ShareWithBroker } from "@/components/ShareWithBroker";
 import type { PartnerRealtor } from "@/lib/broker";
 import type { FeatureSheet } from "@/lib/feature-sheet";
 import { LatestResult, LatestResultSkeleton } from "./LatestResult";

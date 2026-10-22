@@ -13,6 +13,7 @@ import { PlanButton } from "@/components/PlanButton";
 import { PAID_PLANS, type Usage } from "@/lib/plans";
 import { brokerTitles, PROVINCES, readMortgageSettings } from "@/lib/broker";
 import { COLOR_PRESETS, colorsFromLogo } from "@/lib/brand-colors";
+import { AccountType } from "./AccountType";
 import { MortgageDefaults } from "./MortgageDefaults";
 import { connectUrl, daysUntil, EXPIRY_WARN_DAYS, formatDay } from "@/lib/connection-expiry";
 import { PLATFORM_SPECS, TONE_PRESETS, type Profile, type SocialAccount } from "@/lib/types";
@@ -117,7 +118,6 @@ export function SettingsForm({ profile: initial, accounts, isGuest, usage, billi
 
       <section id="about" className="card scroll-mt-24 space-y-4 p-5">
         <h2 className="font-semibold">About you</h2>
-        <Chips label="I am a" value={p.role} onChange={(v) => set("role", v)} options={{ realtor: "Realtor", mortgage_broker: "Mortgage broker" }} />
         <div className="grid gap-3 sm:grid-cols-2">
           {text("full_name", "Full name")}
           {isBroker ? (
@@ -390,6 +390,8 @@ export function SettingsForm({ profile: initial, accounts, isGuest, usage, billi
           </div>
         )}
       </section>
+
+      {!isGuest && <AccountType profile={p} onSwitched={(next) => setP((cur) => ({ ...cur, ...next }))} />}
     </div>
   );
 }

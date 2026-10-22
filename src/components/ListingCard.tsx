@@ -4,12 +4,27 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { LocalTime } from "./LocalTime";
+import { ShareWithBroker, type ListingShare } from "./ShareWithBroker";
+import type { PartnerRealtor } from "@/lib/broker";
 import { confirmAndDeleteListing } from "@/lib/delete-listing";
 import { formatCurrency } from "@/lib/mortgage";
 import { PLATFORM_SPECS, type Listing, type Platform, type Post } from "@/lib/types";
 
-export function ListingCard({ listing, posts }: { listing: Listing; posts: Pick<Post, "status" | "platform">[] }) {
+/** `brokers` is set for realtors with an account: the card then offers "Send to broker" (and shows the last send). */
+export function ListingCard({
+  listing,
+  posts,
+  brokers,
+  lastShare = null,
+}: {
+  listing: Listing;
+  posts: Pick<Post, "status" | "platform">[];
+  brokers?: PartnerRealtor[];
+  lastShare?: ListingShare | null;
+}) {
   const router = useRouter();
+  const [sent, setSent] = useState(lastShare);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const byPlatform = (Object.keys(PLATFORM_SPECS) as Platform[])
@@ -56,6 +71,23 @@ export function ListingCard({ listing, posts }: { listing: Listing; posts: Pick<
           {error && <div className="mt-1 text-sm text-red-700">{error}</div>}
         </div>
       </Link>
+      {/* Outside the card link: a button inside a link would open the listing too. */}
+      {brokers && (
+        <div className="flex min-h-11 items-center justify-between gap-3 border-t border-border px-4 py-1.5">
+          {sent && (
+            <span className="min-w-0 flex-1 truncate text-xs text-muted" title={`Sent to ${sent.to_name ?? sent.to_email}`}>
+              <span className="text-emerald-700">✓</span> Sent to {sent.to_name?.trim().split(/\s+/)[0] || sent.to_email} · <LocalTime iso={sent.created_at} short />
+            </span>
+          )}
+          <ShareWithBroker
+            listingId={listing.id}
+            brokers={brokers}
+            label={sent ? "Send again" : "Send to broker →"}
+            onSent={setSent}
+            className={`shrink-0 rounded-md px-2 py-1.5 font-medium transition hover:bg-black/5 ${sent ? "-mr-2 text-xs text-muted" : "-ml-2 text-sm text-brand"}`}
+          />
+        </div>
+      )}
       <button
         onClick={remove}
         disabled={deleting}

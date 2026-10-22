@@ -35,6 +35,13 @@ export function brokerTitles(province: string | null | undefined): string[] {
 
 export const REALTOR_TITLES = ["REALTOR®", "Real Estate Agent", "Sales Representative", "Broker", "Personal Real Estate Corporation"];
 
+/** The title after choosing or switching role: keeps a title the user typed, swaps the other role's default for this one's. */
+export function titleForRole(role: "realtor" | "mortgage_broker", province: string | null | undefined, current: string | null | undefined): string {
+  const preset = (t: string) => REALTOR_TITLES.includes(t) || brokerTitles(province).includes(t) || brokerTitles(null).includes(t);
+  if (current?.trim() && !preset(current)) return current;
+  return role === "mortgage_broker" ? brokerTitles(province)[0] : "REALTOR®";
+}
+
 export const FEE_LABELS = { condo: "Condo fee", strata: "Strata fee", strata_condo: "Strata / condo fee", maintenance: "Maintenance fee" } as const;
 export type FeeLabel = keyof typeof FEE_LABELS;
 

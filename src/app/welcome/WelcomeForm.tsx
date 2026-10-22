@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { PROVINCES, REALTOR_TITLES, brokerTitles } from "@/lib/broker";
+import { PROVINCES, titleForRole } from "@/lib/broker";
 import type { Role } from "@/lib/types";
 
 const CHOICES: { role: Role; title: string; body: string }[] = [
@@ -27,9 +27,7 @@ export function WelcomeForm({ initialRole, initialProvince, currentTitle, next }
     const supabase = createClient();
     const { data: auth } = await supabase.auth.getUser();
     if (!auth.user) return router.replace("/login");
-    // Keep a title they typed themselves; swap the other role's default for this one's.
-    const keepTitle = currentTitle && !REALTOR_TITLES.includes(currentTitle) && !brokerTitles(province).includes(currentTitle) && !brokerTitles(null).includes(currentTitle);
-    const title = keepTitle ? currentTitle : broker ? brokerTitles(province)[0] : "REALTOR®";
+    const title = titleForRole(role, province, currentTitle);
     const { error } = await supabase
       .from("profiles")
       .update({ role, role_chosen: true, title, ...(broker ? { province } : {}) })
