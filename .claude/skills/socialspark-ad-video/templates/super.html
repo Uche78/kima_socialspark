@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="brand.css">
+<style>
+  /* On-screen super (kinetic headline). Render with --alpha to lay over footage,
+     or set data.bg = "brand" | "cream" | "photo" for a full-frame title card. */
+  body { display: flex; align-items: center; justify-content: center; }
+  body.bg-brand { background: var(--brand); color: var(--cream); }
+  body.bg-cream { background: var(--background); }
+  body.bg-photo { background: #000; color: #fff; }
+  .photo { position: absolute; inset: 0; background-size: cover; background-position: center; animation-name: slow-zoom; animation-timing-function: linear; }
+  .photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,20,32,.15) 30%, rgba(10,20,32,.75)); }
+  .stage { position: absolute; left: var(--safe-side); right: var(--safe-side); top: var(--safe-top); bottom: var(--safe-bottom);
+           display: flex; flex-direction: column; justify-content: center; gap: .25em; }
+  .stage.top { justify-content: flex-start; }
+  .stage.bottom { justify-content: flex-end; }
+  .eyebrow { font-family: var(--heading); font-weight: 600; text-transform: uppercase; letter-spacing: .14em; font-size: .42em; color: var(--accent); margin-bottom: .4em; }
+  .line { font-family: var(--heading); font-weight: 700; line-height: 1.08; letter-spacing: -0.015em; }
+  .line.serif { font-family: var(--display); font-weight: 700; letter-spacing: -0.01em; }
+  .line em { font-style: normal; color: var(--accent); }
+  /* Text over footage needs a plate so it reads on any frame. */
+  body.alpha .line, body.alpha .eyebrow { align-self: flex-start; background: var(--brand); color: var(--cream); padding: .12em .32em; border-radius: .14em; }
+  body.alpha .eyebrow { background: var(--accent); color: var(--brand); }
+  body.alpha .line em { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="photo anim" id="photo" hidden></div>
+<div class="stage" id="stage"></div>
+<script>
+/* data: { lines: ["Just listed at 4 p.m.", "Posted by <em>4:01</em>."], eyebrow?, bg?: "alpha"|"brand"|"cream"|"photo",
+           photo?: "file:///…/kitchen.webp", align?: "center"|"top"|"bottom", size?: px, serif?: bool,
+           in?: s (first line appears), stagger?: s, out?: s (fade everything out at this time) } */
+const d = window.__DATA || {};
+const bg = d.bg || "alpha";
+document.body.classList.add(bg === "alpha" ? "alpha" : "bg-" + bg);
+document.body.style.fontSize = (d.size || Math.round((d.width || 1080) * 0.085)) + "px";
+const stage = document.getElementById("stage");
+if (d.align && d.align !== "center") stage.classList.add(d.align);
+if (bg === "photo" && d.photo) {
+  const p = document.getElementById("photo");
+  p.hidden = false;
+  p.style.backgroundImage = `url("${d.photo}")`;
+  p.style.animationDuration = (d.duration || 5) + "s";
+}
+let t = Number(d.in ?? 0.15);
+const stagger = Number(d.stagger ?? 0.35);
+const items = [];
+if (d.eyebrow) items.push(Object.assign(document.createElement("div"), { className: "eyebrow anim", innerHTML: d.eyebrow }));
+for (const text of d.lines || ["Your headline here"]) {
+  items.push(Object.assign(document.createElement("div"), { className: "line anim" + (d.serif ? " serif" : ""), innerHTML: text }));
+}
+for (const el of items) {
+  el.style.animationName = "rise";
+  el.style.animationDuration = "0.55s";
+  el.style.animationDelay = t + "s";
+  stage.appendChild(el);
+  t += stagger;
+}
+if (d.out) {
+  stage.style.animation = `fade-out 0.3s ${d.out}s both`;
+}
+</script>
+</body>
+</html>

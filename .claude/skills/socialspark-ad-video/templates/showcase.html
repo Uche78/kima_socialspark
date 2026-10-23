@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="brand.css">
+<style>
+  /* Product showcase: finished posts / feature sheets rise in one after another, like the home hero.
+     Use real exports from the app (downloaded JPEGs or screenshots of the slide canvas). */
+  body { background: var(--background); }
+  body.dark { background: var(--brand); }
+  .stage { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+  .card { position: absolute; width: 58%; aspect-ratio: var(--ratio, 4 / 5); border-radius: 2.2%; overflow: hidden;
+          background: #fff center / cover no-repeat; box-shadow: 0 30px 80px rgba(15, 42, 68, 0.28); animation-name: rise; animation-duration: .7s; }
+  .label { position: absolute; left: var(--safe-side); right: var(--safe-side); bottom: calc(var(--safe-bottom) - 6%); text-align: center; text-wrap: balance;
+           font-family: var(--heading); font-weight: 700; font-size: 44px; color: var(--brand); animation-name: rise; animation-duration: .5s; }
+  body.dark .label { color: var(--cream); }
+  .label em { font-style: normal; color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="stage" id="stage"></div>
+<script>
+/* data: { images: ["file:///…/slide1.jpg", …] (up to 4), ratio?: "4 / 5" | "1 / 1" | "9 / 16",
+           label?: "Just Listed · Open House · <em>Sold</em>", dark?: bool, stagger?: s } */
+const d = window.__DATA || {};
+if (d.dark) document.body.classList.add("dark");
+if (d.ratio) document.documentElement.style.setProperty("--ratio", d.ratio);
+const stage = document.getElementById("stage");
+const imgs = (d.images || []).slice(0, 4);
+// Fanned stack: last image ends up on top, centred.
+const layouts = { 1: [[0, 0, 0]], 2: [[-14, -4, -5], [10, 3, 4]], 3: [[-20, -5, -7], [18, -2, 6], [0, 4, 0]],
+                  4: [[-22, -7, -8], [20, -6, 7], [-8, 3, -2], [6, 6, 2]] }[imgs.length] || [];
+const stagger = Number(d.stagger ?? 0.4);
+imgs.forEach((src, i) => {
+  const [x, y, r] = layouts[i];
+  const outer = document.createElement("div");
+  outer.style.cssText = `position:absolute;inset:0;display:flex;align-items:center;justify-content:center;transform:translate(${x}%,${y}%) rotate(${r}deg)`;
+  const card = document.createElement("div");
+  card.className = "card anim";
+  card.style.backgroundImage = `url("${src}")`;
+  card.style.animationDelay = (0.15 + i * stagger) + "s";
+  outer.appendChild(card);
+  stage.appendChild(outer);
+});
+if (d.label) {
+  const l = document.createElement("div");
+  l.className = "label anim";
+  l.innerHTML = d.label;
+  l.style.animationDelay = (0.3 + imgs.length * stagger) + "s";
+  document.body.appendChild(l);
+}
+</script>
+</body>
+</html>

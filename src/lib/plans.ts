@@ -19,6 +19,16 @@ export const PAID_PLANS: Record<PaidPlanId, { name: string; price: string; yearl
   top_producer: { name: "Top Producer", price: "$49.99", yearly: "$499.90", yearlyPerMonth: "$41.66", posts: 50, regens: 25, forWho: "For high-volume listing agents" },
 };
 
+/** Included in every paid plan (the pricing page and the offer on persona landing pages). */
+export const PLAN_FEATURES = [
+  "Full-quality property photos and optional personal branding",
+  "Single images and carousels",
+  "Captions and publishing to Facebook, Instagram and LinkedIn",
+  "English, French (Québec) and bilingual content",
+  "Just Listed, Open House, Price Reduced, Coming Soon, Sold and Featured Property posts",
+  "Mortgage feature sheets, PDFs and Stories for mortgage brokers",
+];
+
 /** The next plan up, for "upgrade" prompts (null on the biggest plan). */
 export function nextPlan(plan: PlanId): PaidPlanId | null {
   if (plan === "free") return "starter";

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getUser } from "@/lib/supabase/server";
 import { PricingPlans } from "@/components/pricing/PricingPlans";
-import { FREE_LIMITS, PAID_PLANS, usageFrom, type EntitlementRow } from "@/lib/plans";
+import { FREE_LIMITS, PAID_PLANS, PLAN_FEATURES, usageFrom, type EntitlementRow } from "@/lib/plans";
 
 const { starter: S, professional: P, top_producer: T } = PAID_PLANS;
 export const metadata = {
@@ -9,15 +9,6 @@ export const metadata = {
   description: `Try ${FREE_LIMITS.registered} SocialSpark posts free, no credit card. ${S.name} ${S.price}/month, ${P.name} ${P.price}/month and ${T.name} ${T.price}/month (CAD, plus tax), or pay yearly and get two months free. Every plan includes every feature.`,
   alternates: { canonical: "/pricing" },
 };
-
-const FEATURES = [
-  "Full-quality property photos and optional personal branding",
-  "Single images and carousels",
-  "Captions and publishing to Facebook, Instagram and LinkedIn",
-  "English, French (Québec) and bilingual content",
-  "Just Listed, Open House, Price Reduced, Coming Soon, Sold and Featured Property posts",
-  "Mortgage feature sheets, PDFs and Stories for mortgage brokers",
-];
 
 export default async function PricingPage({ searchParams }: PageProps<"/pricing">) {
   const { supabase, user } = await getUser();
@@ -47,7 +38,7 @@ export default async function PricingPage({ searchParams }: PageProps<"/pricing"
       <div className="card p-6">
         <h2 className="font-semibold">Included in every plan</h2>
         <ul className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
-          {FEATURES.map((f) => <li key={f} className="flex gap-2"><span className="text-brand">✓</span>{f}</li>)}
+          {PLAN_FEATURES.map((f) => <li key={f} className="flex gap-2"><span className="text-brand">✓</span>{f}</li>)}
         </ul>
         <p className="mt-4 text-xs text-muted">
           A single image or a complete carousel counts as one post. Regenerating a post uses a regeneration. Failed generations don&apos;t count.

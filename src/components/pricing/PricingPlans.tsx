@@ -6,27 +6,33 @@ import { PlanButton } from "@/components/PlanButton";
 import { PAID_PLAN_IDS, PAID_PLANS, type BillingInterval, type PaidPlanId, type PlanId } from "@/lib/plans";
 import { TeamBanner } from "./TeamEnquiry";
 
-const HIGHLIGHT: PaidPlanId = "professional";
-/** Phones: the highlighted plan first, then the bigger plan, then the smallest. */
-const PHONE_ORDER: Record<PaidPlanId, string> = { professional: "order-1", top_producer: "order-2", starter: "order-3" };
+/** The plan marked "Most popular": a paid plan, or "team" to feature the Team banner instead of a card. */
+export type PlanHighlight = PaidPlanId | "team";
+
+/** Phones: the highlighted plan first, then the rest from the biggest down. */
+const PHONE_ORDER = ["order-1", "order-2", "order-3"];
 
 /**
- * Monthly/Yearly toggle, the three paid plans and the Team banner. The same on /pricing and both landing
- * pages; on the landing pages the buttons lead to /pricing, where checkout starts.
+ * Monthly/Yearly toggle, the three paid plans and the Team banner. The same on /pricing and the landing
+ * pages; on the landing pages the buttons lead to /pricing, where checkout starts. Persona landing pages
+ * (/for/<slug>) highlight the plan that fits their reader; everywhere else it's Pro.
  */
 export function PricingPlans({
   mode,
   signedIn = false,
   currentPlan = "free",
   initialInterval = "month",
+  highlight = "professional",
 }: {
   mode: "landing" | "pricing";
   signedIn?: boolean;
   currentPlan?: PlanId;
   initialInterval?: BillingInterval;
+  highlight?: PlanHighlight;
 }) {
   const [interval, setBilling] = useState<BillingInterval>(initialInterval);
   const paid = currentPlan !== "free";
+  const phoneOrder = [...PAID_PLAN_IDS].reverse().sort((a, b) => Number(b === highlight) - Number(a === highlight));
 
   return (
     <div>
@@ -51,20 +57,22 @@ export function PricingPlans({
         </div>
       </div>
 
+      {highlight === "team" && <TeamBanner featured />}
+
       <div className="mx-auto mt-8 grid max-w-5xl gap-5 md:grid-cols-3">
         {PAID_PLAN_IDS.map((id) => {
           const p = PAID_PLANS[id];
-          const highlight = id === HIGHLIGHT;
+          const highlighted = id === highlight;
           const current = paid && currentPlan === id;
           return (
-            <div key={id} className={`flex flex-col ${PHONE_ORDER[id]} md:order-none`}>
-              <div className={`flex flex-1 flex-col rounded-2xl bg-white p-6 ${highlight ? "ring-2 ring-[#0f2a44]" : "ring-1 ring-black/10"}`}>
+            <div key={id} className={`flex flex-col ${PHONE_ORDER[phoneOrder.indexOf(id)]} md:order-none`}>
+              <div className={`flex flex-1 flex-col rounded-2xl bg-white p-6 ${highlighted ? "ring-2 ring-[#0f2a44]" : "ring-1 ring-black/10"}`}>
                 <div className="flex items-center justify-between gap-2">
                   <h3 className="font-semibold text-[#141414]">{p.name}</h3>
                   {current ? (
                     <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-900">Your plan</span>
                   ) : (
-                    highlight && <span className="rounded-full bg-[#0f2a44] px-2.5 py-0.5 text-xs font-semibold text-white">Most popular</span>
+                    highlighted && <span className="rounded-full bg-[#0f2a44] px-2.5 py-0.5 text-xs font-semibold text-white">Most popular</span>
                   )}
                 </div>
                 <p className="mt-3">
@@ -85,7 +93,7 @@ export function PricingPlans({
                   {mode === "landing" ? (
                     <Link
                       href={`/pricing${interval === "year" ? "?interval=year" : ""}`}
-                      className={`inline-flex h-11 w-full items-center justify-center rounded-full text-sm font-medium transition ${highlight ? "bg-[#141414] text-white hover:bg-black" : "border border-black/15 bg-white text-[#141414] hover:bg-black/5"}`}
+                      className={`inline-flex h-11 w-full items-center justify-center rounded-full text-sm font-medium transition ${highlighted ? "bg-[#141414] text-white hover:bg-black" : "border border-black/15 bg-white text-[#141414] hover:bg-black/5"}`}
                     >
                       Choose {p.name}
                     </Link>
@@ -98,7 +106,7 @@ export function PricingPlans({
                       plan={id}
                       interval={interval}
                       label={signedIn ? `Choose ${p.name}` : "Create an account to subscribe"}
-                      className={`${highlight ? "btn-primary" : "btn-secondary"} h-11 w-full rounded-full`}
+                      className={`${highlighted ? "btn-primary" : "btn-secondary"} h-11 w-full rounded-full`}
                       signedIn={signedIn}
                     />
                   )}
@@ -109,7 +117,7 @@ export function PricingPlans({
         })}
       </div>
 
-      <TeamBanner />
+      {highlight !== "team" && <TeamBanner />}
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { FAQ } from "@/lib/faq";
 import { BROKER_FAQ } from "@/lib/faq-brokers";
+import { PERSONA_PAGES } from "@/lib/persona-pages";
 import { FREE_LIMITS, PAID_PLAN_IDS, PAID_PLANS } from "@/lib/plans";
 import { COMPANY, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
@@ -41,7 +42,7 @@ ${FAQ.map((f) => `### ${f.q}\n${f.a}`).join("\n\n")}
 - [Home](${SITE_URL}/): what SocialSpark does, how it works, examples and FAQ
 - [Mortgage brokers](${SITE_URL}/mortgage-brokers): mortgage feature sheets
 - [Pricing](${SITE_URL}/pricing): plans and what counts as a post
-- [Privacy policy](${COMPANY.url}/privacy/)
+${PERSONA_PAGES.map((p) => `- [${p.meta.title}](${SITE_URL}/for/${p.slug}): ${p.meta.description}\n`).join("")}- [Privacy policy](${COMPANY.url}/privacy/)
 - [Terms of service](${COMPANY.url}/terms/)
 - [Contact](mailto:${COMPANY.email})
 `;

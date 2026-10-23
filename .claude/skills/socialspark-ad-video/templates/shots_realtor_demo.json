@@ -1,0 +1,31 @@
+{
+  "baseUrl": "http://localhost:3001",
+  "viewport": { "width": 390, "height": 844 },
+  "deviceScaleFactor": 3,
+  "cursor": "touch",
+  "steps": [
+    { "goto": "/" },
+    { "wait": 700 },
+    { "mark": "home" },
+    { "type": { "selector": "input[type=url]", "text": "https://REPLACE-WITH-PERMITTED-DEMO-LISTING", "delay": 35 } },
+    { "wait": 300 },
+    { "mark": "pasted" },
+    { "click": "role=button[name=/Get listing/]" },
+    { "waitFor": "text=Generate post", "timeout": 120000 },
+    { "mark": "listing-ready" },
+    { "wait": 900 },
+    { "scroll": { "y": 500, "duration": 1400 } },
+    { "wait": 600 },
+    { "click": "role=button[name=\"Carousel\"]" },
+    { "click": "role=button[name=\"Just Listed\"]" },
+    { "click": "role=button[name=\"Modern\"]" },
+    { "scroll": { "to": "role=button[name=\"Generate post\"]" } },
+    { "mark": "generate" },
+    { "click": "role=button[name=\"Generate post\"]" },
+    { "waitFor": "text=Your new post", "timeout": 180000 },
+    { "mark": "post-ready" },
+    { "wait": 1500 },
+    { "scroll": { "to": "text=Your new post" } },
+    { "wait": 2000 }
+  ]
+}

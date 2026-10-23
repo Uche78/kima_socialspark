@@ -88,6 +88,7 @@ export function PastePageDialog({
         </ol>
 
         <textarea
+          name="pasted_page"
           aria-label="Paste the copied page here"
           className={`mt-5 h-28 w-full resize-none rounded-xl border-2 border-dashed p-4 text-center text-sm outline-none transition focus:border-brand ${
             captured ? "border-green-500 bg-green-50 text-green-900" : "border-border bg-black/[0.02] text-muted"

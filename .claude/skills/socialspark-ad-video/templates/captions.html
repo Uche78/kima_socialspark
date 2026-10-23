@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="brand.css">
+<style>
+  /* Burned-in captions for sound-off viewing. Render with --alpha and --data captions.json
+     (from scripts/captions.py). Sits just above the bottom safe zone. */
+  .wrap { position: absolute; left: var(--safe-side); right: var(--safe-side); bottom: calc(var(--safe-bottom) + 2%);
+          display: flex; justify-content: center; }
+  .wrap.top { bottom: auto; top: calc(var(--safe-top) + 2%); }
+  .cap { font-family: var(--heading); font-weight: 700; text-align: center; line-height: 1.2;
+         background: rgba(15, 42, 68, 0.92); color: #fff; padding: .28em .55em; border-radius: .3em;
+         max-width: 100%; box-shadow: 0 .1em .5em rgba(0,0,0,.25); }
+  .w { opacity: .55; transition: none; }
+  .w.on { opacity: 1; }
+  .w.now { color: var(--accent); }
+</style>
+</head>
+<body class="alpha">
+<div class="wrap" id="wrap"><div class="cap" id="cap" hidden></div></div>
+<script>
+/* data: { groups: [{start, end, words: [{w, start, end}]}], position?: "bottom"|"top", size?: px, offset?: s } */
+const d = window.__DATA || {};
+const groups = d.groups || [];
+const offset = Number(d.offset || 0);
+const cap = document.getElementById("cap");
+cap.style.fontSize = (d.size || Math.round((d.width || 1080) * 0.052)) + "px";
+if (d.position === "top") document.getElementById("wrap").classList.add("top");
+let shown = -1;
+window.seek = (time) => {
+  const t = time - offset;
+  const gi = groups.findIndex((g) => t >= g.start && t < g.end);
+  if (gi < 0) { cap.hidden = true; shown = -1; return; }
+  const g = groups[gi];
+  if (gi !== shown) {
+    cap.innerHTML = g.words.map((w, i) => `<span class="w" data-i="${i}">${w.w}</span>`).join(" ");
+    shown = gi;
+  }
+  cap.hidden = false;
+  cap.querySelectorAll(".w").forEach((el, i) => {
+    const w = g.words[i];
+    el.classList.toggle("on", t >= w.start);
+    el.classList.toggle("now", t >= w.start && t < w.end && !!d.highlight);
+  });
+};
+</script>
+</body>
+</html>

@@ -65,6 +65,8 @@ export function LoginForm({ isGuest, next, role }: { isGuest: boolean; next: str
         </p>
         <input
           className="input h-12 rounded-full px-5 text-center text-xl tracking-[0.4em]"
+          id="login-code"
+          name="code"
           inputMode="numeric"
           autoComplete="one-time-code"
           autoFocus
@@ -99,7 +101,7 @@ export function LoginForm({ isGuest, next, role }: { isGuest: boolean; next: str
       }}
       className="mt-6 space-y-3"
     >
-      <input className="input h-12 rounded-full px-5 text-base" type="email" required autoComplete="email" placeholder="you@brokerage.ca" value={email} onChange={(e) => setEmail(e.target.value)} />
+      <input className="input h-12 rounded-full px-5 text-base" id="login-email" name="email" type="email" required autoComplete="email" placeholder="you@brokerage.ca" value={email} onChange={(e) => setEmail(e.target.value)} />
       <button className="btn-primary h-12 w-full rounded-full text-base" disabled={busy}>
         {busy ? "Sending…" : "Email me a code"}
       </button>

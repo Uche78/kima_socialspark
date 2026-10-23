@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  /* Phone bezel overlay, rendered as a transparent PNG by assemble.py (fit: "phone").
+     Everything between the outer body and the rounded screen hole is opaque, so it also
+     covers the recording's square corners. */
+  html, body { margin: 0; background: transparent; overflow: hidden; }
+  svg { position: absolute; inset: 0; filter: drop-shadow(0 40px 60px rgba(8, 20, 34, .45)); }
+</style>
+</head>
+<body>
+<svg id="svg"></svg>
+<script>
+/* data: { screen: {x, y, w, h} in px (the recording's rectangle), width, height } */
+const d = window.__DATA || {};
+const W = d.width || 1080, H = d.height || 1920;
+const s = d.screen || { x: 160, y: 140, w: 760, h: 1640 };
+// bezel ≥ 0.42 × radius, or the recording's square corners poke past the rounded body.
+const bezel = Math.round(s.w * 0.045), r = Math.round(s.w * 0.1);
+const rr = (x, y, w, h, r) =>
+  `M${x + r},${y}H${x + w - r}A${r},${r} 0 0 1 ${x + w},${y + r}V${y + h - r}A${r},${r} 0 0 1 ${x + w - r},${y + h}` +
+  `H${x + r}A${r},${r} 0 0 1 ${x},${y + h - r}V${y + r}A${r},${r} 0 0 1 ${x + r},${y}Z`;
+const outer = rr(s.x - bezel, s.y - bezel, s.w + 2 * bezel, s.h + 2 * bezel, r + bezel);
+const hole = rr(s.x, s.y, s.w, s.h, r);
+const iw = s.w * 0.3, ih = s.w * 0.085;
+const svg = document.getElementById("svg");
+svg.setAttribute("width", W); svg.setAttribute("height", H); svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+svg.innerHTML =
+  `<path d="${outer} ${hole}" fill="#11161c" fill-rule="evenodd"/>` +
+  `<path d="${outer}" fill="none" stroke="#2a323c" stroke-width="2"/>` +
+  // Camera island is opt-in: it sits over the app header (record with ~30px of top padding if used).
+  (d.island ? `<rect x="${s.x + (s.w - iw) / 2}" y="${s.y + s.w * 0.03}" width="${iw}" height="${ih}" rx="${ih / 2}" fill="#05070a"/>` : "");
+</script>
+</body>
+</html>

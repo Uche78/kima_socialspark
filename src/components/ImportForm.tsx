@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Role } from "@/lib/types";
 import { PastePageDialog } from "./PastePageDialog";
@@ -33,6 +33,7 @@ function isRealtorCa(raw: string) {
 }
 
 export function ImportForm({ role }: { role?: Role } = {}) {
+  const fieldId = useId();
   const router = useRouter();
   const [url, setUrl] = useState("");
   const [busy, setBusy] = useState(false);
@@ -117,6 +118,9 @@ export function ImportForm({ role }: { role?: Role } = {}) {
         <input
           className="h-14 w-full rounded-full border border-black/15 bg-white px-6 text-base text-[#141414] placeholder:text-[#141414]/45 outline-none transition focus:border-[#141414]/50 disabled:opacity-60 sm:flex-1"
           type="url"
+          // Unique per form: the home and broker pages show this form twice.
+          id={`listing-url-${fieldId}`}
+          name="listing_url"
           required
           aria-label="Listing link"
           placeholder="Paste a listing link from a brokerage or agent's website"

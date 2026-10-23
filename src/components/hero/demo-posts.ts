@@ -113,6 +113,19 @@ export type DemoPost = {
   comments: number;
 };
 
+/**
+ * The same listing with sharper photos (public/hero/<name>-hd.webp, 1024px, about twice the bytes).
+ * For pages that draw posts large, like the persona landing pages; the home page hero keeps the 640px
+ * copies so phones load it fast.
+ */
+export function withHdPhotos(l: Listing): Listing {
+  return { ...l, photos: l.photos.map((p) => ({ ...p, url: p.url.replace(/^\/hero\/([\w-]+)\.webp$/, "/hero/$1-hd.webp") })) };
+}
+
+export function hdPost(p: DemoPost): DemoPost {
+  return { ...p, listing: withHdPhotos(p.listing) };
+}
+
 export const DEMO_POSTS: DemoPost[] = [
   {
     id: "ig-oakridge",

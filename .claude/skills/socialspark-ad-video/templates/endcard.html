@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="brand.css">
+<style>
+  /* End card: wordmark, the offer, the risk reversal, the URL. Full frame, 3–5 s. */
+  body { background: var(--brand); color: var(--cream); display: flex; align-items: center; justify-content: center; }
+  body.light { background: var(--background); color: var(--foreground); }
+  .stage { position: absolute; left: var(--safe-side); right: var(--safe-side); top: var(--safe-top); bottom: var(--safe-bottom);
+           display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: .55em; }
+  .wordmark { font-size: 1.5em; }
+  body:not(.light) .wordmark { color: var(--cream); }
+  .rule { width: 2.2em; height: .07em; background: var(--accent); transform-origin: center; animation-name: underline; }
+  .offer { font-family: var(--heading); font-weight: 700; font-size: .78em; line-height: 1.15; max-width: 14em; }
+  .reassure { font-size: .42em; opacity: .85; font-weight: 500; }
+  .cta { margin-top: .4em; font-family: var(--heading); font-weight: 700; font-size: .5em; background: var(--accent); color: var(--brand);
+         padding: .6em 1.3em; border-radius: .5em; }
+  .url { font-size: .4em; font-weight: 600; letter-spacing: .02em; opacity: .9; }
+  .preview { width: 62%; aspect-ratio: 1; border-radius: .25em; background-size: cover; background-position: center;
+             box-shadow: 0 .4em 1.2em rgba(0,0,0,.35); margin-bottom: .3em; }
+</style>
+</head>
+<body>
+<div class="stage" id="stage"></div>
+<script>
+/* data: { offer: "See your listing as a post", reassure: "3 free posts · No credit card", cta: "Try it free",
+           url: "socialspark.usekima.com", preview?: "file:///…/post.jpg", light?: bool, size?: px }
+   Every string comes from the ad-copy skill and the code (src/lib/plans.ts, src/lib/site.ts). */
+const d = window.__DATA || {};
+if (d.light) document.body.classList.add("light");
+document.body.style.fontSize = (d.size || Math.round((d.width || 1080) * 0.09)) + "px";
+const stage = document.getElementById("stage");
+const parts = [];
+if (d.preview) parts.push(["div", "preview", "", "pop"]);
+parts.push(["div", "wordmark", 'Social<span>Spark</span>', "rise"]);
+parts.push(["div", "rule", "", "underline"]);
+if (d.offer) parts.push(["div", "offer", d.offer, "rise"]);
+if (d.reassure) parts.push(["div", "reassure", d.reassure, "rise"]);
+if (d.cta) parts.push(["div", "cta", d.cta, "pop"]);
+if (d.url) parts.push(["div", "url", d.url, "fade"]);
+let t = 0.1;
+for (const [tag, cls, html, anim] of parts) {
+  const el = document.createElement(tag);
+  el.className = cls + " anim";
+  el.innerHTML = html;
+  if (cls === "preview") el.style.backgroundImage = `url("${d.preview}")`;
+  el.style.animationName = anim;
+  el.style.animationDuration = anim === "pop" ? "0.5s" : "0.6s";
+  el.style.animationDelay = t + "s";
+  stage.appendChild(el);
+  t += 0.22;
+}
+</script>
+</body>
+</html>

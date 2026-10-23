@@ -38,6 +38,7 @@ export async function Header() {
           {user && guest && <Link href="/settings" className={`btn-ghost hidden md:inline-flex ${ON_PHOTO}`}>Brand &amp; voice</Link>}
           {guest ? (
             <LoginLink
+              signedOut={!user}
               // Outlined pill everywhere: navy on white pages, off-white over the home page photo.
               className="btn ml-2 h-10 whitespace-nowrap rounded-full border border-brand bg-transparent px-4 text-brand hover:bg-brand/5 sm:px-5 group-data-[overlay=true]:border-[#f3f1ec]/80 group-data-[overlay=true]:text-[#f3f1ec] group-data-[overlay=true]:hover:bg-white/10"
             >

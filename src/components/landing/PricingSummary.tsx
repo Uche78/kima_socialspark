@@ -1,12 +1,15 @@
 import Link from "next/link";
-import { FREE_LIMITS } from "@/lib/plans";
-import { PricingPlans } from "@/components/pricing/PricingPlans";
+import { FREE_LIMITS, type BillingInterval } from "@/lib/plans";
+import { PricingPlans, type PlanHighlight } from "@/components/pricing/PricingPlans";
 
 const EYEBROW = "text-[11px] font-semibold uppercase tracking-[0.2em] text-[#141414]/70 sm:text-xs";
 const H2 = "mt-3 font-[family-name:var(--font-heading)] tracking-[-0.02em] text-3xl font-medium leading-tight text-[#141414] sm:text-5xl";
 
-/** The same plans and prices on both landing pages (realtors and mortgage brokers). Free is the headline, not a card. */
-export function PricingSummary() {
+/**
+ * The same plans and prices on every landing page. Free is the headline, not a card. Persona pages pass the
+ * plan and billing that fit their reader, and `fit`: one line on why that plan fits (with the volume math).
+ */
+export function PricingSummary({ highlight, initialInterval, fit }: { highlight?: PlanHighlight; initialInterval?: BillingInterval; fit?: string } = {}) {
   return (
     <>
       <div className="mx-auto max-w-3xl text-center">
@@ -15,9 +18,10 @@ export function PricingSummary() {
           Try {FREE_LIMITS.registered} posts free. No credit card.
         </h2>
         <p className="mt-4 text-lg text-[#141414]/70">Upgrade when you&apos;re ready. Every plan includes every feature, for realtors and mortgage brokers. Prices in CAD, plus tax.</p>
+        {fit && <p className="mt-3 text-base font-medium text-[#141414]">{fit}</p>}
       </div>
       <div className="mt-10">
-        <PricingPlans mode="landing" />
+        <PricingPlans mode="landing" highlight={highlight} initialInterval={initialInterval} />
       </div>
       <p className="mt-6 text-center">
         <Link href="/pricing" className="text-sm font-medium text-[#141414] underline underline-offset-4">
