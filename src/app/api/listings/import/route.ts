@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { getUser } from "@/lib/supabase/server";
+import { createAdminClient, getUser } from "@/lib/supabase/server";
+import { recordAiUsage, type UsageMeter } from "@/lib/ai-usage";
 import { extractListing, ExtractionBlockedError, fetchListingPage, MAX_PASTED_CHARS, pastedListingPage } from "@/lib/extract";
 import { copyPhotosToStorage } from "@/lib/photos";
 import { upgradePhotoUrls } from "@/lib/photo-quality";
@@ -37,11 +38,15 @@ export async function POST(request: Request) {
   }
 
   let extracted;
+  const meter: UsageMeter = { usage: null };
   try {
-    extracted = await extractListing(page);
+    extracted = await extractListing(page, meter);
   } catch (e) {
     const message = e instanceof ClaudeRefusalError || e instanceof Error ? e.message : "Extraction failed.";
     return NextResponse.json({ error: message, manualEntry: true }, { status: 422 });
+  } finally {
+    // Recorded whether or not the page turned out to be a listing: the call cost the same.
+    if (meter.usage) await recordAiUsage(createAdminClient(), { user_id: user.id, kind: "import", usage: meter.usage });
   }
 
   const { listing: l, photoUrls, tourUrl } = extracted;

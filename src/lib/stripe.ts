@@ -1,6 +1,6 @@
 import Stripe from "stripe";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { PaidPlanId } from "./plans";
+import { PAID_PLAN_IDS, type BillingInterval, type PaidPlanId } from "./plans";
 
 let client: Stripe | null = null;
 
@@ -11,19 +11,36 @@ export function stripe() {
   return client;
 }
 
-/** Price IDs configured in the environment (Stripe dashboard → product → price). */
-export function priceIdFor(plan: PaidPlanId) {
-  const id = plan === "starter" ? process.env.STRIPE_PRICE_STARTER : process.env.STRIPE_PRICE_PROFESSIONAL;
-  if (!id) throw new Error(`Stripe price for ${plan} is not configured`);
+/**
+ * Price IDs configured in the environment (Stripe dashboard → product → price), e.g. STRIPE_PRICE_PROFESSIONAL
+ * for Pro monthly and STRIPE_PRICE_PROFESSIONAL_YEARLY for Pro yearly.
+ */
+function priceEnv(plan: PaidPlanId, interval: BillingInterval) {
+  return `STRIPE_PRICE_${plan.toUpperCase()}${interval === "year" ? "_YEARLY" : ""}`;
+}
+
+export function priceIdFor(plan: PaidPlanId, interval: BillingInterval = "month") {
+  const id = process.env[priceEnv(plan, interval)];
+  if (!id) throw new Error(`Stripe price for ${plan} (${interval}ly) is not configured`);
   return id;
 }
 
 /** Access is assigned from the subscription's price ID, never from client input or metadata alone. */
 export function planForPrice(priceId: string | null | undefined): PaidPlanId | null {
   if (!priceId) return null;
-  if (priceId === process.env.STRIPE_PRICE_STARTER) return "starter";
-  if (priceId === process.env.STRIPE_PRICE_PROFESSIONAL) return "professional";
+  for (const plan of PAID_PLAN_IDS) {
+    for (const interval of ["month", "year"] as const) if (priceId === process.env[priceEnv(plan, interval)]) return plan;
+  }
   return null;
+}
+
+/** One month after `iso`, keeping the day of month where it exists (Jan 31 → Feb 28), like the database. */
+function addMonth(iso: string) {
+  const d = new Date(iso);
+  const day = d.getUTCDate();
+  const next = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 1, d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds()));
+  next.setUTCDate(Math.min(day, new Date(Date.UTC(next.getUTCFullYear(), next.getUTCMonth() + 1, 0)).getUTCDate()));
+  return next.toISOString();
 }
 
 /**
@@ -65,7 +82,11 @@ export async function syncSubscription(admin: SupabaseClient, sub: Stripe.Subscr
       cancel_at_period_end: !!sub.cancel_at_period_end,
       period_start: periodStart,
       period_end: periodEnd,
-      ...(live && (newPeriod || planChanged) ? { period_posts_used: 0, period_regens_used: 0 } : {}),
+      billing_interval: item?.price?.recurring?.interval === "year" ? "year" : "month",
+      // A new billing period or plan starts a fresh month of allowance (yearly plans then roll monthly in the database).
+      ...(live && (newPeriod || planChanged)
+        ? { period_posts_used: 0, period_regens_used: 0, allowance_start: periodStart, allowance_end: periodStart ? addMonth(periodStart) : periodEnd }
+        : {}),
       updated_at: new Date().toISOString(),
     })
     .eq("user_id", row.user_id);

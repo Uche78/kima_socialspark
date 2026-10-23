@@ -2,6 +2,7 @@ import * as cheerio from "cheerio";
 import { z } from "zod";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { anthropic, ClaudeRefusalError, MODEL } from "./claude";
+import { usageOf, type UsageMeter } from "./ai-usage";
 import { safeFetch } from "./safe-fetch";
 import { findTourLinks } from "./virtual-tour";
 
@@ -248,10 +249,11 @@ function parseListingHtml(html: string, url: URL): PageData {
   };
 }
 
-export async function extractListing(page: PageData): Promise<{ listing: ExtractedListing; photoUrls: string[]; tourUrl: string | null }> {
+export async function extractListing(page: PageData, meter?: UsageMeter): Promise<{ listing: ExtractedListing; photoUrls: string[]; tourUrl: string | null }> {
   const imageList = page.images.map((u, i) => `[${i}] ${u}`).join("\n");
   const tourList = page.tours.map((u, i) => `[${i}] ${u}`).join("\n");
 
+  const started = Date.now();
   const response = await anthropic().messages.parse({
     model: MODEL,
     max_tokens: 16000,
@@ -274,6 +276,7 @@ export async function extractListing(page: PageData): Promise<{ listing: Extract
     ],
   });
 
+  if (meter) meter.usage = usageOf(response, started);
   if (response.stop_reason === "refusal") throw new ClaudeRefusalError("The listing could not be processed.");
   const listing = response.parsed_output;
   if (!listing) throw new Error("Couldn't read listing details from that page.");

@@ -2,6 +2,7 @@ import { z } from "zod";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import type Anthropic from "@anthropic-ai/sdk";
 import { anthropic, ClaudeRefusalError, MODEL } from "./claude";
+import { usageOf, type UsageMeter } from "./ai-usage";
 export { MAX_FOCUS } from "./focus";
 import { estimateMortgage, formatCurrency } from "./mortgage";
 import { isLowRes } from "./media";
@@ -205,6 +206,7 @@ export type GenerateRequest = {
 
 export async function generatePost(
   req: GenerateRequest,
+  meter?: UsageMeter,
 ): Promise<{ caption: string; hashtags: string[]; slides: Slide[]; focusedOn: string[] }> {
   const { listing, profile, platform, format, postType, language, focus, notes, mortgage } = req;
   const spec = PLATFORM_SPECS[platform];
@@ -258,6 +260,7 @@ export async function generatePost(
     messages: [{ role: "user", content }],
   });
 
+  if (meter) meter.usage = usageOf(response, started);
   const u = response.usage;
   console.log(
     "generate usage",

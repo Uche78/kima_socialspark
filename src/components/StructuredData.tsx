@@ -1,5 +1,5 @@
 import { FAQ } from "@/lib/faq";
-import { FREE_LIMITS, PAID_PLANS } from "@/lib/plans";
+import { FREE_LIMITS, PAID_PLAN_IDS, PAID_PLANS } from "@/lib/plans";
 import { COMPANY, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
 const price = (p: string) => p.replace(/[^0-9.]/g, "");
@@ -10,13 +10,13 @@ const price = (p: string) => p.replace(/[^0-9.]/g, "");
  */
 export function HomeStructuredData() {
   const org = { "@type": "Organization", "@id": `${SITE_URL}/#org`, name: COMPANY.name, url: COMPANY.url, email: COMPANY.email };
-  const monthly = (name: string, amount: string, description: string) => ({
+  const offer = (name: string, amount: string, duration: "P1M" | "P1Y", description: string) => ({
     "@type": "Offer",
     name,
     description,
     price: price(amount),
     priceCurrency: "CAD",
-    priceSpecification: { "@type": "UnitPriceSpecification", price: price(amount), priceCurrency: "CAD", billingDuration: "P1M", valueAddedTaxIncluded: false },
+    priceSpecification: { "@type": "UnitPriceSpecification", price: price(amount), priceCurrency: "CAD", billingDuration: duration, valueAddedTaxIncluded: false },
     url: `${SITE_URL}/pricing`,
   });
   const graph = [
@@ -45,8 +45,11 @@ export function HomeStructuredData() {
       publisher: { "@id": `${SITE_URL}/#org` },
       offers: [
         { "@type": "Offer", name: "Free", price: "0", priceCurrency: "CAD", description: `${FREE_LIMITS.registered} posts to try, no credit card`, url: `${SITE_URL}/pricing` },
-        monthly(PAID_PLANS.starter.name, PAID_PLANS.starter.price, `${PAID_PLANS.starter.posts} new posts and ${PAID_PLANS.starter.regens} regenerations a month`),
-        monthly(PAID_PLANS.professional.name, PAID_PLANS.professional.price, `${PAID_PLANS.professional.posts} new posts and ${PAID_PLANS.professional.regens} regenerations a month`),
+        ...PAID_PLAN_IDS.flatMap((id) => {
+          const p = PAID_PLANS[id];
+          const what = `${p.posts} new posts and ${p.regens} regenerations a month`;
+          return [offer(p.name, p.price, "P1M", what), offer(`${p.name} (yearly)`, p.yearly, "P1Y", `${what}, billed yearly (two months free)`)];
+        }),
       ],
     },
     {

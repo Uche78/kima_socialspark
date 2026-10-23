@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import type { PaidPlanId } from "@/lib/plans";
+import type { BillingInterval, PaidPlanId } from "@/lib/plans";
 
 /** Starts Stripe Checkout for a plan, or opens the billing portal for existing subscribers. */
-export function PlanButton({ plan, label, className, signedIn }: { plan: PaidPlanId | "portal"; label: string; className: string; signedIn: boolean }) {
+export function PlanButton({ plan, interval = "month", label, className, signedIn }: { plan: PaidPlanId | "portal"; interval?: BillingInterval; label: string; className: string; signedIn: boolean }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -16,7 +16,7 @@ export function PlanButton({ plan, label, className, signedIn }: { plan: PaidPla
     setError(null);
     const res = await fetch(plan === "portal" ? "/api/billing/portal" : "/api/billing/checkout", {
       method: "POST",
-      body: plan === "portal" ? undefined : JSON.stringify({ plan }),
+      body: plan === "portal" ? undefined : JSON.stringify({ plan, interval }),
     });
     const json = await res.json().catch(() => ({}));
     if (json.url) return (window.location.href = json.url);

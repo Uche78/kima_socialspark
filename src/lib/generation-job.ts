@@ -7,6 +7,7 @@ import { paywallFor } from "./paywall";
 import type { AllowanceKind } from "./plans";
 import { cleanTourUrl } from "./virtual-tour";
 import { PLATFORM_SPECS, type Aspect, type Design, type Language, type Listing, type MortgageInputs, type Platform, type PostFormat, type Post, type PostType, type Profile, type TextMode } from "./types";
+import { recordAiUsage, type UsageMeter } from "./ai-usage";
 
 /** Validated generation settings, stored on the job. */
 export type JobParams = {
@@ -87,10 +88,11 @@ export async function runGenerationJob(jobId: string) {
   const sheet = isSheet ? readSheetConfig(p.sheet) : null;
 
   let generated: { caption: string; hashtags: string[]; slides: Post["slides"]; focusedOn: string[] };
+  const meter: UsageMeter = { usage: null };
   try {
     generated = isSheet
       ? {
-          ...withSheetSlide(await generateFeatureSheetCopy({ listing, profile, platform: p.platform, format: p.format, language: p.language, sheet: sheet!, notes: p.notes }), p),
+          ...withSheetSlide(await generateFeatureSheetCopy({ listing, profile, platform: p.platform, format: p.format, language: p.language, sheet: sheet!, notes: p.notes }, meter), p),
           focusedOn: [],
         }
       : await generatePost({
@@ -106,10 +108,13 @@ export async function runGenerationJob(jobId: string) {
           includeContactSlide: p.format === "carousel" && p.include_contact_slide,
           tourUrl: p.include_tour ? cleanTourUrl(listing.virtual_tour_url) : null,
           mortgage: p.mortgage,
-        });
+        }, meter);
   } catch (e) {
     console.error("generation failed", job.id, e);
     return fail(e instanceof ClaudeRefusalError || e instanceof Error ? e.message : "Generation failed. Please try again.");
+  } finally {
+    // Every call Claude answered costs money, even if the reply was unusable: record it either way.
+    if (meter.usage) await recordAiUsage(admin, { user_id: job.user_id, kind: job.kind, post_type: p.post_type, listing_id: job.listing_id, job_id: job.id, usage: meter.usage });
   }
 
   // Use the allowance now that there's a post to show for it (atomic; rechecks the limit).

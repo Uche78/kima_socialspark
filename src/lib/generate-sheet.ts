@@ -4,6 +4,7 @@
 import { z } from "zod";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { anthropic, ClaudeRefusalError, MODEL } from "./claude";
+import { usageOf, type UsageMeter } from "./ai-usage";
 import { describeListing, describeProfile } from "./generate";
 import { brokerageLine, type SheetConfig } from "./feature-sheet";
 import { PLATFORM_SPECS, type Language, type Listing, type Platform, type PostFormat, type Profile, type Slide } from "./types";
@@ -46,10 +47,11 @@ export async function generateFeatureSheetCopy(req: {
   language: Language;
   sheet: SheetConfig;
   notes: string;
-}): Promise<SheetCopy> {
+}, meter?: UsageMeter): Promise<SheetCopy> {
   const { listing, profile, platform, format, language, sheet, notes } = req;
   const spec = PLATFORM_SPECS[platform];
   const realtor = sheet.realtor ? `${sheet.realtor.full_name}${sheet.realtor.brokerage_name ? `, ${sheet.realtor.brokerage_name}` : ""}` : "(none)";
+  const started = Date.now();
   const response = await anthropic().messages.parse({
     model: MODEL,
     max_tokens: 4000,
@@ -74,6 +76,7 @@ export async function generateFeatureSheetCopy(req: {
       },
     ],
   });
+  if (meter) meter.usage = usageOf(response, started);
   if (response.stop_reason === "refusal") throw new ClaudeRefusalError("Couldn't write this post. Please try again.");
   const out = response.parsed_output;
   if (!out) throw new Error("Generation failed. Please try again.");

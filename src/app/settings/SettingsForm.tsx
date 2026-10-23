@@ -10,7 +10,7 @@ import { formatPhone, isValidEmail, isValidPhone, normalizeEmail } from "@/lib/c
 import { Chips } from "@/components/Chips";
 import { LocalTime } from "@/components/LocalTime";
 import { PlanButton } from "@/components/PlanButton";
-import { PAID_PLANS, type Usage } from "@/lib/plans";
+import { nextPlan, PAID_PLANS, type PaidPlanId, type Usage } from "@/lib/plans";
 import { brokerTitles, PROVINCES, readMortgageSettings } from "@/lib/broker";
 import { COLOR_PRESETS, colorsFromLogo } from "@/lib/brand-colors";
 import { AccountType } from "./AccountType";
@@ -362,18 +362,37 @@ export function SettingsForm({ profile: initial, accounts, isGuest, usage, billi
         {usage.paid ? (
           <div className="space-y-1.5">
             <p>
-              <strong>{PAID_PLANS[usage.plan as keyof typeof PAID_PLANS].name}</strong> · {PAID_PLANS[usage.plan as keyof typeof PAID_PLANS].price} CAD/month plus tax
+              <strong>{PAID_PLANS[usage.plan as PaidPlanId].name}</strong> ·{" "}
+              {usage.interval === "year"
+                ? `${PAID_PLANS[usage.plan as PaidPlanId].yearly} CAD/year plus tax`
+                : `${PAID_PLANS[usage.plan as PaidPlanId].price} CAD/month plus tax`}
             </p>
             <p>New posts: {Math.min(usage.posts.used, usage.posts.limit)} of {usage.posts.limit} used this month</p>
             {usage.regens && <p>Regenerations: {Math.min(usage.regens.used, usage.regens.limit)} of {usage.regens.limit} used this month</p>}
             {usage.resetsAt && (
               <p className="text-muted">
-                {usage.cancelAtPeriodEnd ? "Your plan ends on " : "Allowances reset and your plan renews on "}
-                <LocalTime iso={usage.resetsAt} dateOnly />.
+                {usage.cancelAtPeriodEnd && usage.renewsAt ? (
+                  <>
+                    Your plan ends on <LocalTime iso={usage.renewsAt} dateOnly />.
+                  </>
+                ) : usage.interval === "year" && usage.renewsAt ? (
+                  <>
+                    Allowances reset on <LocalTime iso={usage.resetsAt} dateOnly />. Your plan renews on <LocalTime iso={usage.renewsAt} dateOnly />.
+                  </>
+                ) : (
+                  <>
+                    Allowances reset and your plan renews on <LocalTime iso={usage.resetsAt} dateOnly />.
+                  </>
+                )}
               </p>
             )}
-            <div className="pt-2">
+            <div className="flex flex-wrap gap-2 pt-2">
               <PlanButton plan="portal" label="Manage billing" className="btn-secondary rounded-full" signedIn />
+              {nextPlan(usage.plan) && (
+                <Link href="/pricing" className="btn-ghost rounded-full">
+                  Need more posts? See {PAID_PLANS[nextPlan(usage.plan)!].name}
+                </Link>
+              )}
             </div>
           </div>
         ) : (

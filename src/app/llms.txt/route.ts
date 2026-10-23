@@ -1,14 +1,12 @@
 import { FAQ } from "@/lib/faq";
 import { BROKER_FAQ } from "@/lib/faq-brokers";
-import { FREE_LIMITS, PAID_PLANS } from "@/lib/plans";
+import { FREE_LIMITS, PAID_PLAN_IDS, PAID_PLANS } from "@/lib/plans";
 import { COMPANY, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
 // llms.txt (llmstxt.org): a plain-language summary for AI assistants and answer engines.
 export const dynamic = "force-static";
 
 export function GET() {
-  const s = PAID_PLANS.starter;
-  const p = PAID_PLANS.professional;
   const body = `# ${SITE_NAME}
 
 > ${SITE_DESCRIPTION}
@@ -29,9 +27,12 @@ ${BROKER_FAQ.map((f) => `### ${f.q}\n${f.a}`).join("\n\n")}
 
 ## [Pricing](${SITE_URL}/pricing) (CAD, plus applicable tax)
 - Free: ${FREE_LIMITS.registered} posts in total, one-time, no credit card.
-- ${s.name}: ${s.price}/month: ${s.posts} new posts and ${s.regens} regenerations a month.
-- ${p.name}: ${p.price}/month: ${p.posts} new posts and ${p.regens} regenerations a month.
-- A single image or a full carousel counts as one post. Edits, downloads and publishing are free. Monthly allowances reset each billing cycle. Cancel anytime.
+${PAID_PLAN_IDS.map((id) => {
+  const p = PAID_PLANS[id];
+  return `- ${p.name}: ${p.price}/month, or ${p.yearly}/year (two months free): ${p.posts} new posts and ${p.regens} regenerations a month.`;
+}).join("\n")}
+- Teams and brokerages: seats, one invoice and a shared brand kit; contact us from the pricing page.
+- A single image or a full carousel counts as one post. Edits, downloads and publishing are free, and mortgage feature sheets, PDFs and Stories are free to build. Allowances reset every month, on yearly plans too. Cancel anytime.
 
 ## Frequently asked questions
 ${FAQ.map((f) => `### ${f.q}\n${f.a}`).join("\n\n")}
