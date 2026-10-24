@@ -30,7 +30,7 @@ Listicle copy for the `socialspark-landing-pages` skill, one page per persona, i
 ### Hero
 
 - **Eyebrow:** For new real estate agents
-- **Headline:** 7 reasons new agents make their first listing look like their fiftieth
+- **Headline:** 7 reasons your first listing can look like a top producer's
 - **Subheading:** Paste a listing link. SocialSpark builds a branded post and caption with your name and brokerage, for Instagram, Facebook and LinkedIn. Pay only in the months you have a listing.
 - **Hero post:** `ig-maple`
 - **Button:** See your first listing as a post
@@ -115,7 +115,7 @@ Starter is $14.99 a month plus tax for 10 posts: enough for one listing on two p
 
 ### Close
 
-- **Heading:** Your first listing deserves to look like your fiftieth.
+- **Heading:** Your first listing deserves to look like a top producer's.
 - **Subheading:** Paste the link and see your first post in ⟦TIME⟧. 3 free posts, no credit card.
 
 ---
@@ -134,7 +134,7 @@ Starter is $14.99 a month plus tax for 10 posts: enough for one listing on two p
 ### Hero
 
 - **Eyebrow:** For part-time realtors
-- **Headline:** How part-time realtors post a listing like they do this every day
+- **Headline:** 7 reasons part-time agents can market a listing like a full-timer
 - **Subheading:** Paste a listing link. SocialSpark builds the branded post and caption for Instagram, Facebook and LinkedIn in ⟦TIME⟧. Subscribe the month you list, cancel when it sells.
 - **Hero post:** `fb-maple`
 - **Button:** See your listing as a post
@@ -235,7 +235,7 @@ Starter is $14.99 a month plus tax for 10 posts: one listing on two platforms fr
 ### Hero
 
 - **Eyebrow:** For cottage, rural and small-town realtors
-- **Headline:** 7 reasons cottage country agents give every listing more than a phone photo
+- **Headline:** 7 reasons cottage and rural agents can keep long listings in front of buyers
 - **Subheading:** Paste a listing link. SocialSpark builds a Facebook album of up to 20 photos, or an Instagram carousel, with a caption that sells the property, in ⟦TIME⟧. Re-promote it anytime with a Featured post.
 - **Hero post:** `fb-maple`
 - **Button:** See your next listing as a post
@@ -339,7 +339,7 @@ Starter is $149.90 a year plus tax, two months free, for 10 posts a month: one l
 ### Hero
 
 - **Eyebrow:** For experienced realtors
-- **Headline:** 7 reasons experienced realtors post every listing without learning Instagram
+- **Headline:** 7 reasons experienced realtors can post every listing without learning Instagram
 - **Subheading:** Paste a listing link. SocialSpark builds a professional post and a caption in your own voice, for Facebook, Instagram and LinkedIn. You read it, change anything you like, and nothing posts until you click.
 - **Hero post:** `fb-oakridge`
 - **Button:** See your next listing as a post

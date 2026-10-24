@@ -31,7 +31,7 @@ Listicle copy for the `socialspark-landing-pages` skill, one page per persona, i
 ### Hero
 
 - **Eyebrow:** For real estate marketing coordinators
-- **Headline:** 8 reasons marketing coordinators clear the listing post backlog with SocialSpark
+- **Headline:** 8 reasons marketing coordinators can clear the listing post backlog
 - **Subheading:** Paste a listing link. SocialSpark builds the branded post and a caption in your agent's voice for Instagram, Facebook and LinkedIn. You check it, then schedule it or download it for your own scheduler.
 - **Hero post:** `ig-oakridge`
 - **Button:** See the next listing as a post
@@ -248,7 +248,7 @@ The English twin, for the Ottawa and Moncton ads. Link the two pages to each oth
 ### Hero
 
 - **Eyebrow:** For bilingual real estate agents
-- **Headline:** 7 reasons bilingual agents post listings in English and French from one link
+- **Headline:** 7 reasons bilingual agents can post in English and French from one link
 - **Subheading:** Paste a listing link. SocialSpark builds a branded post with captions in English, Québec French or both, for Instagram, Facebook and LinkedIn. You check it, then post it.
 - **Hero post:** `ig-maple`
 - **Button:** See your next listing in both languages

@@ -29,7 +29,17 @@ The test (`src/lib/persona-pages.test.ts`) enforces the limits in brackets.
 
 - `meta.title` [≤ 46 chars] and `slug` are the **search phrase** the reader types, chosen like a blog post's keyword: specific to the persona, with real search intent, and not competing with `/` or `/mortgage-brokers`. Examples: `social-media-for-top-producing-realtors`, `condo-realtor-instagram-posts`, `mortgage-broker-feature-sheets-for-realtors`. Use Canadian terms ("realtor", "mortgage agent", "Level 2").
 - `hero.eyebrow`: the reader in 2–5 words; it renders as a navy pill with gold text.
-- `hero.headline` [≤ 80 chars]: the big promise, as **"N reasons <reader> should <change in behaviour>"**. N must equal the number of reasons (the test checks a leading number). The behaviour change is the reward in disguise ("stop making listing posts by hand", "send every partner a feature sheet"). Write 15–25 candidates (the `socialspark-ad-copy` headline process); keep the runners-up as A/B challengers.
+- `hero.headline` [≤ 80 chars]: the big promise inside an "N reasons" headline. "N reasons" tells search and social visitors the page is quick to skim; the promise is why they read on. N must equal the number of reasons (the test checks a leading number). Use a shape where the reasons *prove* a promise:
+  - **"N reasons <reader> can <reward>"**: "7 reasons part-time agents can market a listing like a full-timer"
+  - **"N reasons your <thing> can <reward>"**: "7 reasons your first listing can look like a top producer's"
+  - **"N reasons to <action that is the reward>"**: "7 reasons to bring your listing posts back in-house for $49.99 a month"
+  - **"N reasons <reader> should <change>"**: only when the change is itself the reward, never a chore given up ("stop making posts by hand" is the chore, not the reward)
+
+  **Read it aloud as "Here are N reasons why…".** Never write "N reasons <reader> <present-tense verb>" ("7 reasons new agents make their first listing look…"). It asserts the reader already does it, so the list reads as their motives instead of proof. The reward must be concrete ("a top producer's", "the day it goes live"), not vague ("their fiftieth", "more than a phone photo").
+
+  When a plain promise is clearly stronger than any reasons phrasing (a question like "Got a listing this month? Post it like a full-timer.", or a demonstration), make that the headline, put "N reasons" in the eyebrow ("For part-time realtors · 7 reasons"), and test the reasons headline as the challenger.
+
+  Write 15–25 candidates (the `socialspark-ad-copy` headline process) and keep the runners-up as A/B challengers.
 - `hero.sub` [≤ 45 words]: how it works in one breath, and the outcome in their terms.
 - `demoLanguage` (optional): the language of every example post on the page (`"en"`, `"fr"`, `"bilingual"`; default: the page's locale). A `posts` or `platforms` visual can override it with its own `language`, e.g. a bilingual trio on a French page. French and bilingual demo text lives in `localizedPost()` in `demo-posts.ts`; badges, prices and labels localise through the real slide renderer.
 - `heroPost` (optional): the example post beside the hero, by demo-posts id. The default is a detached Oakville house; pick one that looks like *their* listings (condos: `ig-harbour`, the Toronto waterfront unit). Broker pages always show the feature sheet.

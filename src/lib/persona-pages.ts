@@ -121,11 +121,11 @@ const TOP_PRODUCERS: ListiclePage = {
   reader: "Top producing real estate agents in Canada",
   meta: {
     title: "Social Media for Top Producing Realtors",
-    description: "7 reasons top producing realtors get every listing posted the day it goes live: every stage, in your brand and voice, without adding staff.",
+    description: "7 reasons top producing realtors can post every listing the day it goes live: every stage, in your brand and voice, without adding staff.",
   },
   hero: {
     eyebrow: "For top producing realtors",
-    headline: "7 reasons top producing realtors get every listing posted the day it goes live",
+    headline: "7 reasons top producing realtors can post every listing the day it goes live",
     sub: "Paste a listing link. SocialSpark builds the Just Listed carousel, the Open House post and the Sold post in your brand and your voice, for Instagram, Facebook and LinkedIn, without adding staff.",
   },
   cta: "See your next listing as a post",
@@ -213,11 +213,11 @@ const CONDO_REALTORS: ListiclePage = {
   reader: "Condo and pre-sale real estate agents in Canada",
   meta: {
     title: "Social Media Posts for Condo Realtors",
-    description: "10 reasons condo realtors should stop building posts one unit at a time: condo fees and unit details written in, Price Reduced posts and 3D tour links.",
+    description: "10 reasons condo realtors can post five units before lunch: each led by its own features, with Price Reduced posts and 3D tour links.",
   },
   hero: {
     eyebrow: "For condo & pre-sale realtors",
-    headline: "10 reasons condo realtors should stop building posts one unit at a time",
+    headline: "10 reasons condo realtors can post five units before lunch",
     sub: "Five condos this week? Paste each listing link. SocialSpark writes the condo fee, the unit's features and its best photos into a branded post for Instagram, Facebook and LinkedIn. Five posts before lunch.",
   },
   heroPost: "ig-harbour",
@@ -333,7 +333,7 @@ const MARKETING_COORDINATORS: ListiclePage = {
   },
   hero: {
     eyebrow: "For real estate marketing coordinators",
-    headline: "8 reasons marketing coordinators clear the listing post backlog with SocialSpark",
+    headline: "8 reasons marketing coordinators can clear the listing post backlog",
     sub: "Paste a listing link. SocialSpark builds the branded post and a caption in your agent's voice for Instagram, Facebook and LinkedIn. You check it, then schedule it or download it for your own scheduler.",
   },
   heroPost: "ig-oakridge",
@@ -528,7 +528,7 @@ const BILINGUAL_AGENTS_EN: ListiclePage = {
   },
   hero: {
     eyebrow: "For bilingual real estate agents",
-    headline: "7 reasons bilingual agents post listings in English and French from one link",
+    headline: "7 reasons bilingual agents can post in English and French from one link",
     sub: "Paste a listing link. SocialSpark builds a branded post with captions in English, Québec French or both, for Instagram, Facebook and LinkedIn. You check it, then post it.",
   },
   heroPost: "ig-maple",
@@ -714,7 +714,7 @@ const NEW_AGENTS: ListiclePage = {
   },
   hero: {
     eyebrow: "For new real estate agents",
-    headline: "7 reasons new agents make their first listing look like their fiftieth",
+    headline: "7 reasons your first listing can look like a top producer's",
     sub: "Paste a listing link. SocialSpark builds a branded post and caption with your name and brokerage, for Instagram, Facebook and LinkedIn. Pay only in the months you have a listing.",
   },
   heroPost: "ig-maple",
@@ -790,7 +790,7 @@ const NEW_AGENTS: ListiclePage = {
     ],
   },
   planFit: `Five post types on two platforms is ${STARTER.posts} posts, so Starter covers one listing from Coming Soon to Sold.`,
-  close: { heading: "Your first listing deserves to look like your fiftieth.", sub: `Paste the link and see your first post in under a minute. ${FREE} free posts, no credit card.` },
+  close: { heading: "Your first listing deserves to look like a top producer's.", sub: `Paste the link and see your first post in under a minute. ${FREE} free posts, no credit card.` },
 };
 
 /** Persona 8, The Part-Timer. The user's copy. */
@@ -806,7 +806,7 @@ const PART_TIME_REALTORS: ListiclePage = {
   },
   hero: {
     eyebrow: "For part-time realtors",
-    headline: "How part-time realtors post a listing like they do this every day",
+    headline: "7 reasons part-time agents can market a listing like a full-timer",
     sub: "Paste a listing link. SocialSpark builds the branded post and caption for Instagram, Facebook and LinkedIn in under a minute. Subscribe the month you list, cancel when it sells.",
   },
   heroPost: "fb-maple",
@@ -897,7 +897,7 @@ const COTTAGE_RURAL_REALTORS: ListiclePage = {
   },
   hero: {
     eyebrow: "For cottage, rural and small-town realtors",
-    headline: "7 reasons cottage country agents give every listing more than a phone photo",
+    headline: "7 reasons cottage and rural agents can keep long listings in front of buyers",
     sub: "Paste a listing link. SocialSpark builds a Facebook album of up to 20 photos, or an Instagram carousel, with a caption that sells the property, in under a minute. Re-promote it anytime with a Featured post.",
   },
   heroPost: "fb-maple",
@@ -989,7 +989,7 @@ const EXPERIENCED_REALTORS: ListiclePage = {
   },
   hero: {
     eyebrow: "For experienced realtors",
-    headline: "7 reasons experienced realtors post every listing without learning Instagram",
+    headline: "7 reasons experienced realtors can post every listing without learning Instagram",
     sub: "Paste a listing link. SocialSpark builds a professional post and a caption in your own voice, for Facebook, Instagram and LinkedIn. You read it, change anything you like, and nothing posts until you click.",
   },
   heroPost: "fb-oakridge",
