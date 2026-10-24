@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { trackMeta } from "@/components/MetaPixel";
 import { createClient } from "@/lib/supabase/client";
 import { PROVINCES, titleForRole } from "@/lib/broker";
 import type { Role } from "@/lib/types";
@@ -36,6 +37,10 @@ export function WelcomeForm({ initialRole, initialProvince, currentTitle, next }
       setBusy(false);
       return setError("Couldn't save that. Please try again.");
     }
+    // Sign-up is complete: tell Meta from the browser and the server under one event ID, so it counts once.
+    // Both only happen with ad-tracking consent (the pixel isn't loaded without it; the route checks too).
+    trackMeta("CompleteRegistration", { content_name: role }, `reg_${auth.user.id}`);
+    void fetch("/api/track/signup", { method: "POST", keepalive: true }).catch(() => {});
     router.replace(next);
     router.refresh();
   }

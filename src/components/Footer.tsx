@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { COMPANY, SALES_EMAIL, SITE_NAME } from "@/lib/site";
+import { CookieSettingsButton } from "./ConsentBanner";
 import { FooterShell } from "./FooterShell";
 
 const COLUMNS: { title: string; links: { label: string; href: string; external?: boolean }[] }[] = [
@@ -62,6 +63,11 @@ export function Footer() {
                       )}
                     </li>
                   ))}
+                  {col.title === "Company" && (
+                    <li>
+                      <CookieSettingsButton />
+                    </li>
+                  )}
                 </ul>
               </nav>
             ))}
