@@ -7,6 +7,10 @@ import type { Locale } from "@/lib/landing-i18n";
 import { FREE_LIMITS, PAID_PLANS, type BillingInterval } from "./plans";
 import type { Language } from "@/lib/types";
 
+const TP = PAID_PLANS.top_producer;
+const PRO = PAID_PLANS.professional;
+const FREE = FREE_LIMITS.registered;
+
 type Item = { title: string; body: string };
 
 type BasePage = {
@@ -218,7 +222,7 @@ const CONDO_REALTORS: ListiclePage = {
   hero: {
     eyebrow: "For condo & pre-sale realtors",
     headline: "10 reasons condo realtors can post five units before lunch",
-    sub: "Five condos this week? Paste each listing link. SocialSpark writes the condo fee, the unit's features and its best photos into a branded post for Instagram, Facebook and LinkedIn. Five posts before lunch.",
+    sub: "Five condos this week? Paste each listing link. SocialSpark reads the condo fee, the unit's features and its best photos and builds a branded post for Instagram, Facebook and LinkedIn.",
   },
   heroPost: "ig-harbour",
   cta: "See your next unit as a post",
@@ -231,8 +235,8 @@ const CONDO_REALTORS: ListiclePage = {
     },
     {
       label: "Unit details",
-      title: "The condo fee and the unit's features, written in for you.",
-      body: "SocialSpark reads the monthly condo fee, property tax, size and the features the listing names, like parking, a locker or the view, and works them into the caption. You check and edit any detail first, and it never invents one.",
+      title: "The details condo buyers compare, read from the listing.",
+      body: "SocialSpark reads the monthly condo fee, property tax, size and the features the listing names, like parking, a locker or the view, and gives them to the caption. You check and edit any detail first, and it never invents one.",
       visual: { kind: "posts", ids: ["li-harbour"] },
     },
     {
@@ -250,7 +254,7 @@ const CONDO_REALTORS: ListiclePage = {
     {
       label: "Pre-sale",
       title: "Coming Soon posts that start the DMs early.",
-      body: "Tease the best features and invite people to message you before the unit hits the market. Add what the listing page doesn't say, like the occupancy date or assignment terms, in your notes, and the caption works it in. No listing page yet? Enter the details yourself.",
+      body: "Tease the best features and invite people to message you before the unit hits the market. Add what the listing page doesn't say, like the occupancy date or assignment terms, in your notes, and the caption works it in. Selling a new-build unit to a first-time buyer? Add the HST rebate details there too. No listing page yet? Enter the details yourself.",
       visual: { kind: "posts", ids: ["li-laurier"] },
     },
     {
@@ -270,14 +274,14 @@ const CONDO_REALTORS: ListiclePage = {
       body: "Condo captions often describe the buyer. Canadian human rights codes prohibit that, so SocialSpark describes the unit instead: the layout, the light, the fees. It also never invents walk times, school names or neighbourhood claims.",
     },
     {
-      label: "Montréal",
+      label: "Québec",
       title: "Québec French and bilingual posts from the same link.",
       body: "English, Québec French or both, written the way a Québec agent would write them (“Nouvelle inscription”), not translated word for word. One link, both markets.",
     },
     {
       label: "The plan",
-      title: "A plan sized for condo volume.",
-      body: "Several units a month, each with Just Listed, Price Reduced and Sold posts on two platforms, outgrows the smaller plans fast. Top Producer was made for that volume, with every feature included. Try it on your next unit first, free.",
+      title: `${TP.posts} posts a month covers ${Math.floor(TP.posts / 6)} units at three stages.`,
+      body: `Just Listed, Price Reduced and Sold on two platforms is 6 posts a unit, so Top Producer's ${TP.posts} posts a month cover ${Math.floor(TP.posts / 6)} units, with every feature included. Try it on your next unit first, free.`,
       visual: { kind: "plan" },
     },
   ],
@@ -287,7 +291,7 @@ const CONDO_REALTORS: ListiclePage = {
     ours: "SocialSpark",
     theirs: "A template per unit",
     rows: [
-      { label: "Condo fee and unit details", ours: "Read from the listing and written in", theirs: "Retyped for every unit" },
+      { label: "Condo fee and unit details", ours: "Read from the listing", theirs: "Retyped for every unit" },
       { label: "Five units, one building", ours: "Each post led by that unit's own features", theirs: "The same words, five times" },
       { label: "Price Reduced", ours: "Leads with what the new price gets", theirs: "Rebuilt by hand" },
       { label: "3D tour links", ours: "Placed right for each platform", theirs: "Copied in by hand" },
@@ -301,21 +305,18 @@ const CONDO_REALTORS: ListiclePage = {
     items: [
       { q: "My listings all look the same. Won't the posts?", a: "Each post is written from that unit's own details and photos, and you can choose up to three features to lead with. For a different angle on the same unit, ask for a new version." },
       { q: "Will it get the condo fee right?", a: "It reads the fee from the listing page, and you can check and edit every detail before you make a post. Captions only use facts from the listing and your notes." },
-      { q: "Can I post pre-sales and assignments?", a: "Yes. Paste the listing link, paste the page itself, or enter the details yourself. Add what the page doesn't say, like occupancy dates or assignment terms, in your notes." },
-      { q: "Is the Top Producer plan enough for my volume?", a: "A unit posted to two platforms across its life is usually 6 to 10 posts, so Top Producer covers about 5 to 8 units a month at every stage. Running a team that posts more? Use the Team enquiry under the plans." },
+      { q: "Can I post pre-sales and assignments?", a: "Yes. Paste the listing link, paste the page itself, or enter the details yourself. Add what the page doesn't say, like occupancy dates or assignment terms, in your notes. Check your regulator's and the builder's rules before advertising an assignment." },
+      { q: "Is the Top Producer plan enough for my volume?", a: `Just Listed, Price Reduced and Sold on two platforms is 6 posts a unit, so Top Producer's ${TP.posts} posts cover ${Math.floor(TP.posts / 6)} units a month. Running a team that posts more? Use the Team enquiry under the plans.` },
       { q: "Does it work with REALTOR.ca?", a: "REALTOR.ca blocks automated tools, so use “Copy and paste the page”: open the listing, select all, copy, and paste it into SocialSpark. Brokerage and agent websites work with just the link." },
       { q: "Will it post something without me?", a: "Never. A post goes out only when you click Publish now or choose a time to schedule it, and you can edit every caption and image first." },
     ],
   },
-  planFit: "A unit posted to two platforms at Just Listed, Price Reduced and Sold is 6 or more posts. Top Producer's 50 cover about 5 to 8 units a month.",
+  planFit: `Just Listed, Price Reduced and Sold on two platforms is 6 posts a unit, so Top Producer's ${TP.posts} cover ${Math.floor(TP.posts / 6)} units a month.`,
   close: { heading: "Your next unit, posted before lunch.", sub: "Paste the link and see your first post in under a minute." },
 };
 
 // Pages 5, 7 (FR and EN) and 13: the user's copy from marketing/landing-pages/top-producer-personas.md.
 // Plan prices and the free-post count are filled in from plans.ts so they can't go stale.
-const TP = PAID_PLANS.top_producer;
-const PRO = PAID_PLANS.professional;
-const FREE = FREE_LIMITS.registered;
 const OUTSOURCED_COST = { text: "$400", source: "One Canadian brokerage's social content plan: RE/MAX River City digital marketing (personas.md [9])" };
 const QC_PRICE_FORMAT = { text: "649 000 $", source: "Québec French price format the caption prompt follows (src/lib/generate.ts)" };
 
