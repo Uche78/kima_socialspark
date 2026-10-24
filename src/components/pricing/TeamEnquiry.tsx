@@ -3,27 +3,30 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { PROVINCES } from "@/lib/broker";
+import { LANDING_TEXT, type Locale } from "@/lib/landing-i18n";
 import { TEAM_AUDIENCES, TEAM_SIZES } from "@/lib/team";
 
 /**
  * "Brokerage or team?" banner under the plan cards, with a short enquiry form (emailed to sales).
  * `featured`: the "Most popular" pick on team and brokerage landing pages, shown above the cards.
+ * `locale`: the banner in French on French landing pages (the enquiry form itself stays English).
  */
-export function TeamBanner({ featured = false }: { featured?: boolean }) {
+export function TeamBanner({ featured = false, locale = "en" }: { featured?: boolean; locale?: Locale }) {
   const [open, setOpen] = useState(false);
+  const T = LANDING_TEXT[locale];
   return (
     <>
       <div className={`mx-auto mt-8 flex max-w-5xl flex-col gap-4 rounded-2xl bg-[#0f2a44] px-6 py-6 text-white sm:flex-row sm:items-center sm:justify-between sm:px-8 ${featured ? "ring-2 ring-[#d4a24c] ring-offset-2" : ""}`}>
         <div>
           <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#d4a24c]">
-            Team
-            {featured && <span className="rounded-full bg-[#d4a24c] px-2.5 py-0.5 text-xs font-semibold normal-case tracking-normal text-[#141414]">Most popular</span>}
+            {T.team.label}
+            {featured && <span className="rounded-full bg-[#d4a24c] px-2.5 py-0.5 text-xs font-semibold normal-case tracking-normal text-[#141414]">{T.pricing.mostPopular}</span>}
           </p>
-          <p className="mt-1 text-lg font-semibold">Brokerage or team?</p>
-          <p className="text-sm text-white/75">Seats for every agent, one invoice and a shared brand kit.</p>
+          <p className="mt-1 text-lg font-semibold">{T.team.title}</p>
+          <p className="text-sm text-white/75">{T.team.body}</p>
         </div>
         <button type="button" className="inline-flex h-12 shrink-0 items-center justify-center rounded-full bg-white px-6 font-medium text-[#141414] transition hover:bg-white/90" onClick={() => setOpen(true)}>
-          Talk to us →
+          {T.team.cta} →
         </button>
       </div>
       {open && <TeamEnquiryDialog onClose={() => setOpen(false)} />}

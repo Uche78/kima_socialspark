@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { PlanButton } from "@/components/PlanButton";
 import { PAID_PLAN_IDS, PAID_PLANS, type BillingInterval, type PaidPlanId, type PlanId } from "@/lib/plans";
+import { LANDING_TEXT, money, type Locale } from "@/lib/landing-i18n";
 import { TeamBanner } from "./TeamEnquiry";
 
 /** The plan marked "Most popular": a paid plan, or "team" to feature the Team banner instead of a card. */
@@ -23,21 +24,25 @@ export function PricingPlans({
   currentPlan = "free",
   initialInterval = "month",
   highlight = "professional",
+  locale = "en",
 }: {
   mode: "landing" | "pricing";
   signedIn?: boolean;
   currentPlan?: PlanId;
   initialInterval?: BillingInterval;
   highlight?: PlanHighlight;
+  /** French only on landing pages; /pricing and checkout stay English. */
+  locale?: Locale;
 }) {
   const [interval, setBilling] = useState<BillingInterval>(initialInterval);
   const paid = currentPlan !== "free";
+  const T = LANDING_TEXT[locale].pricing;
   const phoneOrder = [...PAID_PLAN_IDS].reverse().sort((a, b) => Number(b === highlight) - Number(a === highlight));
 
   return (
     <div>
       <div className="flex justify-center">
-        <div role="radiogroup" aria-label="Billing" className="inline-flex rounded-full bg-white p-1 ring-1 ring-black/10">
+        <div role="radiogroup" aria-label={T.billing} className="inline-flex rounded-full bg-white p-1 ring-1 ring-black/10">
           {(["month", "year"] as const).map((i) => (
             <button
               key={i}
@@ -47,9 +52,9 @@ export function PricingPlans({
               onClick={() => setBilling(i)}
               className={`rounded-full px-4 py-2 text-sm font-medium transition ${interval === i ? "bg-[#141414] text-white" : "text-[#141414]/70 hover:text-[#141414]"}`}
             >
-              {i === "month" ? "Monthly" : (
+              {i === "month" ? T.monthly : (
                 <>
-                  Yearly <span className={interval === i ? "text-[#d4a24c]" : "text-emerald-700"}>· 2 months free</span>
+                  {T.yearly} <span className={interval === i ? "text-[#d4a24c]" : "text-emerald-700"}>· {T.twoMonthsFree}</span>
                 </>
               )}
             </button>
@@ -57,7 +62,7 @@ export function PricingPlans({
         </div>
       </div>
 
-      {highlight === "team" && <TeamBanner featured />}
+      {highlight === "team" && <TeamBanner featured locale={locale} />}
 
       <div className="mx-auto mt-8 grid max-w-5xl gap-5 md:grid-cols-3">
         {PAID_PLAN_IDS.map((id) => {
@@ -72,17 +77,17 @@ export function PricingPlans({
                   {current ? (
                     <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-900">Your plan</span>
                   ) : (
-                    highlighted && <span className="rounded-full bg-[#0f2a44] px-2.5 py-0.5 text-xs font-semibold text-white">Most popular</span>
+                    highlighted && <span className="rounded-full bg-[#0f2a44] px-2.5 py-0.5 text-xs font-semibold text-white">{T.mostPopular}</span>
                   )}
                 </div>
                 <p className="mt-3">
-                  <span className="font-[family-name:var(--font-heading)] text-4xl tracking-[-0.02em] text-[#141414]">{interval === "year" ? p.yearlyPerMonth : p.price}</span>
-                  <span className="text-sm text-[#141414]/60"> /month</span>
+                  <span className="font-[family-name:var(--font-heading)] text-4xl tracking-[-0.02em] text-[#141414]">{money(interval === "year" ? p.yearlyPerMonth : p.price, locale)}</span>
+                  <span className="text-sm text-[#141414]/60"> {T.perMonth}</span>
                 </p>
-                <p className="mt-1 text-xs text-[#141414]/60">{interval === "year" ? `Billed ${p.yearly} CAD yearly, plus tax` : "CAD, billed monthly, plus tax"}</p>
-                <p className="mt-3 text-sm text-[#141414]/70">{p.forWho}</p>
+                <p className="mt-1 text-xs text-[#141414]/60">{interval === "year" ? T.billedYearly(money(p.yearly, locale)) : T.billedMonthly}</p>
+                <p className="mt-3 text-sm text-[#141414]/70">{locale === "fr" ? LANDING_TEXT.fr.pricing.forWho[id] : p.forWho}</p>
                 <ul className="mt-4 space-y-2 text-sm text-[#141414]/80">
-                  {[`${p.posts} posts a month`, `${p.regens} regenerations a month`, "Unlimited edits and publishing", ...(id === "top_producer" ? ["Best value per post"] : [])].map((l) => (
+                  {[T.posts(p.posts), T.regens(p.regens), T.unlimited, ...(id === "top_producer" ? [T.bestValue] : [])].map((l) => (
                     <li key={l} className="flex gap-2">
                       <span className="text-[#d4a24c]">✓</span>
                       {l}
@@ -95,7 +100,7 @@ export function PricingPlans({
                       href={`/pricing${interval === "year" ? "?interval=year" : ""}`}
                       className={`inline-flex h-11 w-full items-center justify-center rounded-full text-sm font-medium transition ${highlighted ? "bg-[#141414] text-white hover:bg-black" : "border border-black/15 bg-white text-[#141414] hover:bg-black/5"}`}
                     >
-                      Choose {p.name}
+                      {T.choose(p.name)}
                     </Link>
                   ) : current ? (
                     <PlanButton plan="portal" label="Manage billing" className="btn-secondary h-11 w-full rounded-full" signedIn={signedIn} />
@@ -117,7 +122,7 @@ export function PricingPlans({
         })}
       </div>
 
-      {highlight !== "team" && <TeamBanner />}
+      {highlight !== "team" && <TeamBanner locale={locale} />}
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Role } from "@/lib/types";
 import { PastePageDialog } from "./PastePageDialog";
+import { LANDING_TEXT, type Locale } from "@/lib/landing-i18n";
 
 /**
  * Signs visitors in as a guest. `role` is the landing page they came from: guests from the
@@ -32,7 +33,9 @@ function isRealtorCa(raw: string) {
   }
 }
 
-export function ImportForm({ role }: { role?: Role } = {}) {
+/** `locale`: the form in French on French landing pages (what it opens, the app, stays English). */
+export function ImportForm({ role, locale = "en" }: { role?: Role; locale?: Locale } = {}) {
+  const T = LANDING_TEXT[locale].form;
   const fieldId = useId();
   const router = useRouter();
   const [url, setUrl] = useState("");
@@ -122,8 +125,8 @@ export function ImportForm({ role }: { role?: Role } = {}) {
           id={`listing-url-${fieldId}`}
           name="listing_url"
           required
-          aria-label="Listing link"
-          placeholder="Paste a listing link from a brokerage or agent's website"
+          aria-label={T.label}
+          placeholder={T.placeholder}
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           disabled={busy}
@@ -132,14 +135,13 @@ export function ImportForm({ role }: { role?: Role } = {}) {
           className="inline-flex h-14 items-center justify-center gap-2 rounded-full bg-[#141414] px-8 text-base font-medium text-white transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-60"
           disabled={busy}
         >
-          {busy ? "Retrieving listing…" : <>Get listing <span aria-hidden>→</span></>}
+          {busy ? T.busy : <>{T.submit} <span aria-hidden>→</span></>}
         </button>
       </form>
-      {busy && <p className="mt-3 text-sm text-[#141414]/65">Reading the page and collecting photos. This usually takes 15–40 seconds.</p>}
+      {busy && <p className="mt-3 text-sm text-[#141414]/65">{T.busyNote}</p>}
       {realtorCa && !busy && (
         <div role="status" className="mt-3 rounded-2xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
-          REALTOR.ca doesn&apos;t allow automatic retrieval yet. {pasteLink("Copy and paste the page instead")}, or try the same listing on
-          the brokerage&apos;s or agent&apos;s website.
+          {T.realtorCa[0]} {pasteLink(T.pasteInstead)}{T.realtorCa[1]}
         </div>
       )}
       {error && (
@@ -148,14 +150,14 @@ export function ImportForm({ role }: { role?: Role } = {}) {
           {offerManual && (
             <>
               {" "}
-              {pasteLink("Copy and paste the page instead")}.
+              {pasteLink(T.pasteInstead)}.
             </>
           )}
         </div>
       )}
       <div className="mt-2 flex flex-wrap gap-x-6">
         <button type="button" className="hidden py-2.5 text-sm text-[#141414]/65 underline underline-offset-4 hover:text-[#141414] sm:inline-block" onClick={() => setPasteOpen(true)} disabled={busy}>
-          Site blocked? Copy and paste the page
+          {T.siteBlocked}
         </button>
       </div>
       {pasteOpen && (

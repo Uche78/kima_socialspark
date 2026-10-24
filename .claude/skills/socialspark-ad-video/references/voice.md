@@ -11,13 +11,15 @@ The voice is SocialSpark's salesman. Cast a **warm, confident Canadian colleague
 | Québec (FR) | A native Québec French voice with a natural Québec accent and rhythm, never a European French voice. Warm and direct. |
 | Bilingual | Two voices (EN, then FR) or one fluently bilingual Québec voice. Mention bilingual in the copy only if the spot really shows it. |
 
-Pick 2–3 candidates and generate the **hook line and the CTA line** with each. Choose by ear on those two lines, then generate the rest.
+**House voice (chosen 2026-10-23): ElevenLabs "Sarah", `EXAVITQu4vr4xnSDxMaL`** (mature, reassuring, confident, with a lift of excitement), on `eleven_multilingual_v2`. Use her for English spots unless a brief calls for something else. She ran at ~160 wpm on default settings. Keep `style` around 0.25–0.35 to preserve the energy the person liked, and don't flatten it with high stability. For Québec French, cast a native fr-CA voice separately.
+
+For a new audience or language, pick 2–3 candidates and generate the **hook line and the CTA line** with each. Choose by ear on those two lines, then generate the rest.
 
 ## Providers (`scripts/voice.py`)
 
 | Provider | Use | Notes |
 |---|---|---|
-| `elevenlabs` | **Final ads (preferred)** | `ELEVENLABS_API_KEY`. Model `eleven_multilingual_v2` (most natural; FR as well). Commercial use needs a paid plan. Pick voices from `python3 voice.py voices`, filtering for Canadian/North American accents and, for French, `fr-CA`/Québécois voices from the Voice Library. Neighbouring lines are passed as context so intonation flows across takes. |
+| `elevenlabs` | **Final ads (preferred)** | `ELEVENLABS_API_KEY`. Model `eleven_multilingual_v2` (most natural; FR as well). **Commercial use needs a paid plan (Starter or above).** The free tier is non-commercial with attribution, so free-tier takes are animatic-only. A 403 asking for "Creator tier" on an output format means the account is below Creator. The default `mp3_44100_128` works on every tier. Pick voices from `python3 voice.py voices`, filtering for Canadian/North American accents and, for French, `fr-CA`/Québécois voices from the Voice Library. Neighbouring lines are passed as context so intonation flows across takes. |
 | `openai` | Final ads (alternative) | `OPENAI_API_KEY`. `gpt-4o-mini-tts` takes free-text `instructions`, which is good for directing tone ("smile on the last line, relaxed pace"). Voices: coral, sage, ash, ballad, verse, etc. |
 | `edge` | **Drafts / animatics only** | Free neural voices: `en-CA-ClaraNeural`, `en-CA-LiamNeural`, `fr-CA-SylvieNeural`, `fr-CA-JeanNeural`, `fr-CA-AntoineNeural`, `fr-CA-ThierryNeural`. `pipx install edge-tts`. No commercial licence, so never ship it. |
 | `say` | Animatic timing only | macOS voices (`Samantha`; `Amélie` for fr_CA). Robotic, so use it to time the cut, never for review with a client. |

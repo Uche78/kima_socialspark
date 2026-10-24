@@ -21,7 +21,8 @@ script.json:
   "lead_in": 0.25,                                # silence before the first line (s)
   "lines": [
     {"id": "hook", "text": "Just listed at four p.m.?", "pause_after": 0.25},
-    {"id": "demo", "text": "Paste the link. That's it.", "pause_after": 0.4}
+    {"id": "demo", "text": "Paste the link. That's it.", "pause_after": 0.4,
+     "next_text": "optional: what follows in the cut, for intonation", "reuse": false}
   ]
 }
 
@@ -89,7 +90,9 @@ def tts_elevenlabs(text, v, out, prev_text=None, next_text=None):
         body["next_text"] = next_text
     if v.get("language"):
         body["language_code"] = v["language"]
-    mp3 = post(f"https://api.elevenlabs.io/v1/text-to-speech/{v['voice']}?output_format=mp3_44100_192",
+    # mp3_44100_128 works on every tier; Creator+ can set "format": "mp3_44100_192" or "pcm_44100".
+    fmt = v.get("format", "mp3_44100_128")
+    mp3 = post(f"https://api.elevenlabs.io/v1/text-to-speech/{v['voice']}?output_format={fmt}",
                {"xi-api-key": key}, body)
     tmp = Path(tempfile.mkstemp(suffix=".mp3")[1])
     tmp.write_bytes(mp3)
@@ -165,9 +168,11 @@ def cmd_vo(script_path, out_dir):
         if line.get("reuse") and wav.exists():
             pass  # keep an approved take
         else:
+            # Context for intonation: neighbouring lines, or explicit prev_text/next_text (e.g. a hook
+            # generated on its own but cut in front of the shared body).
             fn(line["text"], v, wav,
-               prev_text=lines[i - 1]["text"] if i else None,
-               next_text=lines[i + 1]["text"] if i + 1 < len(lines) else None)
+               prev_text=line.get("prev_text") or (lines[i - 1]["text"] if i else None),
+               next_text=line.get("next_text") or (lines[i + 1]["text"] if i + 1 < len(lines) else None))
             trim_silence(wav)
         d = duration(wav)
         timing.append({"id": line["id"], "text": line["text"], "start": round(t, 3), "end": round(t + d, 3), "file": wav.name})

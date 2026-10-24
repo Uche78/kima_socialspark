@@ -38,7 +38,7 @@ Default to the listicle unless the user asks otherwise. Both can exist for one p
 
 A new page is normally **one new entry in `PERSONA_PAGES` and nothing else**. Don't fork a template for one persona. If a persona really needs something new, add it to the template as an optional field so every page can use it.
 
-**Prices never go in the copy.** The components read `src/lib/plans.ts`, so the page stays right when prices change. Copy can name a plan and its post allowance (in `planFit`, for example), but no dollar amounts; the test enforces this.
+**Prices in copy come from the code.** Plan prices, allowances and the free-post count are written as template strings from `PAID_PLANS` / `FREE_LIMITS` (e.g. `` `${TP.posts} posts a month for ${TP.price}` ``), never typed, so they change when `plans.ts` does. Any other dollar figure (a sourced competitor cost, a format example like « 649 000 $ ») must be listed in the page's `figures` with its source. The test rejects any amount that is neither a current plan price nor a listed figure. A headline that names a price follows the same rule.
 
 ## 2. Facts and proof: only what's true
 
@@ -67,8 +67,17 @@ Shapes: `rounded-3xl` panels, `rounded-2xl` cards, `rounded-full` buttons and ch
 
 ## 4. Workflow
 
+**The user writes the content.** When the user supplies the page content (headline, reasons, comparison, FAQ, proof), build the page from it instead of drafting copy:
+
+1. **Map, don't rewrite.** Put their words into the matching `ListiclePage` / `SectionsPage` fields as written. Choose only what they didn't give: slug and `meta` (from their keyword, or propose one), visuals per reason, `heroPost`, the plan from `PERSONA_PLAN`. Keep their reason order and count, and make the headline's N match.
+2. **Fact-check every claim** against the code (§2) before building. Don't silently soften, cut or reword. List each problem with the fix you suggest and ask: claims the product can't back, prices typed into copy, invented-looking proof (a testimonial without permission, a number without a source), hype words, lines over the test's limits, and anything that breaks the one-goal or branding rules.
+3. **Ask only about real gaps:** a missing required field (e.g. no objections, no comparison), the persona if it isn't clear, or proof details (permission, source, date).
+4. Then run §6 (verify) and §7 (hand-off). In the hand-off, list every change made to their wording and why.
+
+When the user hasn't supplied content, follow the steps below.
+
 1. **Pick the persona** (the user's choice, or recommend from the fit table, Tier 1 first). Check [references/persona-map.md](references/persona-map.md) for a **blocker** before writing anything:
-   - **Québec personas (6, 18)** need Québec French pages. The templates, pricing component and `ImportForm` are English-only, and `<html lang>` is `en-CA`. Stop and tell the user. A French page first needs a `locale` on `PersonaPage`, French labels in `PricingPlans` / `PricingSummary` / `TeamBanner` / both templates, `inLanguage: "fr-CA"` in the JSON-LD and a `lang="fr-CA"` wrapper. Do that only with their go-ahead; never ship an English page to these personas.
+   - **French pages** (Québec personas 6 and 18, or a French twin like 7): listicle layout only. Set `locale: "fr"`, add the slug to `FRENCH_PERSONA_SLUGS` in `src/lib/landing-i18n.ts` (the header button reads it), and set `demoLanguage` (`"fr"`, or `"bilingual"` on a visual). The form, pricing, Team banner, page labels, `lang="fr-CA"`, `inLanguage` and hreflang to the same persona's English page are automatic. Page chrome strings live in `landing-i18n.ts`; add both languages when adding one. **The app, the paste-page dialog and the Team enquiry form are English**: every French page must say so honestly in its FAQ (« L'application est en anglais; vos publications sont en français. »), and must not name French UI labels that don't exist (the buttons are "Publish now", "Brand & voice", "Plan & billing"). Never ship an English page to a Québec persona.
    - **Team personas (4, 14)** are sold but not delivered: the page may only promise what the Team banner already promises (seats, one invoice, a shared brand kit, "Talk to us"). No `plan` visual. Persona 5 is not the payer, so the page arms them with the case for their boss.
    - **Tier 3 (8, 15, 20):** build only if the user asks after hearing the caveat.
 2. **Ask for proof** (§2): real testimonials from people like this persona, the founder story, approved usage numbers. Proceed without them; the slots stay empty.

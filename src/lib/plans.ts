@@ -29,6 +29,16 @@ export const PLAN_FEATURES = [
   "Mortgage feature sheets, PDFs and Stories for mortgage brokers",
 ];
 
+/** PLAN_FEATURES in Québec French, same order, for French landing pages. */
+export const PLAN_FEATURES_FR = [
+  "Photos de la propriété en pleine qualité et image de marque personnelle en option",
+  "Images uniques et carrousels",
+  "Textes et publication sur Facebook, Instagram et LinkedIn",
+  "Contenu en anglais, en français (Québec) et bilingue",
+  "Publications Nouvelle inscription, Visite libre, Prix réduit, Bientôt disponible, Vendu et Propriété en vedette",
+  "Fiches hypothécaires, PDF et Stories pour les courtiers hypothécaires",
+];
+
 /** The next plan up, for "upgrade" prompts (null on the biggest plan). */
 export function nextPlan(plan: PlanId): PaidPlanId | null {
   if (plan === "free") return "starter";

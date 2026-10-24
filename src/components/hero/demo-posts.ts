@@ -1,7 +1,7 @@
 // Made-up agent, listings and posts for the home page showcase. Photos are CC0 stock
 // (public/hero/CREDITS.md). Slides render with the real SlideCanvas, so they always match the app.
 
-import type { Design, Listing, Platform, PostType, Profile, Slide, TextMode } from "@/lib/types";
+import type { Design, Language, Listing, Platform, PostType, Profile, Slide, TextMode } from "@/lib/types";
 
 export const DEMO_AGENT = {
   name: "Jordan Lee",
@@ -107,6 +107,8 @@ export type DemoPost = {
   slide: Slide;
   /** First line or two of the caption, as the feed shows it. */
   caption: string;
+  /** The post's language (badge, labels, price format); English when unset. See localizedPost(). */
+  language?: Language;
   /** Carousel dot count (1 = single image). */
   slides: number;
   likes: number;
@@ -205,7 +207,7 @@ export const DEMO_POSTS: DemoPost[] = [
     template: "minimal",
     aspect: "portrait",
     textMode: "all",
-    slide: { kind: "cover", headline: "Sold in 6 Days", subtext: "Another happy family on Maple Lane", photo_index: 1 },
+    slide: { kind: "cover", headline: "Sold in 6 Days", subtext: "Thank you to my Maple Lane clients", photo_index: 1 },
     caption: "Thinking of selling in Stouffville? Let's talk about what your home could get.",
     slides: 1,
     likes: 309,
@@ -267,7 +269,7 @@ export const SAME_LISTING_POSTS: DemoPost[] = [
     textMode: "all",
     slide: { kind: "cover", headline: "Room to Grow in Oakville", subtext: "Five bedrooms, ten minutes from the lake", photo_index: 2 },
     caption:
-      "Families relocating to the GTA keep asking for room to grow near the lake. This new Oakville listing has five bedrooms and a resort-style backyard, ten minutes from the water. Know someone making the move? I'd be glad to help.",
+      "Relocating to the GTA? This new Oakville listing has five bedrooms and a resort-style backyard, ten minutes from the water. Know someone making the move? I'd be glad to help.",
     slides: 8,
     likes: 64,
     comments: 9,
@@ -318,3 +320,40 @@ export const DEMO_SHEET_DESIGN: Design = {
     realtor: { full_name: "Alex Morgan", title: "REALTOR®", brokerage_name: "Lakeview Realty", phone: "416-555-0199", email: "alex@lakeview.ca", website: "lakeviewrealty.ca", headshot_path: null },
   },
 };
+
+/** Québec French text for the example posts, used by localizedPost(). Made-up listings, like the English ones. */
+const FRENCH: Record<string, { headline?: string; subtext?: string; caption: string }> = {
+  "ig-oakridge": { headline: "Une cour comme en vacances", subtext: "Piscine d'eau salée chauffée, près du lac", caption: "Les samedis matins au bord d'une piscine d'eau salée chauffée, à dix minutes du lac. 🌊" },
+  "same-ig": {
+    headline: "Une cour comme en vacances",
+    subtext: "Piscine d'eau salée chauffée, près du lac",
+    caption: "Les samedis matins au bord d'une piscine d'eau salée chauffée, à dix minutes du lac. 🌊 Glissez pour voir la cuisine de chef et la salle de bain style spa → Écrivez « VISITE » en message privé et je vous envoie la visite complète.",
+  },
+  "fb-oakridge": { caption: "Nouvelle inscription à Oakville : 5 chambres à coucher, 4,5 salles de bain et une cuisine de chef faite pour recevoir. 2 349 000 $. Écrivez-moi pour une visite privée." },
+  "same-fb": { caption: "Nouvelle inscription à Oakville : 5 chambres à coucher, 4,5 salles de bain et une cuisine de chef faite pour recevoir, sur une rue tranquille à dix minutes du lac. 2 349 000 $. Écrivez-moi pour réserver une visite privée cette semaine." },
+  "same-li": {
+    headline: "De l'espace à Oakville",
+    subtext: "Cinq chambres, à dix minutes du lac",
+    caption: "Vous déménagez dans la région de Toronto ? Cette nouvelle inscription à Oakville offre cinq chambres à coucher et une cour arrière digne d'un centre de villégiature, à dix minutes de l'eau. Vous connaissez quelqu'un qui fait le saut ? Je serai heureux d'aider.",
+  },
+  "fb-maple": { headline: "Grande galerie couverte", subtext: "Visite libre cette fin de semaine, 14 h à 16 h", caption: "Venez voir la galerie dont tout le monde parle sur Maple Lane. Visite libre samedi et dimanche, de 14 h à 16 h." },
+  "li-harbour": { headline: "Lumière des deux côtés", subtext: "Unité de coin avec vue sur le lac", caption: "Vous déménagez au bord de l'eau à Toronto ? Cette unité de coin met le PATH, la gare Union et le lac à quelques pas." },
+  "ig-harbour": { headline: "Vue sur le lac, nouveau prix", subtext: "2 chambres, 2 salles de bain, 940 pi²", caption: "La même vue sur le lac, à meilleur prix. Glissez pour voir la cuisine →" },
+  "ig-maple": { headline: "Vendu en 6 jours", subtext: "Merci à mes clients de Maple Lane", caption: "Vous pensez vendre à Stouffville ? Parlons de ce que votre propriété pourrait obtenir." },
+  "li-laurier": { headline: "Bientôt à Centretown", subtext: "Maison de ville moderne de trois étages", caption: "Un premier aperçu pour mon réseau avant que cette maison de ville de Centretown arrive sur le marché. Vous connaissez quelqu'un qui déménage à Ottawa ?" },
+};
+
+/**
+ * An example post in Québec French or bilingual, the way SocialSpark writes them: French badges and labels
+ * come from the slide itself; bilingual posts put both languages on the image and English, then "— FR —",
+ * then French in the caption.
+ */
+export function localizedPost(p: DemoPost, language: Language): DemoPost {
+  const fr = FRENCH[p.id];
+  if (language === "en" || !fr) return { ...p, language };
+  if (language === "fr") {
+    return { ...p, language, caption: fr.caption, slide: { ...p.slide, headline: fr.headline ?? p.slide.headline, subtext: fr.subtext ?? p.slide.subtext } };
+  }
+  const headline = p.slide.headline && fr.headline ? `${p.slide.headline} | ${fr.headline}` : p.slide.headline;
+  return { ...p, language, caption: `${p.caption}\n\n— FR —\n${fr.caption}`, slide: { ...p.slide, headline, subtext: "" } };
+}

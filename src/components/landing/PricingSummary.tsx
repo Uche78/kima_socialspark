@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { FREE_LIMITS, type BillingInterval } from "@/lib/plans";
 import { PricingPlans, type PlanHighlight } from "@/components/pricing/PricingPlans";
+import { LANDING_TEXT, type Locale } from "@/lib/landing-i18n";
 
 const EYEBROW = "text-[11px] font-semibold uppercase tracking-[0.2em] text-[#141414]/70 sm:text-xs";
 const H2 = "mt-3 font-[family-name:var(--font-heading)] tracking-[-0.02em] text-3xl font-medium leading-tight text-[#141414] sm:text-5xl";
@@ -9,23 +10,24 @@ const H2 = "mt-3 font-[family-name:var(--font-heading)] tracking-[-0.02em] text-
  * The same plans and prices on every landing page. Free is the headline, not a card. Persona pages pass the
  * plan and billing that fit their reader, and `fit`: one line on why that plan fits (with the volume math).
  */
-export function PricingSummary({ highlight, initialInterval, fit }: { highlight?: PlanHighlight; initialInterval?: BillingInterval; fit?: string } = {}) {
+export function PricingSummary({ highlight, initialInterval, fit, locale = "en" }: { highlight?: PlanHighlight; initialInterval?: BillingInterval; fit?: string; locale?: Locale } = {}) {
+  const T = LANDING_TEXT[locale].pricing;
   return (
     <>
       <div className="mx-auto max-w-3xl text-center">
-        <p className={EYEBROW}>Pricing</p>
+        <p className={EYEBROW}>{T.eyebrow}</p>
         <h2 id="pricing-summary" className={H2}>
-          Try {FREE_LIMITS.registered} posts free. No credit card.
+          {T.heading(FREE_LIMITS.registered)}
         </h2>
-        <p className="mt-4 text-lg text-[#141414]/70">Upgrade when you&apos;re ready. Every plan includes every feature, for realtors and mortgage brokers. Prices in CAD, plus tax.</p>
+        <p className="mt-4 text-lg text-[#141414]/70">{T.sub}</p>
         {fit && <p className="mt-3 text-base font-medium text-[#141414]">{fit}</p>}
       </div>
       <div className="mt-10">
-        <PricingPlans mode="landing" highlight={highlight} initialInterval={initialInterval} />
+        <PricingPlans mode="landing" highlight={highlight} initialInterval={initialInterval} locale={locale} />
       </div>
       <p className="mt-6 text-center">
         <Link href="/pricing" className="text-sm font-medium text-[#141414] underline underline-offset-4">
-          Compare plans in detail
+          {T.compare}
         </Link>
       </p>
     </>

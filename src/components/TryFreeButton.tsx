@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
+import { LANDING_TEXT, localeOfPath } from "@/lib/landing-i18n";
 
 /**
  * Header call to action for signed-out visitors. On the landing pages (including the persona pages at
@@ -22,7 +23,7 @@ export function TryFreeButton({ className }: { className: string }) {
         input.focus({ preventScroll: true });
       }}
     >
-      Try it for free
+      {LANDING_TEXT[localeOfPath(pathname)].tryFree}
     </button>
   );
 }

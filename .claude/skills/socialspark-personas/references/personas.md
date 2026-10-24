@@ -1,6 +1,10 @@
 # SocialSpark: 20 buyer personas
 
-Written 2026-10-22, plan fit re-assessed 2026-10-23. **Hypotheses, not research:** none of this comes from interviews or usage data yet. Names are illustrative. Plan facts are from `src/lib/plans.ts` at the time of writing (CAD, monthly allowances on both billing intervals):
+Written 2026-10-22. Plan fit re-assessed 2026-10-23. Rebuilt on desk research 2026-10-23: market sizes, regulation, market conditions and agent behaviour from public sources (numbered in [Sources](#sources)).
+
+**What's evidence and what's hypothesis.** Market facts carry a source number like [4]. Personas, names, motives and scenarios are still **hypotheses**: no SocialSpark customer has been interviewed and no usage data has been analysed. Several behaviour figures are US (NAR) data because no Canadian equivalent was found; they're marked "US". Validate with §4 of SKILL.md before treating any persona as proven.
+
+## Plans (from `src/lib/plans.ts`, CAD)
 
 | Plan | Monthly | Yearly (= 10 months) | Posts / regens a month |
 |---|---|---|---|
@@ -8,36 +12,62 @@ Written 2026-10-22, plan fit re-assessed 2026-10-23. **Hypotheses, not research:
 | Starter | $14.99 | $149.90 | 10 / 5 |
 | Pro | $24.99 | $249.90 | 20 / 10 |
 | Top Producer | $49.99 | $499.90 | 50 / 25 |
-| Team | Contact sales (`src/lib/team.ts`, `/api/team-enquiry`) | — | Promises seats, one invoice, shared brand kit: **not built in the product yet** |
+| Team | Contact sales (`src/lib/team.ts`) | — | Promises seats, one invoice, shared brand kit: **not built yet** |
 
-"Post" = one platform, one single image or carousel. A listing posted to two platforms across its life is often 6–10 posts, so Starter ≈ 1 listing a month, Pro ≈ 2–3, Top Producer ≈ 5–8.
+One post = one platform's single image or carousel. A listing posted to two platforms across its life is often 6–10 posts, so Starter ≈ 1 listing a month, Pro ≈ 2–3, Top Producer ≈ 5–8. Broker sheets, PDFs and Stories are free; only captions use a post.
+
+## The market in brief
+
+- **Realtors: about 155,000–160,000** CREA members [1], over half in Ontario. **Québec: about 16,000** OACIQ brokers [5].
+- **Most agents do few deals.** In the GTA, roughly a third of agents closed none in a year and many more closed one or two [2]. Ontario works out to about 3 transactions per member [2]. Membership is shrinking in Ontario: TRREB's renewal drop in early 2024 was the steepest since 1991 [16]. *So the paying base is the active minority, and volume, not headcount, decides the plan.*
+- **The market is balanced and slower.** As of September 2026: 4.9 months of inventory, sales-to-new-listings ratio 48.8%, prices down about 3% year over year [11]. In cottage country, 61% of agents report longer days on market [17]. *Listings live longer and need more posts each (Price Reduced, Open House again, Featured), which pushes agents up the plans.*
+- **Toronto condos are at a historic low.** Q1 2026 GTHA new-condo sales hit a 35-year low, with a record 4,295 completed unsold units (≈92 months of supply). Resale is 38% cheaper per square foot than new [7]. Ontario's full HST rebate for first-time buyers of new homes (to March 2027) adds a new message to market [21].
+- **Luxury is slow.** GTA $3M+ sales are down about 17% (Jan–Apr 2026), and West Vancouver $4M+ is down 25% with about 2.3 years of supply [20].
+- **Agents already use social and AI.** US data: 87% use Facebook, 62% Instagram, 48% LinkedIn [4]; 56% use AI to create social posts, and accuracy is the top AI concern (63%) [18]. Most spend only 1–4 hours a week on social [13]. *AI isn't the selling point; accuracy, their own voice and approval are.*
+- **Outsourcing is the real price comparison.** A Canadian brokerage's social content plan costs $400/month for about 40 posts, and full-time VAs with social duties are listed at about $800/month [9].
+- **Mortgage brokers are growing, and realtors feed them.** Ontario (June 2025): 3,059 brokers, 5,235 Level 2 and 9,923 Level 1 agents in 1,162 brokerages [3]. Brokers handled 38% of mortgages in 2025 and 48% for recent first-time buyers [6]. Realtor referrals were 34.9% of brokers' business in 2026, a three-year high [6].
+- **Regulators require name and licence on ads.** FSRA requires the brokerage name and licence number in advertising [8]. RECO counts social posts as advertising that must name the brokerage [10]. BCFSA and the AMF publish social media rules for mortgage licensees [19].
+- **Policy creates first-time-buyer content.** Since 15 Dec 2024, all first-time buyers can get 30-year insured amortization, and the insured price cap is $1.5M [12].
+- **Photos belong to the photographer** by default under Canadian copyright law. Reusing them needs a written licence [15]. This comes up for every persona who reposts old or inherited listings.
 
 ## Fit at a glance
 
-| # | Persona | Segment | Pays? | Likely plan | Billing | Tier |
-|---|---|---|---|---|---|---|
-| 1 | Tuesday-Night Canva Agent | Realtor, solo | Self | Pro (Starter to start) | Monthly → yearly | 1 |
-| 2 | The Hungry Rookie | Realtor, new | Self | Free → Starter | Monthly | 2 |
-| 3 | The Top Producer | Realtor, high volume | Self / assistant | Top Producer | Yearly | 1 |
-| 4 | The Team Lead | Realtor team | Team budget | Team (sales) | Annual invoice | 2 (fulfilment gap) |
-| 5 | The Marketing Coordinator | Team staff | Not the payer | Top Producer or Team | Boss decides | 2 |
-| 6 | Le courtier immobilier québécois | Realtor, Québec | Self | Starter → Pro | Monthly → yearly | 1 |
-| 7 | The Bilingual Border Agent | Realtor, bilingual market | Self | Pro → Top Producer | Yearly | 1 |
-| 8 | The Part-Timer | Realtor, side business | Self, in bursts | Starter, on and off | Monthly only | 3 |
-| 9 | The Luxury Specialist | Realtor, high-end | Self | Pro | Yearly | 2 |
-| 10 | The Condo & Pre-Sale Specialist | Realtor, urban condos | Self | Top Producer | Monthly → yearly | 1 |
-| 11 | The Small-Town & Cottage Agent | Realtor, rural/recreational | Self | Starter | Yearly | 2 |
-| 12 | The Reluctant Veteran | Realtor, 20+ years | Self (or adult child sets up) | Starter | Yearly | 2 |
-| 13 | The Agent Who Fired Their VA | Realtor, cost-cutting | Self | Pro or Top Producer | Yearly | 2 |
-| 14 | The Independent Brokerage Owner | Managing broker | Brokerage | Team (sales) | Annual invoice | 2 (fulfilment gap) |
-| 15 | The Relocation & Newcomer Agent | Realtor, community niche | Self | Starter | Monthly | 3 |
-| 16 | The Referral-Hungry Mortgage Agent | Mortgage, early career | Self | Starter → Pro | Monthly | 1 |
-| 17 | The Realtor-Network Broker | Mortgage, established | Self | Pro → Top Producer | Yearly | 1 |
-| 18 | Le courtier hypothécaire québécois | Mortgage, Québec | Self | Pro | Yearly | 1 |
-| 19 | The First-Time-Buyer Broker | Mortgage, FTHB niche | Self | Pro | Monthly → yearly | 1 |
-| 20 | The Bank Mobile Mortgage Specialist | Mortgage, lender-employed | Self, if allowed | Starter | Monthly | 3 (compliance) |
+| # | Persona | Segment | Plan | Billing | Tier |
+|---|---|---|---|---|---|
+| 1 | Tuesday-Night Canva Agent | Realtor, solo | Pro | Monthly → yearly | 1 |
+| 2 | The Hungry Rookie | Realtor, new | Starter | Monthly | 2 |
+| 3 | The Top Producer | Realtor, high volume | Top Producer | Yearly | 1 |
+| 4 | The Team Lead | Realtor team | Team | Annual invoice | 2 (fulfilment gap) |
+| 5 | The Marketing Coordinator | Team staff (boss pays) | Top Producer | Monthly | 2 |
+| 6 | Le courtier immobilier québécois | Realtor, Québec | Pro | Monthly → yearly | 1 |
+| 7 | The Bilingual Border Agent | Realtor, bilingual market | Top Producer | Yearly | 1 |
+| 8 | The Part-Timer | Realtor, side business | Starter | Monthly, on and off | 3 |
+| 9 | The Luxury Specialist | Realtor, high-end | Pro | Yearly | 2 |
+| 10 | The Condo & Pre-Sale Specialist | Realtor, urban condos | Top Producer | Monthly → yearly | 1 |
+| 11 | The Small-Town & Cottage Agent | Realtor, rural/recreational | Starter | Yearly | 2 |
+| 12 | The Reluctant Veteran | Realtor, 20+ years | Starter | Yearly | 2 |
+| 13 | The Agent Who Fired Their VA | Realtor, cost-cutting | Top Producer | Yearly | 1 |
+| 14 | The Independent Brokerage Owner | Realtor brokerage | Team | Annual invoice | 2 (fulfilment gap) |
+| 15 | The Expired-Listing Specialist *(new)* | Realtor, relists | Pro | Monthly | 1 |
+| 16 | The Referral-Hungry Mortgage Agent | Mortgage, early career | Pro | Monthly | 1 |
+| 17 | The Realtor-Network Broker | Mortgage, established | Top Producer | Yearly | 1 |
+| 18 | Le courtier hypothécaire québécois | Mortgage, Québec | Pro | Yearly | 1 |
+| 19 | The First-Time-Buyer Broker | Mortgage, FTHB niche | Pro | Monthly → yearly | 1 |
+| 20 | The Mortgage Brokerage Principal *(new)* | Mortgage brokerage | Team | Annual invoice | 2 (fulfilment gap) |
 
-Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit with a caveat. Tier 3 = possible, but blocked by a gap, low volume or a gatekeeper. Changes from the first version: personas 3 and 10 moved up (Top Producer removes their cap); 4 and 14 moved from "blocked" to "sales-led, but the promised Team features must be delivered".
+Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit with a caveat. Tier 3 = possible but low volume. Personas 15 and 20 replace the Relocation & Newcomer Agent and the Bank Mobile Mortgage Specialist (see [Watch list](#watch-list-not-targets-today)).
+
+## Personas by plan
+
+| Plan | Personas | Common thread |
+|---|---|---|
+| **Free** | Everyone's entry point | The 3 posts are the demo. Paying starts the day a listing goes live. |
+| **Starter** $14.99 · 10 posts | 2 Rookie, 8 Part-Timer, 11 Small-Town & Cottage, 12 Veteran | About 1 listing a month; price-sensitive or low-tech. 11 and 12 suit yearly; 2 and 8 never do. |
+| **Pro** $24.99 · 20 posts | 1 Tuesday-Night, 6 Québec realtor, 9 Luxury, 15 Expired-Listing, 16 Referral-Hungry broker, 18 Québec broker, 19 First-Time-Buyer broker | 2–3 listings a month, or a few broker sheets a week. The core plan. |
+| **Top Producer** $49.99 · 50 posts | 3 Top Producer, 5 Coordinator, 7 Bilingual, 10 Condo, 13 Fired-the-VA, 17 Network broker | 5–8 listings a month, two languages, or a large realtor network. Volume and speed matter, not price. |
+| **Team** (sales) | 4 Team Lead, 14 Brokerage Owner, 20 Mortgage Brokerage Principal | Seats, one invoice, consistent compliant branding. Promised on the pricing page, not built. |
+
+`PERSONA_PLAN` in `src/lib/persona-pages.ts` mirrors this table. Change both together.
 
 ---
 
@@ -45,21 +75,23 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 
 ### 1. Tuesday-Night Canva Agent — solo listing agent, suburban Ontario or BC
 
-**Who they are.** "Priya", 6–12 years licensed, 12–25 listings a year, on a big franchise or a mid-size independent brokerage. Runs their business alone or with a part-time admin. Has an Instagram with a few hundred to a couple thousand followers, a Facebook business page, and a LinkedIn they barely touch. Their brand matters to them: they paid for a headshot and a logo.
+**Plan: Pro** · billed monthly, yearly once the habit sticks · fallback: Starter for a quiet month.
 
-**Today.** Every new listing means opening Canva, finding last month's template, dropping in photos, retyping the price and features, writing a caption, then doing it again for the open house and again for Sold. It happens after showings, usually at night. Sometimes the Sold post never gets made.
+**Who they are.** "Priya", 6–12 years licensed, 12–25 listings a year, at a franchise or mid-size independent. Works alone or with a part-time admin. Has a professional headshot and logo, an Instagram with a few hundred to a few thousand followers, and a Facebook page.
 
-**Goals.** Post every listing at every stage, look as polished as the big teams, get seller leads from people who see their listings.
+**Problems and scenarios.**
+- A listing goes live Thursday. Between showings and offers, the Just Listed post gets built in Canva at 10 p.m., then rebuilt for the open house, again for the price change and again for Sold. Usually the Sold post never happens.
+- Listings now sit longer [11], so one listing means more posts than it did two years ago.
+- At a listing presentation the seller asks, "How will you market my home online?" Their honest answer is "I'll post it when I can."
+- They've tried ChatGPT for captions but don't trust it with facts. Accuracy is agents' top AI worry [18].
 
-**Pains and triggers.** A new listing goes live and they're already behind. They see a competitor's consistent feed. A seller asks "where will you market my home?"
+**How SocialSpark helps.** Paste the brokerage listing link and get a branded carousel and caption for Instagram, Facebook or LinkedIn in under a minute. The caption follows their tone and past posts (Brand & voice). It covers six post types across the listing's life (Coming Soon → Sold), and scheduling sets up the Open House post on day one. Details come from the listing and are editable, and nothing posts without their click.
 
-**Why they'd use SocialSpark.** Paste the listing link from their brokerage site and get the Just Listed carousel and caption for Instagram, Facebook or LinkedIn in their voice (Brand & voice learns from past posts), with their name, brokerage and colours. Six post types cover the whole listing life. Scheduling means the Open House post can be set up on day one.
+**Why they'd pay.** The 3 free posts run out on the first listing. 1–2 listings a month × 4–5 stages × 2 platforms is 10–20 posts, which is Pro. For an agent working from about one transaction's commission a month, $24.99 is trivial. The benefit they can sell is "every listing gets professional social posts at every stage," said in the listing presentation.
 
-**Why they'd pay.** The free 3 posts run out on their first listing. At 1–2 listings a month across two platforms they need 10–20 posts: Starter for a trial month, then Pro once they post every stage. Busy spring months can push them toward Top Producer; a yearly Pro plan ($249.90, two months free) suits them once the habit sticks. Either is less than an hour of their time, and they can mention "every listing gets professional social posts" in listing presentations.
+**Objections.** "AI captions sound fake" → voice samples, and every word is editable. "Will it get details wrong?" → it uses the listing's own details, and you approve before anything posts. "REALTOR.ca links fail" → paste the page, or use the brokerage link.
 
-**Objections.** "AI captions sound fake" → voice samples, edit everything. "Will it post something wrong?" → nothing posts without their click. "REALTOR.ca links don't work" → copy-paste the page, or use their brokerage link.
-
-**Reach them.** Instagram and Facebook ads, realtor Facebook groups, brokerage training nights, Google searches like "listing post template".
+**Reach them.** Facebook and Instagram ads, realtor Facebook groups, brokerage training nights, "just listed post template" searches.
 
 **Message that lands.** "Paste your listing link. Your Just Listed post is ready before your coffee is."
 
@@ -67,43 +99,45 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 
 ### 2. The Hungry Rookie — first- or second-year agent, any major market
 
-**Who they are.** "Jordan", 24–35, licensed under two years, maybe a career-changer. Has 0–6 listings a year, so most of their posts are about other people's listings (shared with permission), open houses they host for senior agents, and Featured Property posts. Very online, but money is tight and the brokerage desk fee comes first.
+**Plan: Starter** · billed monthly · fallback: Free until the first listing.
 
-**Today.** Free Canva, phone photos, captions copied from other agents. Their feed looks amateur and they know it.
+**Who they are.** "Jordan", 24–35, licensed under two years, often a career-changer. Few or no listings of their own, so they host colleagues' open houses and post Featured Properties (with permission). Very online, money tight, desk fees first.
 
-**Goals.** Look established before they are. Build a following that turns into their first clients.
+**Problems and scenarios.**
+- They're competing in a field where about a third of agents close nothing in a year [2]. The ones who survive look established before they are.
+- Their first listing comes from a family friend. They want it to look like a top producer's, but have only free Canva templates and phone photos.
+- In the US, about half of agents who closed their first deal in 2022 closed none in 2023 [16]. Rookies are anxious about every dollar.
 
-**Pains and triggers.** Their first listing. Hosting an open house for a colleague. Seeing peers who started with them look more professional.
+**How SocialSpark helps.** A professional, branded post for the cost of pasting a link. Open House and Featured Property types fit their reality. The free posts let them see the result before paying.
 
-**Why they'd use SocialSpark.** Free posts with no card: a polished first post costs nothing. Featured Property and Open House post types fit their reality. Branded templates make a small agent look like a real business.
+**Why they'd pay.** The day they get a listing. 10 posts covers one listing across two platforms, so Starter, monthly.
 
-**Why they'd pay.** When they land a listing and want to post it properly at every stage. Starter is the natural plan. Risk: they may cycle through free accounts or wait for listings to subscribe.
+**Objections.** "Another subscription?" → subscribe the month you have a listing, cancel in two clicks. "I don't have listings" → host open houses and Featured posts for colleagues, with the listing agent's OK and photo permission [15].
 
-**Objections.** "I can't afford another subscription" → cancel anytime, subscribe for the month you have a listing. "I don't have listings yet" → Featured Property and open houses for colleagues (with the listing agent's OK).
-
-**Reach them.** TikTok and Instagram, licensing-course communities, new-agent Facebook groups, brokerage onboarding.
+**Reach them.** Instagram and TikTok, licensing-course and new-agent groups, brokerage onboarding.
 
 **Message that lands.** "Your first listing deserves to look like your fiftieth."
 
 ---
 
-### 3. The Top Producer — high-volume listing agent, GTA, Greater Vancouver or Calgary
+### 3. The Top Producer — high-volume listing agent, GTA, Greater Vancouver, Calgary
 
-**Who they are.** "Marc", 40–55, 50+ listings a year, a buyer agent or two and an assistant. Their name is the brand. Social media is already handled, somewhat: an assistant or contractor makes posts, but it's slow and uneven.
+**Plan: Top Producer** · billed yearly · fallback: Team once they add agents.
 
-**Today.** A listing goes live and the post appears two or three days later, if the assistant isn't on transaction paperwork. Open House posts get skipped on busy weekends.
+**Who they are.** "Marc", 40–55, 50+ listings a year, a buyer's agent or two and an assistant. They are the small minority who carry the mean transaction count [2]. Their name is the brand.
 
-**Goals.** Speed and consistency at scale. Every listing announced the day it goes live. Protect the brand they spent years building.
+**Problems and scenarios.**
+- Four listings hit MLS in one week. The assistant is buried in paperwork, so Just Listed posts show up three days late and one Open House post never goes out. A seller notices.
+- Longer days on market [11] mean each listing needs a second wave of posts (Price Reduced, Featured, a second open house), which multiplies the assistant's work.
+- Recruiting season: their feed is the team's résumé, and gaps look like decline.
 
-**Pains and triggers.** A seller noticing their listing wasn't posted. The assistant going on vacation. Recruiting season, when the feed is the team's résumé.
+**How SocialSpark helps.** It makes the assistant much faster: link in, branded post out, scheduled across platforms, with the same templates every time so the brand stays consistent. LinkedIn posts reach their professional referral network.
 
-**Why they'd use SocialSpark.** It makes the assistant five times faster: link in, branded post out, scheduled. Consistent templates keep the brand uniform. LinkedIn posts reach their professional referral network.
+**Why they'd pay.** 4+ listings a month × 4–5 stages × 2 platforms is 30–40+ posts, which is the Top Producer plan, named for them. Price doesn't matter to them. Yearly ($499.90) is one less invoice to approve.
 
-**Why they'd pay.** Price is irrelevant to them; time and consistency aren't. 4+ listings a month × 4 stages × 2 platforms is 30+ posts, which is why the **Top Producer plan** ($49.99, 50 posts) exists, and it's named after them. They're the likeliest yearly buyer ($499.90). Only the very largest (8+ listings a month) would still hit 50, and they usually have a team (persona 4).
+**Objections.** "My assistant does this" → it gives your assistant the hours back. "Is 50 enough?" → about 5–8 listings a month at every stage; past that, Team.
 
-**Objections.** "My assistant already does this" → it makes your assistant faster, not redundant. "Is 50 enough?" → about 5–8 listings a month at every stage; beyond that, Team.
-
-**Reach them.** Their assistant, usually. LinkedIn, industry conferences, brokerage top-producer events, referrals from other agents.
+**Reach them.** Through their assistant, LinkedIn, top-producer events, coaching programs.
 
 **Message that lands.** "Every listing posted the day it goes live, at every stage, without adding staff."
 
@@ -111,87 +145,91 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 
 ### 4. The Team Lead — leads a 4–10 agent team
 
-**Who they are.** "Sandra", runs a team under a franchise brokerage, splits commission with team agents, owns the team brand and marketing budget. Cares about team brand consistency more than any single post.
+**Plan: Team** · annual invoice (sales-led) · fallback: one Top Producer account run by a coordinator until Team features exist.
 
-**Today.** Each agent posts their own way, or the team's marketing person bottlenecks everything. Brand rules exist in a PDF nobody follows.
+**Who they are.** "Sandra", runs a team under a franchise brokerage, owns the team brand and marketing budget. No Canadian figure exists for the share of agents on teams; in the US it was about a quarter [22].
 
-**Goals.** One consistent team look across every agent's listings. Content volume that makes the team look bigger.
+**Problems and scenarios.**
+- Each agent posts differently. One leaves the brokerage name off a post, which RECO treats as an advertising problem [10].
+- A new agent joins and needs to look "on brand" by week one.
+- The team's marketing person is the bottleneck for every listing post.
 
-**Pains and triggers.** A team member's off-brand post. Onboarding a new agent. Annual marketing budget review.
+**How SocialSpark helps.** The same templates and branding for every listing, so any agent can produce a consistent post. Posts carry the agent's name and brokerage.
 
-**Why they'd use SocialSpark.** Templates and branding produce a consistent look. Every agent can generate posts without design skills.
+**Why they'd pay.** From the team marketing budget, as one line item. The Team banner ("seats for every agent, one invoice and a shared brand kit") is aimed at them.
 
-**Why they'd pay.** Out of the team marketing budget, as one line item. The pricing page's Team banner ("Seats for every agent, one invoice and a shared brand kit") speaks directly to them, and the enquiry form captures team size and province. **Fulfilment gap:** seats, a shared brand kit and central billing aren't built yet, so the first Team deals would be handled by hand (separate accounts, one manual invoice) or need the features built. Until then, the realistic fallback is one Top Producer account run by a coordinator (persona 5).
+**Product gap.** Seats, a shared brand kit and central billing are promised, not built. Decide a per-agent price and how the first deal is fulfilled before taking calls.
 
-**Objections.** "How do I control the brand across accounts?" → promised on the banner, not built. "Who owns the accounts if an agent leaves?" → not solved yet. "What does it cost per agent?" → no published Team price; decide one before the first call.
-
-**Reach them.** LinkedIn, team-lead masterminds and coaching programs, brokerage leadership events.
+**Reach them.** LinkedIn, team-lead coaching programs, brokerage leadership events.
 
 **Message that lands.** "Every agent on your team, one look, without a designer."
 
 ---
 
-### 5. The Marketing Coordinator — staff at a team or busy agent's office
+### 5. The Marketing Coordinator — staff at a team or top producer's office
 
-**Who they are.** "Alex", 25–35, salaried or contractor, does social, listing launches, print, and some admin for a team or top producer. Uses the product every day but doesn't own the card.
+**Plan: Top Producer** · billed monthly on the boss's card · fallback: Team if they work for a team.
 
-**Today.** Lives in Canva and a content calendar. Rebuilds the same listing posts over and over. Gets asked "is the Sold post up yet?" weekly.
+**Who they are.** "Alex", 25–35, salaried or contract. Does social, listing launches, print and some admin. Uses the product daily but doesn't hold the card.
 
-**Goals.** Clear the backlog. Spend time on content that actually needs them (videos, market updates, client stories) instead of listing posts.
+**Problems and scenarios.**
+- Three listings go live in one week, and each needs the same five posts rebuilt from scratch.
+- The boss asks "is the Sold post up?" weekly.
+- Their real ambition (video, market updates, client stories) never gets time.
 
-**Pains and triggers.** Three listings going live in one week. A new boss who wants daily posting.
+**How SocialSpark helps.** Fast, editable first drafts of every listing post, scheduling, and downloads for their existing scheduler. Their judgement still shapes the final post.
 
-**Why they'd use SocialSpark.** Bulk speed on repetitive listing posts; scheduling; editable output so their judgement still shows; downloads to drop into their existing scheduler.
+**Why they'd pay.** They don't. They champion it to persona 3 or 4. Give them a one-line case for the boss: "50 listing posts a month for $49.99, against a social content package that costs $400 [9]."
 
-**Why they'd pay.** They don't; they champion it to their boss (personas 3 or 4). For a top producer the ask is Top Producer at $49.99; for a team it's the Team enquiry. Pitch to them as a tool that makes them look good, and give them a one-line case for the boss.
+**Objections.** "Will it replace me?" → it takes the repetitive part, not the job.
 
-**Objections.** "Will it replace me?" → it takes the repetitive part, not the job. "Our brand is custom" → colours, logo, photos and text are all editable.
-
-**Reach them.** Real-estate marketing communities, Instagram, Canva-alternative searches, LinkedIn job titles.
+**Reach them.** Real-estate marketing communities, Instagram, LinkedIn job titles.
 
 **Message that lands.** "The listing posts are done. Go make the content only you can."
 
 ---
 
-### 6. Le courtier immobilier québécois — francophone broker, Montréal, Québec City, Gatineau or the regions
+### 6. Le courtier immobilier québécois — Montréal, Québec City, Gatineau, the regions
 
-**Who they are.** "Geneviève", courtier immobilier résidentiel under the OACIQ, 8–20 listings a year, works entirely in French. Most English tools give them France French or awkward translations, or nothing.
+**Plan: Pro** · billed monthly, yearly once loyal · fallback: Starter for 1 listing a month.
 
-**Today.** Writes captions themselves in French, or translates English tools' output and fixes it. Design work in Canva.
+**Who they are.** "Geneviève", one of about 16,000 OACIQ-licensed brokers [5], 8–20 listings a year, works in French. Most social tools give them France French or stilted translations.
 
-**Goals.** Posts that sound like a Québécois broker, not a translation. Professional look on Facebook (very strong in Québec) and Instagram.
+**Problems and scenarios.**
+- They try an English-first tool and get "Juste listé" style copy that their clients would mock.
+- Bill 96 made French the default language for real estate documents [14]. Their whole working day is in French, and their marketing needs to match. (We found no OACIQ rule that specifically covers social posts.)
+- Facebook is their main channel, and posts must read like a Québécois neighbour wrote them.
 
-**Pains and triggers.** Trying an English-first tool and seeing "Juste listé" type output. A new listing in a hot market.
+**How SocialSpark helps.** Captions written natively in Québec French, or bilingual. Same branding and speed as English users. Account data is stored in Canada.
 
-**Why they'd use SocialSpark.** Québec French captions written natively, plus bilingual output for mixed areas. Same link-to-post speed and branding as English users. Data stored in Canada.
+**Why they'd pay.** Few tools do Québec French well, so once it works, switching costs are high. 2 listings a month at every stage is Pro.
 
-**Why they'd pay.** Few alternatives do Québec French properly, so the switching cost is high once it works. Starter at first, Professional when they post every stage.
+**Objections.** "Is the French really Québécois?" → show a real sample in the ad. "Centris links?" → test this; if Centris blocks tools, the copy-paste path applies.
 
-**Objections.** "Is the French actually Québécois?" → show a real sample in the ad. "Does it work with Centris links?" → test this; if Centris blocks automated tools like REALTOR.ca does, the copy-paste path applies.
-
-**Reach them.** French-language Facebook and Instagram ads served in Québec, Québec real-estate Facebook groups, local real-estate boards' events.
+**Reach them.** French-language Meta ads served in Québec, Québec agent Facebook groups, real estate board events.
 
 **Message that lands.** "Vos publications Inscrit, Visite libre et Vendu, en français d'ici, en une minute."
 
 ---
 
-### 7. The Bilingual Border Agent — Ottawa–Gatineau, Montréal West Island, Moncton, Eastern Ontario
+### 7. The Bilingual Border Agent — Ottawa–Gatineau, Montréal West Island, Moncton
 
-**Who they are.** "Daniel", fully bilingual, serves both anglophone and francophone buyers, often across a provincial border. Posting in only one language loses half their audience; posting twice doubles the work.
+**Plan: Top Producer** · billed yearly · fallback: Pro if one bilingual caption per post is enough.
 
-**Today.** Writes one caption in English and another in French, or one awkward mixed caption, or skips French.
+**Who they are.** "Daniel", fully bilingual, often selling across the Ottawa River or in officially bilingual New Brunswick. In Gatineau, about 64% of residents are bilingual [23].
 
-**Goals.** Reach both language communities with every listing, without doing everything twice.
+**Problems and scenarios.**
+- Ottawa buyers cross into Gatineau for lower prices, while Gatineau sellers want to reach them [23]. Every listing needs both languages.
+- Writing every caption twice doubles their posting work.
+- A francophone seller asks why their listing was posted only in English.
 
-**Pains and triggers.** A francophone seller asking for French marketing. Doing two captions per listing every time.
+**How SocialSpark helps.** Bilingual captions in one post, or separate English and Québec French posts from the same listing link. This is SocialSpark's clearest differentiator.
 
-**Why they'd use SocialSpark.** Bilingual output in one post, or separate EN and Québec FR versions. It's one of SocialSpark's clearest differentiators.
+**Why they'd pay.** Separate EN and FR posts double the count: 2–3 listings × 5 stages × 2 platforms × 2 languages goes well past 20, so Top Producer. Pro if one bilingual caption per post is enough.
 
-**Why they'd pay.** A single bilingual caption is one post, but agents who want separate English and French posts double their load and hit 20 fast. Pro for bilingual captions; Top Producer if they post each language separately.
+**Objections.** "Is the French good enough?" → sample it.
 
-**Objections.** "Is the French good enough for my francophone clients?" → sample it; Québec French, not France French.
-
-**Reach them.** Geo-targeted bilingual ads in border regions, Ottawa and Gatineau real-estate boards, LinkedIn.
+**Reach them.** Bilingual geo-targeted ads in border regions, Ottawa and Outaouais boards, LinkedIn.
 
 **Message that lands.** "One listing link. English, French, or both, in the same minute."
 
@@ -199,21 +237,21 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 
 ### 8. The Part-Timer — agent with a day job or semi-active licence
 
-**Who they are.** "Chris", a teacher, nurse or retiree who keeps a licence and does 2–6 deals a year, mostly from friends and family. Doesn't want another monthly bill.
+**Plan: Starter** · billed monthly only, on and off · fallback: Free between listings.
 
-**Today.** Posts listings on their personal Facebook. Sometimes nothing.
+**Who they are.** "Chris", a teacher, nurse or retiree who keeps a licence for 1–4 deals a year from friends and family. This is a large group: many agents close only one or two deals a year [2].
 
-**Goals.** Look professional on the few listings they have; not waste money in the months they don't.
+**Problems and scenarios.**
+- A friend lists with them. They want to do it justice but won't learn design tools for one listing.
+- Every monthly fee feels heavy against an income that comes in bursts.
 
-**Pains and triggers.** A friend lists with them and they want to do it justice.
+**How SocialSpark helps.** Free posts, no card, no learning curve: link in, post out.
 
-**Why they'd use SocialSpark.** Free posts and no card. Link in, post out, with almost no learning curve.
-
-**Why they'd pay.** Only during a listing: subscribe to Starter for a month, cancel after Sold. Never yearly: $149.90 is more than the 2–3 months they'd actually use. Low lifetime value, but "cancel anytime" is exactly what gets them to pay at all.
+**Why they'd pay.** Only during a listing: Starter for a month or two, then cancel. Never yearly.
 
 **Objections.** "I only need it twice a year" → subscribe that month, cancel in two clicks.
 
-**Reach them.** Facebook, word of mouth from agent friends, brokerage newsletters.
+**Reach them.** Facebook, word of mouth from agent friends.
 
 **Message that lands.** "Got a listing this month? Make it look like you do this every day."
 
@@ -221,21 +259,22 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 
 ### 9. The Luxury Specialist — $2M+ homes, Toronto, Vancouver, Muskoka, Montréal
 
-**Who they are.** "Victoria", sells high-end homes, works with professional photographers and stagers, guards their image carefully. Their buyers and referrers include executives, lawyers and other professionals, so LinkedIn matters.
+**Plan: Pro** · billed yearly · fallback: none; volume is low, care is high.
 
-**Today.** Pays a designer for listing launch materials. Social posts are slow because every one is custom.
+**Who they are.** "Victoria", sells high-end homes with professional photographers and stagers, and guards their image. Referrers are executives and professionals, so LinkedIn matters.
 
-**Goals.** Social posts that match the quality of the photography. Reach high-net-worth networks.
+**Problems and scenarios.**
+- GTA $3M+ sales are down about 17% and West Vancouver $4M+ down 25%, with about 2.3 years of supply [20]. Luxury listings now sit for months, and sellers expect the marketing to keep going.
+- A designer's turnaround delays the launch post by a week.
+- Template tools look cheap next to their photography.
 
-**Pains and triggers.** A designer's turnaround holding up a launch. Template tools that look cheap.
+**How SocialSpark helps.** The Minimal template lets the photography lead. Good photo picking, text on photos optional, LinkedIn posting, everything editable. Featured and Price Reduced posts keep a slow listing visible without a designer.
 
-**Why they'd use SocialSpark.** The Minimal template and good photo picking let the photography carry the post. LinkedIn posting. Text-on-photo is optional. Everything is editable.
+**Why they'd pay.** Price is trivial; the output has to be beautiful. Few listings but long ones, so Pro, likely yearly.
 
-**Why they'd pay.** Price is trivial for them. They'll pay if the output is beautiful enough; if not, nothing else matters. Few listings, so Pro covers them; likely yearly, since they don't watch small subscriptions.
+**Objections.** "Templates look templated" → show luxury examples in the creative. They may keep a designer for the launch and use SocialSpark for everything after.
 
-**Objections.** "Templates look templated" → show luxury output in the creative. "I need custom" → they may keep a designer for hero pieces and use SocialSpark for Open House, Price Reduced and Sold.
-
-**Reach them.** LinkedIn, Instagram, luxury real-estate networks and franchise luxury divisions.
+**Reach them.** LinkedIn, Instagram, luxury brokerage divisions.
 
 **Message that lands.** "Let your photographer's work speak. The post is ready when the photos are."
 
@@ -243,43 +282,46 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 
 ### 10. The Condo & Pre-Sale Specialist — downtown Toronto, Vancouver, Calgary, Montréal
 
-**Who they are.** "Kevin", sells resale condos and assignments, many units a year at lower prices than detached homes, often to investors and first-time buyers. High listing volume means high posting volume.
+**Plan: Top Producer** · billed monthly, then yearly · fallback: Pro in a slow month.
 
-**Today.** Many similar listings, each needing its own post. Condo fees and building amenities have to be in every caption.
+**Who they are.** "Kevin", sells resale condos and assignments, often to investors and first-time buyers. Many units, lower prices, high posting volume.
 
-**Goals.** Speed through volume. Captions that get unit specifics (floor, view, parking, locker, fees) right.
+**Problems and scenarios.**
+- GTHA new-condo sales hit a 35-year low in Q1 2026, with a record 4,295 completed unsold units [7]. Their investor clients are trying to sell assignments into a glut, so every unit needs repeated pushes and frequent Price Reduced posts.
+- Resale condos are 38% cheaper per square foot than new [7], and they need to tell buyers that, unit by unit.
+- New messages appear constantly. Ontario's full HST rebate for first-time buyers of new homes (to March 2027) [21] and 30-year amortization for new builds [12] change what a unit "really costs."
+- Five units in one building look identical, and posts need to tell them apart (floor, view, parking, locker, fees).
 
-**Pains and triggers.** Five units live in one building. Market slowdowns that make Price Reduced posts frequent.
+**How SocialSpark helps.** It imports each unit's details, condo fee and photos, and writes captions around each unit's own features. Price Reduced and Coming Soon types are built in. It pairs with persona 19 for "what it costs a month" feature sheets.
 
-**Why they'd use SocialSpark.** Extraction pulls details from the listing page, Claude writes specifics in. Price Reduced and Coming Soon types are core to a slower condo market.
+**Why they'd pay.** 4–6 active units × several Price Reduced and Open House rounds × 2 platforms is well past 20, so Top Producer.
 
-**Why they'd pay.** Volume pushes them past Pro's 20 posts; Top Producer (50) fits a busy condo month, especially when Price Reduced posts pile up.
+**Objections.** "My listings all look the same" → captions use each unit's own details and photos.
 
-**Objections.** "My listings all look the same" → captions use each unit's details and photos.
-
-**Reach them.** Instagram, investor-focused communities, Google search.
+**Reach them.** Instagram, investor communities, "condo realtor" searches. They already have a landing page (`/for/social-media-posts-for-condo-realtors`).
 
 **Message that lands.** "Five condos this week? Five posts before lunch."
 
 ---
 
-### 11. The Small-Town & Cottage Agent — rural Ontario, Alberta, Nova Scotia, BC Interior
+### 11. The Small-Town & Cottage Agent — rural Ontario, Prairies, Atlantic, BC Interior
 
-**Who they are.** "Doug", sells acreages, farms, cottages and small-town homes. Local Facebook groups and community pages are their main channel. Listings sit longer, so they post the same property several times.
+**Plan: Starter** · billed yearly · fallback: Pro in spring market.
 
-**Today.** Phone posts to Facebook, sometimes with a typed caption. Little design.
+**Who they are.** "Doug", sells acreages, cottages and small-town homes. Facebook Pages and community groups are their channel.
 
-**Goals.** Reach the whole town and the city buyers looking for a cottage.
+**Problems and scenarios.**
+- Cottage prices are forecast to rise about 4% in 2026 on tight supply, but 61% of agents say days on market are up [17]. Each listing has a long life and needs re-promotion.
+- City buyers want to see the waterfront property before the spring rush, so posts need to reach Toronto or Calgary, not just the local group.
+- They post phone photos with a one-line caption because there's no time for more.
 
-**Pains and triggers.** A cottage listing ahead of spring market. A slow listing that needs a fresh push (Price Reduced, Featured).
+**How SocialSpark helps.** Facebook posts and 20-photo albums suit property-heavy listings. Virtual tour links are picked up. Featured Property re-promotes a slow listing without new effort.
 
-**Why they'd use SocialSpark.** Facebook Pages posts and 20-photo albums suit property-heavy listings. Virtual tour links get picked up and mentioned. Featured Property lets them re-promote a listing that's been sitting.
+**Why they'd pay.** Fewer listings, longer lives. Starter covers most months, and steady year-round business suits yearly ($149.90).
 
-**Why they'd pay.** Fewer listings but more posts per listing over a longer life. Starter usually covers it, and steady year-round listings make yearly Starter ($149.90) a fit.
+**Objections.** "I'm not a tech person" → paste a link, click post.
 
-**Objections.** "I'm not a tech person" → paste a link, click post. "My board's listings are only on REALTOR.ca" → copy-paste the page.
-
-**Reach them.** Facebook ads with rural geo-targeting, regional real-estate boards.
+**Reach them.** Rural geo-targeted Facebook ads, regional boards.
 
 **Message that lands.** "That cottage deserves more than a phone photo on Facebook."
 
@@ -287,21 +329,22 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 
 ### 12. The Reluctant Veteran — 20+ years in, referral-based
 
-**Who they are.** "Linda", 55–68, built a business on referrals and repeat clients. Knows social media matters now but finds it uncomfortable. Often their adult child or a younger colleague sets them up.
+**Plan: Starter** · billed yearly · fallback: none.
 
-**Today.** Posts rarely, or pays a family member to do it. Embarrassed by how thin their online presence looks next to younger agents.
+**Who they are.** "Linda", 55–68, built a business on referrals. Social media feels foreign. Ontario's membership shrinkage is partly long-time agents leaving [16], and the ones who stay must keep up.
 
-**Goals.** Show past clients and their sphere they're still active and successful, with minimal effort.
+**Problems and scenarios.**
+- They lose a listing presentation to a younger agent "because of marketing."
+- A grandchild points out their Instagram hasn't been updated in a year.
+- They fear posting something wrong, or AI posting for them.
 
-**Pains and triggers.** A seller choosing a younger agent "because of marketing." A grandchild or assistant telling them their Instagram is empty.
+**How SocialSpark helps.** Almost no skill needed, captions in their own voice, and nothing posts without their click.
 
-**Why they'd use SocialSpark.** Almost no skill required. Captions in their own voice (they paste a few old posts or emails). Nothing posts without their click, so they never fear an accident.
+**Why they'd pay.** To stop losing presentations on marketing. Starter, yearly: one decision, then never think about it again. Low churn if it just works.
 
-**Why they'd pay.** To stop losing listing presentations on marketing. Starter, steady and loyal once set up; low churn if it just works. Good yearly candidate: one decision, then no more thinking about it.
+**Objections.** "I don't trust AI" → you approve every word. "I'll never set it up" → one link, one click.
 
-**Objections.** "I don't trust AI" → you approve every word. "I'll never figure out the setup" → one link, one click; offer a short guided start.
-
-**Reach them.** Facebook, brokerage office managers, their own assistants or family, email.
+**Reach them.** Facebook, office managers, their assistants or family, email.
 
 **Message that lands.** "Your listings, posted properly, without learning Instagram."
 
@@ -309,67 +352,71 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 
 ### 13. The Agent Who Fired Their VA — cost-conscious mid-career agent
 
-**Who they are.** "Ravi", has paid a virtual assistant or freelance social media manager for listing posts. Market slowed, commissions dropped, and the retainer now hurts. Wants the output without the monthly cost.
+**Plan: Top Producer** · billed yearly · fallback: Pro if volume is moderate.
 
-**Today.** Either still paying and resenting it, or stopped and their feed went quiet.
+**Who they are.** "Ravi", has paid a VA or freelance social manager for listing posts. With prices down about 3% and sales slower [11], the retainer hurts.
 
-**Goals.** Keep the posting cadence clients noticed, at a fraction of the cost.
+**Problems and scenarios.**
+- They're paying a few hundred dollars a month for a content package, about $400 for 40 posts [9], or up to about $800 for a VA [9].
+- The contractor's turnaround slips during a busy week, and the feed goes quiet after they cancel.
 
-**Pains and triggers.** A slow quarter. A contractor's price increase. The contractor's turnaround slipping.
+**How SocialSpark helps.** The same deliverable (branded listing posts plus captions) in minutes, with scheduling, for a fraction of the cost.
 
-**Why they'd use SocialSpark.** Same deliverable (branded listing posts plus captions), produced in minutes, with scheduling.
+**Why they'd pay.** They compare it with the person they paid, not with Canva: $49.99 for 50 posts against roughly $400 for 40. Pro if their volume is moderate.
 
-**Why they'd pay.** The comparison isn't Canva, it's the person they were paying, so even Top Producer at $49.99 is an easy decision. Pro if their volume is moderate.
+**Objections.** "My VA also did stories and replies" → SocialSpark does listing posts, not community management. Say so.
 
-**Objections.** "My VA also did stories and engagement" → SocialSpark covers listing posts, not community management; be honest about that.
+**Reach them.** Cost-saving Meta ads, "real estate social media manager" searches.
 
-**Reach them.** Facebook and Instagram ads with a cost-saving angle, Google searches for "real estate social media manager".
-
-**Message that lands.** "The listing posts you used to outsource, done in a minute, for less than lunch."
+**Message that lands.** "The listing posts you used to outsource, done in a minute, for a fraction of the retainer."
 
 ---
 
 ### 14. The Independent Brokerage Owner — managing broker, 10–60 agents
 
-**Who they are.** "Faisal", owns a local independent brokerage. Competes with franchises for agents by offering better tools and support. Has a small marketing budget and a brand to protect.
+**Plan: Team** · annual invoice (sales-led) · fallback: none until seats exist.
 
-**Today.** Agents use whatever they want; brokerage branding on social is inconsistent. Recruiting pitch lacks a marketing tool story.
+**Who they are.** "Faisal", owns a local independent and competes with franchises and cloud brokerages for agents.
 
-**Goals.** A recruiting and retention perk ("we give you a listing post tool"). Consistent brokerage branding on agent posts.
+**Problems and scenarios.**
+- They lose an agent to a brokerage that offers a bigger tech stack.
+- They're responsible for agents' advertising: RECO requires every social post to name the brokerage [10], and BCFSA has similar rules [10]. Agents freelance their own posts and get it wrong.
+- Agent numbers are falling in Ontario [16], so keeping productive agents matters more.
 
-**Pains and triggers.** Losing an agent to a franchise with a bigger tech stack. A regulator or board reminder about advertising rules (brokerage name on ads).
+**How SocialSpark helps.** Posts always carry the brokerage name. Consistent templates. A tool to mention when recruiting.
 
-**Why they'd use SocialSpark.** Brokerage name appears on posts; templates make agents look consistent.
+**Why they'd pay.** As a brokerage perk, through the Team enquiry (sizes up to 51+). Highest potential value of any realtor persona.
 
-**Why they'd pay.** Only if they can buy for the brokerage, which is what the Team enquiry is for (sizes go up to 51+ agents, and the form covers realtor, mortgage or mixed brokerages). Highest potential value of any persona. **Fulfilment gap:** seats, an admin view and a shared brand kit are promised on the pricing page but not built; a brokerage deal will expect them.
+**Product gap.** Seats, an admin view and a shared brand kit are promised, not built, and there's no published per-agent price.
 
-**Objections.** "Can I manage seats and brand centrally?" → promised, not built. "Per-agent price?" → not published; needs a number before sales calls.
-
-**Reach them.** LinkedIn, direct outreach, provincial real-estate association events.
+**Reach them.** LinkedIn, direct outreach, provincial association events.
 
 **Message that lands.** "A listing-post tool you can offer every agent you recruit."
 
 ---
 
-### 15. The Relocation & Newcomer Agent — serves a cultural or immigrant community, GTA, Vancouver, Calgary
+### 15. The Expired-Listing Specialist — wins listings that expired with another agent *(new)*
 
-**Who they are.** "Mei" or "Harpreet", serves a specific community, often newcomers to Canada, through WhatsApp, WeChat, Facebook and Instagram. Their community trusts them partly because they look established.
+**Plan: Pro** · billed monthly · fallback: Top Producer in a busy relisting month.
 
-**Today.** Posts in English and shares on messaging apps; some write a second caption in their community's language by hand.
+**Who they are.** "Tanya", 5–15 years in, built a pipeline on calling sellers whose listings expired unsold. In a balanced, slower market (4.9 months of inventory, falling prices [11]) and with longer days on market [17], expired listings are plentiful.
 
-**Goals.** Look professional to clients who are new to Canadian real estate. Share listings fast in community channels.
+**Problems and scenarios.**
+- An expired seller's first complaint is "my last agent didn't market it." Winning the listing means showing a better marketing plan in the first call.
+- Once relisted, the home needs a reset: "back on the market" (Coming Soon), Just Listed with a new photo order, an Open House, and often a Price Reduced. That's many posts for one property.
+- They can't reuse the previous agent's photos without the photographer's licence [15], so they shoot new ones.
 
-**Pains and triggers.** A batch of newcomer clients arriving for spring market.
+**How SocialSpark helps.**
+- **In the listing presentation:** paste the expired listing link and show the seller a branded draft post right then. A free post makes the pitch.
+- **Once relisted:** every stage's post from one link.
 
-**Why they'd use SocialSpark.** Polished English posts; downloadable images to share in WhatsApp and WeChat groups.
+**Why they'd pay.** 2–3 relistings a month at every stage, so Pro. The demo in the presentation is the pay trigger, because it wins listings.
 
-**Why they'd pay.** Starter, if the English (or French) output is enough. **Gap:** no languages beyond English and French. Validate before targeting.
+**Objections.** "Can I use the old photos?" → only with the photographer's permission; use new photos or upload your own.
 
-**Objections.** "My clients read Punjabi / Mandarin / Tagalog" → not supported today.
+**Reach them.** Expired-listing coaching communities and scripts, Facebook groups, prospecting-tool audiences.
 
-**Reach them.** Community associations, multicultural media, Facebook and Instagram ads by language interest.
-
-**Message that lands.** "Professional listing posts you can share in every group chat."
+**Message that lands.** "Show the seller their home on Instagram before you hang up."
 
 ---
 
@@ -377,21 +424,22 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 
 ### 16. The Referral-Hungry Mortgage Agent — Ontario Level 2, BC submortgage broker, 1–4 years in
 
-**Who they are.** "Tyler", licensed mortgage agent at a brokerage, eats what they kill. Their pipeline depends on realtor referrals they don't have yet. Knows realtors are flooded with brokers asking to "grab a coffee."
+**Plan: Pro** · billed monthly · fallback: Starter for the first months.
 
-**Today.** Cold coffees, generic rate posts (which compliance may not love), and favours for realtors in the hope of referrals.
+**Who they are.** "Tyler", one of about 15,000 licensed mortgage agents in Ontario alone (9,923 Level 1, 5,235 Level 2 [3]). Commission-only, and their pipeline depends on realtor referrals, which were 34.9% of brokers' business in 2026 [6].
 
-**Goals.** Become the broker realtors call. Give realtors something useful instead of asking for something.
+**Problems and scenarios.**
+- Realtors get pitched by brokers weekly, and "can I buy you a coffee?" no longer works.
+- Their own social posts are generic rate graphics, which FSRA's advertising rules make risky without the brokerage name and licence [8].
+- A slow month, and no realtor has sent a deal in weeks.
 
-**Pains and triggers.** A slow month. A realtor accepting a coffee and then sending the deal elsewhere.
+**How SocialSpark helps.** A co-branded mortgage feature sheet for a realtor's listing, offered as a gift. It shows the realtor's photo, contact details and QR code beside the broker's, with monthly payments at four down payments using Canadian rules, printable for the open house. Every sheet carries their brokerage name, licence number, rate "as of" date and a disclaimer. Captions never quote rates.
 
-**Why they'd use SocialSpark.** A co-branded mortgage feature sheet for a realtor's listing is a gift: the realtor's photo, contact and QR code next to the broker's, monthly payments at four down payments, printable for the open house. Partners are saved once. It's the "give first" pitch a new broker needs.
+**Why they'd pay.** Sheets, PDFs and Stories are free; only social captions use posts. Once they're posting sheets for several realtors' listings, that's 10–20 captions a month: Pro. One referral pays for years of it.
 
-**Why they'd pay.** Sheets, PDFs and Stories are free; captions for social posts use the plan. Once they're making sheets for several realtors' listings and posting them, Starter then Professional. The first referral pays for years of it.
+**Objections.** "Is this compliant?" → the licence, date and disclaimer are automatic, but you review against your regulator. "Will realtors want it?" → ask first, then send a finished sheet.
 
-**Objections.** "Is this compliant?" → licence number, rate "as of" date and disclaimer on every sheet, no rates in captions; they still review against their regulator. "Will realtors want this?" → ask permission, then send them a finished sheet.
-
-**Reach them.** LinkedIn, mortgage broker Facebook groups, brokerage training, Google searches like "mortgage feature sheet template".
+**Reach them.** LinkedIn, broker Facebook groups, brokerage training, "mortgage feature sheet" searches.
 
 **Message that lands.** "Stop asking realtors for coffee. Send them a finished feature sheet for their listing."
 
@@ -399,21 +447,25 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 
 ### 17. The Realtor-Network Broker — established broker with 10–30 realtor partners
 
-**Who they are.** "Natalie", 8–15 years in, a solid book of realtor referral partners. Already sends feature sheets, made by an assistant or in Excel and Canva, and it's a time sink. Partners expect them.
+**Plan: Top Producer** · billed yearly · fallback: Pro with fewer than about 20 active partners.
 
-**Today.** Every partner listing means a manual sheet: payment calcs in a spreadsheet, design in Canva, PDF export, email. Some partners get them, some don't.
+**Who they are.** "Natalie", 8–15 years in. Already sends feature sheets, built in Excel and Canva by an assistant. Partners expect them. Co-branded open-house flyers with payment scenarios are standard practice in the US loan-officer market [24], and Canadian tools for them are scarce.
 
-**Goals.** A sheet for every partner listing, the same day, without assistant hours. Keep partners loyal.
+**Problems and scenarios.**
+- Every partner listing needs a sheet: payment math in a spreadsheet, design in Canva, PDF export, email. Some partners get one, some don't.
+- Rates move, and last month's sheets are stale.
+- A partner mentions another broker's sheets look better.
 
-**Pains and triggers.** A partner mentioning another broker's sheets. Rate changes that make old sheets stale.
+**How SocialSpark helps.**
+- **Sheets from a link:** paste the listing link and get a sheet with Canadian math (CMHC premiums including the 30-year surcharge, semi-annual compounding, legal minimum down payments).
+- **Partners:** co-branding with saved partners, and bulk open-house PDFs, one page per home.
+- **Listings come to them:** realtors who use SocialSpark can send listings directly with "Send to broker."
 
-**Why they'd use SocialSpark.** Paste the listing link, get a sheet with Canadian math (CMHC premiums incl. 30-year surcharge, semi-annual compounding, minimum down payments enforced), partner co-branding, open-house PDFs in bulk (one page per home). When realtors on SocialSpark use "Send to broker", listings come to them directly.
+**Why they'd pay.** Captions for 20+ partner listings a month is more than 20 posts: Top Producer. It protects relationships worth far more than the fee. Yearly.
 
-**Why they'd pay.** Sheets, PDFs and Stories are free, so only social captions count. Posting a sheet for most partner listings means Pro, or Top Producer with 20+ partners. The value is protecting referral relationships worth far more than the subscription; a yearly plan matches how they think about partner tools. Note: Top Producer is labelled "For high-volume listing agents", so brokers may not see it as theirs; broker-facing copy should say who it's for.
+**Objections.** "My spreadsheet is custom" → you enter your own rates; the AI never writes the numbers. Note that the Top Producer card says "for high-volume listing agents," so broker pages should say it fits them too.
 
-**Objections.** "My spreadsheet is customized" → their own rates with "as of" date; the AI never writes the numbers. "I need more captions" → Top Producer gives 50; sheets themselves are always free.
-
-**Reach them.** LinkedIn, broker networks and franchise conferences, their own realtor partners who already use SocialSpark.
+**Reach them.** LinkedIn, broker network conferences, their own realtor partners who already use SocialSpark.
 
 **Message that lands.** "Every partner listing gets a feature sheet the day it goes live."
 
@@ -421,21 +473,22 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 
 ### 18. Le courtier hypothécaire québécois — AMF-regulated, Montréal, Québec City, Laval
 
-**Who they are.** "Mathieu", courtier hypothécaire under the AMF, works in French with realtor partners who are mostly francophone. Feature sheet tools are mostly English or Ontario-centric.
+**Plan: Pro** · billed yearly · fallback: Top Producer with a large partner network.
 
-**Today.** Builds French sheets manually, or uses English tools and translates.
+**Who they are.** "Mathieu", regulated by the AMF since mortgage brokerage moved there in May 2020 [19]. Works in French with mostly francophone realtor partners.
 
-**Goals.** French sheets and posts that look native, with Québec titles and fine print.
+**Problems and scenarios.**
+- Feature sheet tools are English and Ontario-centric, so they build French sheets by hand.
+- The AMF's social media guidance requires information that is true, verifiable and objective [19], so a sloppy sheet is a professional risk.
+- A partner needs a sheet for Saturday's visite libre.
 
-**Pains and triggers.** A realtor partner asking for a sheet for a Saturday visite libre.
+**How SocialSpark helps.** Titles and fine print follow the province. Sheets and captions in Québec French or bilingual, Canadian payment math, co-branding with francophone realtors (persona 6).
 
-**Why they'd use SocialSpark.** Titles follow the province; sheets and captions in Québec French or bilingual; Canadian payment math; co-branding with francophone realtors (who may also use SocialSpark in French, persona 6).
+**Why they'd pay.** Few alternatives, and partners come to rely on the sheets. Pro, yearly.
 
-**Why they'd pay.** Few alternatives; once their partners rely on the sheets, switching costs are high. Pro, likely yearly.
+**Objections.** "Is the fine print right for Québec?" → it follows the province, but you review against AMF rules.
 
-**Objections.** "Is the fine print right for Québec?" → it follows the province, but they review against AMF rules themselves.
-
-**Reach them.** French-language ads in Québec, Québec mortgage broker associations and networks, LinkedIn.
+**Reach them.** French-language Québec ads, Québec broker networks, LinkedIn.
 
 **Message that lands.** "Vos fiches hypothécaires en français d'ici, co-signées avec vos courtiers immobiliers."
 
@@ -443,61 +496,93 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 
 ### 19. The First-Time-Buyer Broker — specializes in first-time buyers, any province
 
-**Who they are.** "Aisha", their niche is buyers who think they can't afford a home. Their marketing is education: what 5% down actually means, what CMHC insurance costs, what a 30-year amortization changes.
+**Plan: Pro** · billed monthly, then yearly · fallback: Top Producer if posting daily.
 
-**Today.** Explains the same math over and over in DMs and calls. Social content is generic "rates are moving" posts.
+**Who they are.** "Aisha", her niche is the 48% of recent first-time buyers who use a broker [6]. Their marketing is education.
 
-**Goals.** Show buyers a specific home is within reach. Turn "I can't afford it" into a pre-approval appointment.
+**Problems and scenarios.**
+- Buyers don't know that since Dec 2024 every first-time buyer can get a 30-year insured mortgage, or that the insured cap is now $1.5M [12]. They assume they can't afford anything.
+- Ontario's HST rebate on new homes for first-time buyers [21] is confusing, and buyers ask what a specific unit would cost.
+- They explain the same down-payment and insurance math in DMs over and over.
 
-**Pains and triggers.** Spring market. Policy changes (insured amortization and price-cap rules) that buyers don't understand.
+**How SocialSpark helps.** Feature sheets show the real monthly cost of a real listing at four down payments, including the minimum, insurance premiums (with the 30-year surcharge), property tax and condo fees. Content built on real listings, compliant by design.
 
-**Why they'd use SocialSpark.** Feature sheets show the real monthly cost of a real listing at four down payments, including 5% down and insurance premiums, with property tax and condo fees. That's the most persuasive first-time-buyer content there is, and it's done in minutes.
+**Why they'd pay.** Three sheets a week posted with captions is about 13 posts a month: Pro. Daily posting moves them to Top Producer.
 
-**Why they'd pay.** They want to post a few sheets a week on Instagram (Stories downloads are free, only captions count). Three a week is about 13 posts a month: Pro.
+**Objections.** "I can't advertise rates loosely" → your own rates with an "as of" date and disclaimer; captions never quote rates or payments.
 
-**Objections.** "I can't advertise rates loosely" → sheets show their own rates with an "as of" date and disclaimer; captions never quote rates or payments.
+**Reach them.** Instagram and TikTok, first-time-buyer webinars, partner condo agents (persona 10).
 
-**Reach them.** Instagram and TikTok, first-time-buyer webinars, LinkedIn.
-
-**Message that lands.** "Show your buyers what that home really costs each month, at 5% down."
-
----
-
-### 20. The Bank Mobile Mortgage Specialist — employed by a bank or credit union
-
-**Who they are.** "Jason", a mobile mortgage specialist at a big bank or credit union, paid partly on volume, depends on realtor referrals just like a broker. But their employer controls marketing tightly.
-
-**Today.** Uses employer-approved templates, if any. Personal social posting about rates is often restricted.
-
-**Goals.** Realtor referrals; standing out from brokers who can offer more lenders.
-
-**Pains and triggers.** Brokers winning realtor relationships with better marketing.
-
-**Why they'd use SocialSpark.** The same co-branded feature sheet "gift" for realtors, printable for open houses.
-
-**Why they'd pay.** Only if their employer's compliance allows third-party marketing tools, which many won't. Starter at most.
-
-**Objections.** "Compliance won't approve this" → often true; don't target until someone confirms otherwise.
-
-**Reach them.** LinkedIn, but low priority.
-
-**Message that lands.** "Give your realtor partners a feature sheet for every listing." (Only after compliance is confirmed.)
+**Message that lands.** "Show your buyers what that home really costs each month."
 
 ---
 
-## Who is *not* a target (today)
+### 20. The Mortgage Brokerage Principal — owns or runs a mortgage brokerage, 10–50 agents *(new)*
 
-- **US agents.** Payment math, titles, regulators and data residency are Canadian. Turn away politely.
-- **FSBO sellers.** No brokerage or licence to brand; low lifetime value; posts would show "agent" framing.
-- **Property managers and rental listings.** Post types and captions are sale-focused.
-- **New-construction builders' marketing departments.** Have agencies and their own brand systems; possible later.
+**Plan: Team** · annual invoice (sales-led) · fallback: none until seats exist.
+
+**Who they are.** "Hassan", principal broker at one of Ontario's 1,162 mortgage brokerages [3], or a BC or Québec equivalent. Responsible for supervising agents, including their advertising.
+
+**Problems and scenarios.**
+- Agent counts grew about 21% from 2019 to 2025 [3]. Many new agents post whatever they like, and the brokerage answers for ads missing its name or licence number [8].
+- They want their whole shop to win realtor referrals [6], but each agent builds sheets differently, or not at all.
+- Recruiting: they compete for agents on tools and support.
+
+**How SocialSpark helps.** Every agent's sheets carry the brokerage name, licence number, "as of" date and disclaimer automatically. Canadian payment math is the same for everyone. The Team enquiry form already offers "Mortgage brokers" as an audience.
+
+**Why they'd pay.** As brokerage infrastructure: compliance consistency plus a referral engine for every agent. Team.
+
+**Product gap.** Seats, an admin view, shared branding and central billing aren't built. And they'll ask whether they can review agents' sheets before they go out.
+
+**Reach them.** LinkedIn, Mortgage Professionals Canada events, broker network conferences.
+
+**Message that lands.** "Every agent's feature sheet carries your brokerage name and licence number."
+
+---
+
+## Watch list (not targets today)
+
+- **Relocation & Newcomer Agent** (was 15). Real demand: 48% of newcomers who intend to buy plan to within two years [25]. But these agents' clients often want Punjabi, Mandarin, Tagalog and other languages, which SocialSpark doesn't support. Revisit if more languages ship.
+- **Bank Mobile Mortgage Specialist** (was 20). Same referral need as broker persona 16, but bank employees are typically governed by employer social media and marketing policies, and third-party tools usually need approval. Revisit if a lender asks.
+- **US agents.** Payment math, titles, regulators and data residency are all Canadian.
+- **FSBO sellers.** No brokerage or licence to brand; low lifetime value.
+- **Property managers and rentals.** Post types and captions are sale-focused.
+- **Builders' marketing departments.** They have agencies; the HST-rebate push [21] could make them worth a look later.
 
 ## Patterns across the personas
 
-- **Pay trigger = a listing.** For most realtors, the moment to sell is the day a listing goes live. Ads and emails timed to listing activity should beat generic ones.
-- **Top Producer closes the volume gap** for personas 3, 10 and some of 7, 13 and 17. Watch who upgrades from Pro and who hits 50; that tells you whether the cap is right.
-- **Yearly billing fits committed, steady users** (1, 3, 9, 11, 12, 17, 18) and never fits burst users (2, 8). Offer yearly after a first good month, not on day one.
-- **Team is now sold, but not yet delivered** (personas 4, 5, 14). The pricing page promises seats, one invoice and a shared brand kit; none are in the product. Decide a per-agent price and how the first deal gets fulfilled before enquiries arrive.
-- **Plan names lean realtor.** "Top Producer" and "For an active agent" don't speak to mortgage brokers (16–19); broker pages and ads should say which plan fits a broker.
-- **The realtor–broker loop is the growth engine.** Personas 1, 6 and 16–18 feed each other through Partners and "Send to broker": every broker who sends sheets to realtors is a distribution channel to realtors, and vice versa.
-- **Québec and bilingual personas (6, 7, 18)** have the fewest alternatives and are the clearest differentiated segment.
+- **A slower market sells more posts per listing.** With longer days on market [11][17], listings need second and third waves of posts. That's the strongest argument for Pro over Starter and Top Producer over Pro, and a good ad angle: "listings are sitting longer; keep them visible."
+- **Accuracy and approval beat "AI."** Agents already use AI (56% for social posts, US [18]) and worry most about accuracy. Lead with "uses the listing's own details, nothing posts without you."
+- **The real price comparison is a person, not Canva.** About $400/month for 40 posts from an agency [9] against $49.99 for 50.
+- **Compliance is a feature brokers buy.** Name and licence on ads are mandatory [8][10]. Sheets that carry them automatically sell to personas 16–20, and to the realtor brokerage owner (14).
+- **The realtor–broker loop is the growth engine.** Realtor referrals are 34.9% of broker business [6]. Every broker sending sheets to realtors is distribution to realtors, and "Send to broker" works the other way.
+- **Team is sold but not delivered** (personas 4, 14, 20). Before enquiries arrive, set a per-agent price and decide how to fulfil the first deal.
+- **Québec and bilingual personas (6, 7, 18)** have the fewest alternatives and the clearest differentiation.
+
+## Sources
+
+1. CREA, membership (≈160,000; ≈155,000 in an Apr 2026 release): [crea.ca](https://crea.ca/who-we-are/realtor-association-community), [Wikipedia](https://en.wikipedia.org/wiki/Canadian_Real_Estate_Association)
+2. Agent transaction counts: [Real Estate Magazine (TRREB 2017)](https://realestatemagazine.ca/many-transactions-average-toronto-realtor-2017/), [getwhatyouwant.ca (2022)](https://www.getwhatyouwant.ca/how-many-homes-has-your-agent-sold-the-2022-edition), [examace.ca](https://examace.ca/how-much-do-real-estate-agents-make-ontario), [rochstgeorges.ca (Ottawa)](https://www.rochstgeorges.ca/blog/the-silent-truth-most-ottawa-realtors-sell-fewer-homes-than-you-think/)
+3. FSRA, Mortgage Brokering Sector Supervision Plan 2025–26: [fsrao.ca](https://www.fsrao.ca/industry/mortgage-brokering/regulatory-framework/supervision/mortgage-brokering-sector-supervision-plan-2025-26)
+4. NAR technology and social media data (US): [nar.realtor](https://www.nar.realtor/news/real-estate-news/technology/technology-realtors-use-the-most), [HousingWire](https://www.housingwire.com/articles/realtors-still-get-most-of-their-leads-from-facebook/)
+5. Québec brokers ≈16,000: [Centris blog (Jan 2024)](https://www.centris.ca/fr/blogue/immobilier/programme-de-formation-continue-votre-courtier-se-forme-chaque-annee), [OACIQ annual report 2025](https://www.oaciq.com/media/2x1b3evl/ra-oaciq-2025.pdf)
+6. Broker share and referral sources: [Canadian Mortgage Trends (MPC 2026)](https://www.canadianmortgagetrends.com/2026/07/mortgage-broker-share-rises-to-38-hits-48-among-recent-first-time-buyers-mpc/), [MPC report](https://mortgageproscan.ca/docs/default-source/marcomms/consumer-reports/2026-mpc_the-broker-advantage_en.pdf), [CMP Brokers on Lenders 2026](https://www.mpamag.com/ca/best-in-mortgage/best-mortgage-lenders-in-canada-according-to-brokers-brokers-on-lenders/586484)
+7. Toronto condo market Q1 2026 (Urbanation): [CP24](https://www.cp24.com/local/toronto/2026/04/17/toronto-condo-market-hits-35-year-low-as-sales-continue-to-plunge-with-no-new-project-launches/), [MPA](https://www.mpamag.com/ca/mortgage-industry/market-updates/torontos-condo-market-hits-rock-bottom-as-unsold-units-pile-up/572743), [Real Estate Magazine](https://realestatemagazine.ca/no-new-condo-projects-launch-in-q1-as-toronto-market-hits-a-wall/)
+8. FSRA mortgage advertising disclosure: [FSRA consultation summary](https://fsrao.ca/mortgage-brokering-consultation-summary-report), [MPA](https://www.mpamag.com/ca/mortgage-industry/industry-trends/fsra-proposes-new-advertising-guidelines-for-mortgage-brokers/521938)
+9. Outsourced social costs: [RE/MAX River City digital marketing](https://rivercityrealestate.ca/agentdir=48413/digital.html), [VA case study](https://somewhere.com/post/how-a-real-estate-broker-hired-a-virtual-assistant-social-media-manager-for-800-month)
+10. Realtor advertising rules: [RECO Bulletin 5.1](https://www.reco.on.ca/getmedia/fc6d0358-a8a1-4e6b-bfaa-2b8c312e1c3b/RECO-Bulletin-5-1-Advertising-requirements.pdf), [RECO Bulletin 5.3](https://www.reco.on.ca/getmedia/398b2b0c-2c20-4bec-a8d9-d88fc9e03d18/RECO-Bulletin-5-3-Advertising-online.pdf), [BCFSA advertising guidelines](https://www.bcfsa.ca/industry-resources/real-estate-professional-resources/knowledge-base/guidelines/advertising-guidelines)
+11. CREA national statistics, Sept 2026: [creastats.crea.ca](https://creastats.crea.ca/), [homiesai.com (Aug 2026)](https://www.homiesai.com/research/canada-housing-stats-august-2026)
+12. Mortgage reforms (30-year amortization, $1.5M cap): [Department of Finance](https://www.canada.ca/en/department-finance/news/2024/09/government-announces-boldest-mortgage-reforms-in-decades-to-unlock-homeownership-for-more-canadians.html), [Ratehub](https://ratehub.ca/blog/breaking-news-30-year-amortizations-for-all-first-time-home-buyers-insured-mortgages-up-to-1-5-million)
+13. Agent time on social: [RISMedia](https://blog.rismedia.com/?p=11777), [PA Realtors](https://www.parealtors.org/blog/realtors-and-social-media-use/)
+14. Bill 96 and real estate: [OACIQ](https://www.oaciq.com/en/oaciq/press-release/press-releases/bill-96-and-amendment-to-the-civil-code-of-quebec-new-obligations-having-an-impact-on-the-practice-o/)
+15. Listing photo copyright: [BCREA](https://www.bcrea.bc.ca/legally-speaking/legal-use-of-photographs-in-real-estate-transactions-597/), [CREA Café](https://www.crea.ca/cafe/re-using-listing-photographs-easy-eh/)
+16. Agent attrition: [Globe and Mail (TRREB membership)](https://www.theglobeandmail.com/real-estate/article-realtor-numbers-drop-at-canadas-largest-real-estate-board), [Inman (Relitix, US)](https://www.inman.com/2026/05/14/new-agents-say-how-theyre-surviving/)
+17. Royal LePage 2026 recreational property report: [CP24](https://www.cp24.com/news/canada/2026/03/26/vacation-home-prices-expected-to-rise-again-this-year-royal-lepage-report/), [Canadian Mortgage Trends](https://www.canadianmortgagetrends.com/2026/03/vacation-home-prices-expected-to-rise-again-this-year-royal-lepage-report/)
+18. AI adoption (US): [NAR Digital Age report](https://www.nar.realtor/reports/real-estate-in-a-digital-age), [Inman](https://www.inman.com/2026/01/29/so-pretty-much-everyone-in-real-estate-is-using-ai-now/), [The Close](https://theclose.com/news-agent-ai-social-media/)
+19. Mortgage social media rules: [AMF](https://lautorite.qc.ca/en/professionals/representatives/rules-of-conduct-and-rules-governing-the-pursuit-of-activities-as-a-representative/responsible-use-of-social-media-in-mortgage-brokerage), [BCFSA](https://www.bcfsa.ca/industry-resources/mortgage-broker-resources/msa-landing-page/mortgage-broker-knowledge-base/mortgage-services-regulatory-index/guideline-on-social-media-conduct-mortgage-services-licensees), [Blakes (AMF transfer)](https://www.blakes.com/fr-ca/perspectives/transfert-de-l-encadrement-du-courtage-hypothecaire-a-l-autorite-des-marches-financiers/)
+20. Luxury market 2026: [Sotheby's West Vancouver release](https://www.bnnbloomberg.ca/press-releases/2026/09/29/20-years-reveal-a-changing-luxury-market-as-west-vancouver-prices-double/), [Storeys](https://storeys.com/211-dunvegan-road-neighbourhood-record/)
+21. Ontario HST rebate on new homes: [Global News](https://globalnews.ca/news/11514391/ontario-sales-tax-rebate-new-homes), [Osler](https://www.osler.com/?p=115417), [Mondaq](https://www.mondaq.com/canada/real-estate/1801464/ontario-expanded-hst-relief-for-new-housing-what-buyers-need-to-know-in-2026)
+22. Teams (US): [NAR](https://www.nar.realtor/magazine/real-estate-news/commentary/teams-attract-roughly-a-quarter-of-agents)
+23. Gatineau bilingualism and Ottawa–Gatineau buyers: [JLR 2018](https://solutions.jlr.ca/hubfs/Etudes_et_rapports/2018-JLR-Real-Estate-Portrait-Gatineau.pdf?hsLang=en), [Ottawa Business Journal](https://obj.ca/widening-price-gap-increases-gatineaus-attractiveness-to-ottawa-residents/)
+24. Co-branded open house flyers (US loan officers): [Mortgage Coach](https://support.mortgagecoach.com/hc/en-us/articles/9600220487191-Creating-an-Open-House-Flyer), [ijungo](https://ijungo.com/printpub-co-marketing-with-realtors/)
+25. Royal LePage 2026 newcomer survey: [Royal LePage](https://www.royallepage.ca/en/realestate/royal-lepage-2026-canadian-newcomers), [MPA](https://www.mpamag.com/ca/mortgage-industry/industry-trends/most-newcomer-canadians-want-to-own-a-home-but-cant-save-fast-enough/591990)

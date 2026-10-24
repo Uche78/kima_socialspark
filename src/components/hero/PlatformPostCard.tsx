@@ -19,7 +19,7 @@ export function PlatformPostCard({ post, className = "", captionLines = 2 }: { p
         profile={demoProfile}
         design={demoDesign(post)}
         mortgage={null}
-        language="en"
+        language={post.language ?? "en"}
         postType={post.postType}
         width={size.w}
         height={size.h}

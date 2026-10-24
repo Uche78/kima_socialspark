@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { DEMO_POSTS } from "../components/hero/demo-posts";
+import { FRENCH_PERSONA_SLUGS, money } from "./landing-i18n";
 import { PERSONA_PAGES, PERSONA_PLAN, type PersonaPage } from "./persona-pages";
+import { PAID_PLANS } from "./plans";
 
 // The copy rules from .claude/skills/socialspark-landing-pages, checked for every persona page.
 
@@ -37,12 +39,10 @@ function copy(p: PersonaPage) {
 }
 
 describe("persona pages", () => {
-  it("have unique, URL-friendly slugs and one page per persona", () => {
+  it("have unique, URL-friendly slugs", () => {
     const slugs = PERSONA_PAGES.map((p) => p.slug);
     expect(new Set(slugs).size).toBe(slugs.length);
     for (const s of slugs) expect(s).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/);
-    const personas = PERSONA_PAGES.map((p) => p.persona);
-    expect(new Set(personas).size).toBe(personas.length);
   });
 
   it("map every persona to a plan", () => {
@@ -80,6 +80,7 @@ describe("persona pages", () => {
       const n = p.hero.headline.match(/^(\d+)\s/)?.[1];
       if (n) expect(Number(n), `${at}: headline count vs reasons`).toBe(p.reasons.length);
       expect(new Set(p.reasons.map((r) => r.title)).size, `${at}: duplicate reason`).toBe(p.reasons.length);
+      if (p.heroPost) expect(demoIds.has(p.heroPost), `${at}: hero post ${p.heroPost}`).toBe(true);
       for (const r of p.reasons) {
         expect(r.label.split(/\s+/).length, `${at}: reason label "${r.label}"`).toBeLessThanOrEqual(3);
         expect(r.body.split(/\s+/).length, `${at}: reason "${r.title}" body`).toBeLessThanOrEqual(70);
@@ -97,15 +98,30 @@ describe("persona pages", () => {
     }
   });
 
-  it("keep prices in the pricing component and ship no placeholders or hype", () => {
+  it("only name current plan prices or sourced figures, and ship no placeholders or hype", () => {
+    // Plan prices are filled in from plans.ts, so a typed price that no longer matches one is stale.
+    const planPrices = Object.values(PAID_PLANS).flatMap((p) => [p.price, p.yearly, p.yearlyPerMonth]).flatMap((a) => [a, money(a, "fr")]);
     for (const p of PERSONA_PAGES) {
+      for (const f of p.figures ?? []) expect(f.source.trim(), `/for/${p.slug}: figure ${f.text} needs a source`).not.toBe("");
       const lines = [...copy(p), ...(p.layout === "listicle" ? p.proof.testimonials.map((t) => t.quote) : [])];
       for (const line of lines) {
-        // Prices change in src/lib/plans.ts; the pricing component shows them, the copy doesn't repeat them.
-        expect(line, `/for/${p.slug}: no prices in copy`).not.toMatch(/\$\s?\d|\d\s?\$/);
-        expect(line, `/for/${p.slug}: unresolved placeholder`).not.toMatch(/\[[A-Z]/);
+        for (const amount of line.match(/\$\s?\d[\d,.]*\d|\d[\d\s\u00a0,.]*\d\s?\$|\$\s?\d/g) ?? []) {
+          const ok = planPrices.includes(amount.trim()) || (p.figures ?? []).some((f) => f.text.includes(amount.trim()));
+          expect(ok, `/for/${p.slug}: "${amount}" is neither a current plan price nor a sourced figure (in "${line.slice(0, 60)}…")`).toBe(true);
+        }
+        expect(line, `/for/${p.slug}: unresolved placeholder`).not.toMatch(/\[[A-Z]|⟦/);
         expect(line, `/for/${p.slug}: hype or boast`).not.toMatch(HYPE);
       }
+    }
+  });
+
+  it("French pages are listicles, listed for the header, and paired with an English twin", () => {
+    const french = PERSONA_PAGES.filter((p) => p.locale === "fr");
+    expect(french.map((p) => p.slug).sort()).toEqual([...FRENCH_PERSONA_SLUGS].sort());
+    for (const p of french) expect(p.layout, `/for/${p.slug}`).toBe("listicle");
+    for (const p of PERSONA_PAGES) {
+      const sameLocale = PERSONA_PAGES.filter((o) => o.persona === p.persona && (o.locale ?? "en") === (p.locale ?? "en"));
+      expect(sameLocale.length, `persona ${p.persona} has two ${p.locale ?? "en"} pages (hreflang needs one per language)`).toBe(1);
     }
   });
 });

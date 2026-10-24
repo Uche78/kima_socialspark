@@ -22,7 +22,7 @@ Prices, allowances and features change. Before writing, read the current values:
 | Post types, platforms, languages | `src/app/llms.txt/route.ts` |
 | Keystone-fact mines ("pains taken") | `src/lib/generate.ts`, `src/lib/caption.ts` (how captions are written), `src/lib/photos.ts`, `src/lib/photo-quality.ts` (photo picking), `src/lib/mortgage.ts`, `src/lib/mortgage-sheet.ts` (payment math), `src/lib/broker.ts`, `src/lib/feature-sheet.ts` (compliance on sheets) |
 
-Snapshot (2026-10-23; verify before use): free = 3 posts, no credit card (1 as a guest without an account); Starter $14.99/mo (10 posts, 5 regenerations); Pro $24.99/mo (20 posts, 10 regenerations); Top Producer $49.99/mo (50 posts, 25 regenerations); yearly = two months free; Team for brokerages = contact us (don't advertise team features as available until they're built); cancel anytime; first post "in under a minute".
+Snapshot (2026-10-23; verify before use): free = 3 posts, no credit card (1 as a guest without an account); Starter CAD 14.99/mo (10 posts, 5 regenerations); Pro CAD 24.99/mo (20 posts, 10 regenerations); Top Producer CAD 49.99/mo (50 posts, 25 regenerations); yearly = two months free; Team for brokerages = contact us (don't advertise team features as available until they're built); cancel anytime; first post "in under a minute".
 
 **Never invent** a number, testimonial, customer count, award, integration, rate, founder story or result. If an ad needs a proof point that doesn't exist yet, leave a clearly marked placeholder and say so: `[REAL AGENT QUOTE — needs permission]`, `[FOUNDER NAME / STORY]`, `[MEASURE: median seconds from link to finished post]`.
 

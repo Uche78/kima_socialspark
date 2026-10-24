@@ -31,6 +31,8 @@ The test (`src/lib/persona-pages.test.ts`) enforces the limits in brackets.
 - `hero.eyebrow`: the reader in 2–5 words; it renders as a navy pill with gold text.
 - `hero.headline` [≤ 80 chars]: the big promise, as **"N reasons <reader> should <change in behaviour>"**. N must equal the number of reasons (the test checks a leading number). The behaviour change is the reward in disguise ("stop making listing posts by hand", "send every partner a feature sheet"). Write 15–25 candidates (the `socialspark-ad-copy` headline process); keep the runners-up as A/B challengers.
 - `hero.sub` [≤ 45 words]: how it works in one breath, and the outcome in their terms.
+- `demoLanguage` (optional): the language of every example post on the page (`"en"`, `"fr"`, `"bilingual"`; default: the page's locale). A `posts` or `platforms` visual can override it with its own `language`, e.g. a bilingual trio on a French page. French and bilingual demo text lives in `localizedPost()` in `demo-posts.ts`; badges, prices and labels localise through the real slide renderer.
+- `heroPost` (optional): the example post beside the hero, by demo-posts id. The default is a detached Oakville house; pick one that looks like *their* listings (condos: `ig-harbour`, the Toronto waterfront unit). Broker pages always show the feature sheet.
 - The template adds the form and four trust chips (free posts from `FREE_LIMITS`, no credit card, nothing posts without your click, data stored in Canada). Don't repeat them in copy.
 - `proof.stats` appear under the chips **only if real** (see Proof).
 
@@ -88,6 +90,8 @@ Proof is what makes a listicle believable, and it is the one place where a made-
 ## 4. Comparison
 
 [4–8 rows]
+
+A row SocialSpark deliberately doesn't do takes `oursNo: true` and shows a dash instead of a tick (e.g. "Comments, DMs, stories: Not included"). Saying what it doesn't do makes the rest believable and screens out the wrong buyers.
 
 `comparison.ours` is "SocialSpark"; `comparison.theirs` is **how this reader does it today**: "By hand", "Your assistant in Canva", "A generic AI chatbot", "Your bank's rate sheet". **Never a named competitor** (`socialspark-ad-copy` rule 11). Each row has a short label, SocialSpark's specific answer (gets a gold ✓), and an honest, non-mocking description of the alternative. Include at least two rows of unique positioning (Québec French, fair-housing wording, Canadian mortgage math, platform-specific posts). No price row; pricing has its own section.
 

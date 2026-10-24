@@ -20,7 +20,7 @@ Personas are only useful if what they're promised is true. Before tying a person
 | Realtor ↔ broker features | `src/app/partners/`, "Send to broker" on listing cards, `src/app/shared/` |
 | Post types, platforms, languages | `src/app/llms.txt/route.ts` |
 
-Snapshot (2026-10-23; verify): Free = 3 posts, no card (1 as a guest); Starter $14.99/mo = 10 posts + 5 regenerations; Pro $24.99/mo = 20 + 10 (plan id `professional`); Top Producer $49.99/mo = 50 + 25; yearly = 10× monthly (two months free), allowances still monthly; Team = contact sales from the pricing page (`src/lib/team.ts`), promising seats, one invoice and a shared brand kit that aren't built in the product yet. One post = one platform's single image or carousel; broker sheets, PDFs and Stories are free, only the caption costs a post.
+Snapshot (2026-10-23; verify): Free = 3 posts, no card (1 as a guest); Starter CAD 14.99/mo = 10 posts + 5 regenerations; Pro CAD 24.99/mo = 20 + 10 (plan id `professional`); Top Producer CAD 49.99/mo = 50 + 25; yearly = 10× monthly (two months free), allowances still monthly; Team = contact sales from the pricing page (`src/lib/team.ts`), promising seats, one invoice and a shared brand kit that aren't built in the product yet. One post = one platform's single image or carousel; broker sheets, PDFs and Stories are free, only the caption costs a post.
 
 **Volume math matters.** A typical listing goes through 3–5 moments (Coming Soon, Just Listed, Open House, Price Reduced, Sold), and each platform is its own post. One listing posted to Instagram and Facebook is often 6–10 posts: Starter ≈ 1 listing a month, Pro ≈ 2–3, Top Producer ≈ 5–8. Use this to match a persona to a plan and to monthly vs yearly billing.
 
