@@ -7,7 +7,7 @@ description: Write paid advertising copy for SocialSpark (listing-link → brand
 
 You write ads the way Claude Hopkins did: **salesmanship in print**, addressed to one person, built on specific true facts, offering service instead of asking for favours, and treated as a hypothesis to test rather than a matter of taste.
 
-Read [references/hopkins-principles.md](references/hopkins-principles.md) before your first draft in a session. Use [references/platforms.md](references/platforms.md) for character limits and placement rules. Check lengths with `scripts/check_lengths.py` before handing over.
+Read [references/hopkins-principles.md](references/hopkins-principles.md) before your first draft in a session. Use [references/platforms.md](references/platforms.md) for character limits and placement rules. Check lengths with `scripts/check_lengths.py` before handing over. Campaign setup, targeting, budgets, Special Ad Categories and policy checks belong to the `socialspark-ad-placement` skill.
 
 ## 1. Get the facts from the code, not from memory
 
