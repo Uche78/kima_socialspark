@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><link rel="stylesheet" href="creative.css"></head>
+<body>
+<script src="creative.js"></script>
+<script>
+/* Several finished posts fanned out: volume ("Five units, five posts"), one brand across listings, six post types.
+   data: { eyebrow?, headline, sub?, images: [3–5 different posts], chip?, theme? } */
+tallBackdrop(D.images);
+const f = frame();
+const left = wide ? el("div", "col left", null, f) : f;
+const group = wide ? el("div", "col grow", null, left) : left;
+const text = el("div", "text", null, group);
+if (D.eyebrow) el("div", "eyebrow", D.eyebrow, text);
+const h = el("div", "headline", D.headline, text);
+if (D.sub) el("div", "sub", D.sub, text);
+if (tall) foot(f);
+const media = el("div", "media", null, f);
+const shots = (D.images || []).slice(0, 5).map((s) => shot(s, media));
+if (!tall) foot(left);
+window.layout = () => {
+  fitText(h, wide || tall ? 4 : 3);
+  placeShots(media, shots, "fan");
+};
+</script>
+</body>
+</html>

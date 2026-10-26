@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><link rel="stylesheet" href="creative.css"></head>
+<body>
+<script>window.DEFAULT_THEME = "dark";</script>
+<script src="creative.js"></script>
+<script>
+/* One strong line, optionally a price, over a few finished posts: price comparisons, candour ("Listing posts. That's it."),
+   the honest-count angle. A price always carries "plus tax" in its note.
+   data: { eyebrow?, headline, sub?, price?: { amount: "$49.99", note: "a month, plus tax · Top Producer" },
+           images?: [up to 3 posts, fanned], chip?, theme? ("dark" by default) } */
+document.body.classList.add("big");
+tallBackdrop(D.images);
+el("div", "glow", null, document.body);
+const f = frame();
+const left = wide ? el("div", "col left", null, f) : f;
+const group = wide ? el("div", "col grow", null, left) : left;
+const text = el("div", "text", null, group);
+if (D.eyebrow) el("div", "eyebrow", D.eyebrow, text);
+const h = el("div", "headline", D.headline, text);
+if (D.sub) el("div", "sub", D.sub, text);
+if (D.price) {
+  const p = el("div", "price", null, group);
+  el("div", "amount", D.price.amount, p);
+  if (D.price.note) el("div", "note", D.price.note, p);
+}
+if (tall) foot(f);
+const imgs = (D.images || []).slice(0, 3);
+const media = imgs.length ? el("div", "media", null, f) : el("div", "spacer", null, f);
+const shots = imgs.map((s) => shot(s, media));
+if (!tall) foot(left);
+window.layout = () => {
+  fitText(h, 4);
+  if (shots.length) placeShots(media, shots, shots.length > 1 ? "fan" : "row");
+};
+</script>
+</body>
+</html>

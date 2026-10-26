@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><link rel="stylesheet" href="creative.css"></head>
+<body>
+<script>window.DEFAULT_THEME = "dark";</script>
+<script src="creative.js"></script>
+<script>
+/* Closing card for a carousel (or a plain brand card): wordmark, the offer, the risk reversal, the address.
+   No button shape: a drawn button that doesn't work is a policy problem; the platform's CTA button does that job.
+   data: { headline ("See your next listing as a post"), sub ("3 free posts · No credit card"), url ("socialspark.usekima.com"), theme? } */
+el("div", "glow", null, document.body);
+const f = el("div", "frame col center", null, document.body);
+wordmark(f, "big-mark");
+el("div", "rule", null, f);
+const h = el("div", "headline", D.headline, f);
+if (D.sub) el("div", "sub", D.sub, f);
+if (D.url) el("div", "url", D.url, f);
+window.layout = () => fitText(h, 3);
+</script>
+</body>
+</html>

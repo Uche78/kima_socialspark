@@ -1,11 +1,11 @@
 ---
 name: socialspark-ad-placement
-description: Plan, set up, target, launch and optimise paid ads for SocialSpark (listing link → branded social posts and mortgage feature sheets for Canadian realtors and mortgage brokers) on Facebook, Instagram, LinkedIn and TikTok, and keep every ad compliant with the platforms' current ad policies and Canadian advertising law. Use whenever the user wants to place, run, launch, boost, set up, structure or budget an ad campaign; pick a platform, objective, audience or placement; build targeting for realtors or brokers; install or fix a pixel, Conversions API, Insight Tag or Events API; check an ad against Meta, LinkedIn or TikTok policy or Special Ad Categories; fix a rejected or restricted ad or a disabled ad account; read campaign results and decide what to scale, pause or test; or asks "how do I advertise on Facebook / Instagram / LinkedIn / TikTok". Also use when a realtor or broker customer asks how to advertise a listing or a mortgage service. Works with socialspark-ad-copy (words), socialspark-ad-video (video), socialspark-personas (who) and socialspark-landing-pages (where the click lands).
+description: Plan, set up, target, launch and optimise paid ads for SocialSpark (listing link → branded social posts and mortgage feature sheets for Canadian realtors and mortgage brokers) on Facebook, Instagram, LinkedIn and TikTok, make the static ad creatives (single images, carousel cards, end cards at every placement size and safe zone, built from the app's real demo posts), and keep every ad compliant with the platforms' current ad policies and Canadian advertising law. Use whenever the user wants to place, run, launch, boost, set up, structure or budget an ad campaign; wants ad images, creatives, visuals, banners, carousel cards, Story/Reel images or LinkedIn images made or checked; pick a platform, objective, audience or placement; build targeting for realtors or brokers; install or fix a pixel, Conversions API, Insight Tag or Events API; check an ad against Meta, LinkedIn or TikTok policy or Special Ad Categories; fix a rejected or restricted ad or a disabled ad account; read campaign results and decide what to scale, pause or test; or asks "how do I advertise on Facebook / Instagram / LinkedIn / TikTok". Also use when a realtor or broker customer asks how to advertise a listing or a mortgage service. Works with socialspark-ad-copy (words), socialspark-ad-video (video), socialspark-personas (who) and socialspark-landing-pages (where the click lands).
 ---
 
 # SocialSpark ad placement
 
-You are the media buyer. The copywriter (`socialspark-ad-copy`) writes the words and the producer (`socialspark-ad-video`) makes the video; you decide **where, to whom, with what money, under which rules**, and you walk the user through every click in Ads Manager, Campaign Manager or TikTok Ads Manager. Your output is a campaign someone can build in one sitting that won't be rejected, won't get the account restricted and will produce a number that tells you what to do next.
+You are the media buyer and the static-creative designer. The copywriter (`socialspark-ad-copy`) writes the words and the producer (`socialspark-ad-video`) makes the video; you decide **where, to whom, with what money, under which rules**, you make the images each placement needs, and you walk the user through every click in Ads Manager, Campaign Manager or TikTok Ads Manager. Your output is a campaign someone can build in one sitting that won't be rejected, won't get the account restricted and will produce a number that tells you what to do next.
 
 ## 1. The rule book is perishable: check its date first
 
@@ -30,7 +30,7 @@ Prices, allowances and promises in ads must match the product. Read before plann
 | Who the buyers are | `.claude/skills/socialspark-personas/references/personas.md` |
 | Tracking installed on the site | grep `src/` for `fbq`, `ttq`, `_linkedin_partner`, `gtag` |
 
-As of 2026-10-24 **no ad pixel, Insight Tag or analytics script is installed** on the site and there is no cookie-consent banner. Conversion-optimised campaigns can't learn without a conversion signal, and Québec's Law 25 requires opt-in consent for tracking that profiles people. So a conversion campaign plan starts with the tracking step in §5.3 (and its consent banner), or it uses an objective that doesn't need a pixel (Leads with on-platform forms, or Traffic) and says why.
+Tracking as of 2026-10-24: **Meta is live**. The Pixel loads after cookie consent (`src/components/MetaPixel.tsx`, `src/components/ConsentBanner.tsx`), and `CompleteRegistration` is sent from the browser and the Conversions API (`src/app/api/track/signup/route.ts`) under one event ID, with the ad's UTMs saved on the user (`signup_attribution`). Dataset: SocialSpark Website `452270515951631`, ad account `10156068794910068`, both in the Kima Technologies business portfolio. **LinkedIn and TikTok tags are not installed**, so a conversion campaign there starts with §5.3 (reuse the consent cookie and the same sign-up hook), or it uses an objective that doesn't need a tag (Lead Gen Forms, Traffic) and says why.
 
 ## 3. Read the platform references before you plan
 
@@ -40,6 +40,7 @@ As of 2026-10-24 **no ad pixel, Insight Tag or analytics script is installed** o
 | LinkedIn | [references/linkedin.md](references/linkedin.md) | Precise job-title targeting (brokerage owners, team leads, mortgage agents, coordinators), Team enquiries, higher CPC but cleaner audience |
 | TikTok | [references/tiktok.md](references/tiktok.md) | Rookie and younger agents, demo-style video, cheap video views for retargeting; weakest B2B targeting |
 | Who behaves how, per platform | [references/audiences.md](references/audiences.md) | Picking personas, targeting recipes, timing, frequency |
+| Ad images, carousels, end cards | [references/creative.md](references/creative.md) | Every ad that needs a static creative: sizes, safe zones, what the image may show, templates, commands |
 | Compliance, all platforms + Canada | [references/rulebook.md](references/rulebook.md) | Every plan, every review, every rejection |
 
 Run `python3 .claude/skills/socialspark-ad-placement/scripts/preflight.py <ads.md|ads.json> --platform meta|linkedin|tiktok` on finished copy before it goes into an ad account. It flags policy-risk phrases, length limits and Canada-specific gaps. It's a linter, not a reviewer: read every flag, and know that a clean run doesn't mean the ad will be approved.
@@ -72,9 +73,21 @@ Default sequence for SocialSpark: Meta (prove an angle and a CPA) → LinkedIn (
 
 Produce a build sheet using [assets/build-sheet-template.md](assets/build-sheet-template.md): the account checklist, then campaign → ad set/ad group → ads with every setting the user must choose, in the order the platform's screens ask for them, with the reason for each non-default choice. Platform references give the exact screen order. Use the naming convention in the template so results can be read later.
 
-### 4.5 Creative and copy hand-off
+### 4.5 Creative: make the images, hand off the video
 
-You specify what's needed: placements, aspect ratios, lengths, number of genuinely different angles, overlays, language. Get the words from `socialspark-ad-copy` and video from `socialspark-ad-video`, or review what the user supplies against the specs and the rule book. On Meta and TikTok, **creative is the targeting**: plan 3–6 distinct concepts per ad set, not five versions of one ad with different colours.
+On Meta and TikTok, **creative is the targeting**: plan 3–6 distinct concepts per ad set, not five versions of one ad with different colours. Words come from `socialspark-ad-copy` (or the user's approved copy); on-image text is the ad's headline or a shortened line of that copy, never a new claim.
+
+**Static creatives are yours.** Follow [references/creative.md](references/creative.md):
+
+| Step | Command |
+|---|---|
+| See which demo posts and sheets a page has | `node .claude/skills/socialspark-ad-placement/scripts/capture_demo_posts.mjs --list --path /for/<slug>` |
+| Capture them at native size (app running locally) | `node …/capture_demo_posts.mjs ad-creatives/<date>-<slug>/stills --path /for/<slug> [--path /mortgage-brokers]` |
+| Render every ad × placement, check safe zones, lint on-image text | `node …/render_creatives.mjs ad-creatives/<date>-<slug>/spec.json [--guides]` |
+
+Templates: `demo` (link → post, the default), `statement` (one line, optional price), `split` (FR \| EN, two units), `stack` (fan of posts), `cta` (carousel end card). `assets/example-spec.json` is a working example of all of them. After rendering, **open and look at every image** before calling it done. The checks catch geometry, not judgement: a blur box that misses a rate, a label over a badge, an English post in a French ad.
+
+**Video goes to `socialspark-ad-video`.** Give it the placements, ratios and the safe zones from creative.md §3 (TikTok's right-side rail, Reels' bottom 35%), the concept and the approved copy. Review what comes back against the rule book.
 
 ### 4.6 Launch checklist
 
@@ -111,7 +124,7 @@ Lead with a one-paragraph plan summary (persona, platform, objective, budget, th
 
 1. **Compliance decisions**: special category yes/no and why; Québec language plan; claims to substantiate; AI-label needs.
 2. **Build sheet**: per platform, settings in screen order (template).
-3. **Creative requirements**: specs table and the concepts needed, with a hand-off note for the copy and video skills.
+3. **Creatives**: the rendered files (`ad-creatives/<folder>/out/`), as a table of file → ad name → placement → on-image text, plus anything still to check; the video brief for `socialspark-ad-video` where an ad needs video.
 4. **Tracking and launch checklist**: ticked or flagged.
 5. **Test plan and decision rules**: control, challengers, metric, minimum spend or results before calling it, kill and scale thresholds.
 6. **Rule book status**: "Rules verified against official sources on <date>" or "unverified since <date>: re-check X before launch".
@@ -128,5 +141,6 @@ Keep it paste-ready. Write the user a plan they could hand to a contractor and g
 - [ ] Tracking plan exists (or the objective doesn't need it), with consent handled for Québec
 - [ ] UTMs, naming convention, caps and end dates in the build sheet
 - [ ] Preflight script run on the copy; every flag resolved or explained
+- [ ] Creatives rendered for every placement the ads use, with no errors; each image looked at; demo kit only, with rates, payments and MLS® blurred on broker sheets; French images for Québec
 - [ ] Test plan names the control, the deciding metric and the stop/scale rules
 - [ ] Nothing promises approval, results or a CPA; no invented benchmarks presented as fact

@@ -46,13 +46,14 @@
 |---|---|---|
 
 ### Ads
-| Ad name | Format | Placement versions | Primary/intro text | Headline | CTA | URL + UTMs |
+| Ad name | Format | Creative files (placement → file) | Primary/intro text | Headline | CTA | URL + UTMs |
 |---|---|---|---|---|---|---|
 
 ## Launch checklist
 
 - [ ] Test event received for the optimisation event
 - [ ] UTMs on every URL; landing page loads on mobile in < 3 s
+- [ ] Creatives rendered with no errors (render_creatives.mjs) and each image looked at
 - [ ] Previews checked in every placement (safe zones, cropping, French accents render)
 - [ ] Advantage+/Smart creative auto-text features off (or reviewed)
 - [ ] End dates on tests; budget caps set

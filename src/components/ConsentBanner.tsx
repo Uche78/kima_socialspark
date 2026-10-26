@@ -9,20 +9,20 @@ import { useConsent } from "@/lib/use-consent";
 
 const TEXT = {
   en: {
-    body: "May we use cookies to see which of our ads bring people to SocialSpark? This loads the Meta Pixel. Nothing is loaded unless you allow it.",
+    body: "May we use cookies to see how people use SocialSpark and which of our ads bring them here? This loads Google Analytics and the Meta Pixel. Nothing is loaded unless you allow it.",
     allow: "Allow",
     decline: "No thanks",
     privacy: "Privacy policy",
   },
   fr: {
-    body: "Pouvons-nous utiliser des témoins (cookies) pour savoir quelles publicités amènent les gens à SocialSpark? Cela charge le pixel Meta. Rien n'est chargé sans votre accord.",
+    body: "Pouvons-nous utiliser des témoins (cookies) pour savoir comment les gens utilisent SocialSpark et quelles publicités les amènent ici? Cela charge Google Analytics et le pixel Meta. Rien n'est chargé sans votre accord.",
     allow: "Accepter",
     decline: "Non merci",
     privacy: "Politique de confidentialité",
   },
 };
 
-/** Asks once for ad-tracking consent (Law 25: off by default; refusing is as easy as accepting). "Cookie settings" in the footer reopens it. */
+/** Asks once for analytics and ad-tracking consent (Law 25: off by default; refusing is as easy as accepting). "Cookie settings" in the footer reopens it. */
 export function ConsentBanner() {
   const consent = useConsent();
   const pathname = usePathname();
@@ -39,7 +39,7 @@ export function ConsentBanner() {
   const choose = (value: "granted" | "denied") => {
     setConsent(value);
     setReopened(false);
-    // The pixel can't be unloaded from a running page; reload so a withdrawal takes effect now.
+    // The pixel and Google Analytics can't be unloaded from a running page; reload so a withdrawal takes effect now.
     if (value === "denied" && consent === "granted") window.location.reload();
   };
 
@@ -65,9 +65,10 @@ export function ConsentBanner() {
 
 /** Footer link that reopens the banner so people can change or withdraw their choice. */
 export function CookieSettingsButton() {
+  const fr = localeOfPath(usePathname()) === "fr";
   return (
     <button type="button" onClick={() => window.dispatchEvent(new Event(OPEN_CONSENT_EVENT))} className="text-[#141414]/80 hover:text-[#141414] hover:underline">
-      Cookie settings
+      {fr ? "Paramètres des témoins" : "Cookie settings"}
     </button>
   );
 }

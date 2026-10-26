@@ -90,15 +90,17 @@ Campaign: SS_META_LEADS_SIGNUP_EN_2026-11        (Advantage+ / campaign budget o
 
 ## 6. Targeting recipes
 
-Meta has no dependable job-title targeting (work-title targeting was mostly retired); interests are hints that Advantage+ Audience can go beyond. So:
+Under Advantage+ Audience, detailed targeting is a **suggestion** Meta can go beyond, not a limit. So:
 
-- **Default: Advantage+ Audience with suggestions.** Location (provinces), language for Québec, age minimum 25 as a control (licensed agents are adults, and it trims students), and audience suggestions: interests around real estate *as a profession* (e.g. "Real estate broker", "Real estate agent", "Multiple listing service", "Canva", "Mortgage broker" for brokers). Check each still exists in the picker; retired interests break ad sets.
+- **Default: Advantage+ Audience with suggestions.** Controls: location (provinces, exclusions), language for Québec, minimum age 25 (licensed agents are adults; it trims students) with WhatsApp unknown-age excluded. Suggestions, under "Show suggestions → Detailed targeting": **job titles** (Demographics › Work › Job titles), which are still offered as of 2026-10-24: *Real Estate Agent/Salesperson, Real Estate Associate, Real estate broker, Realtor, Realtor/Real Estate Consultant*; for brokers, mortgage broker/agent titles. Leave out consumer interests such as "Residential real estate", which pull home buyers. Don't use "Define further" (it ANDs groups and narrows). Check each entry still exists in the picker; retired options break ad sets.
 - **Let the creative qualify the viewer.** The first frame and first line should only make sense to an agent ("Your new listing, posted before you leave the driveway"). That does more targeting than any interest.
 - **Custom audiences** (strong): site visitors (once pixel + consent exist), Facebook/Instagram engagers, video viewers (50%+), and customer lists with consent. Use **exclusions** for existing customers on acquisition campaigns.
 - **Lookalikes:** seed from paying customers (≥ 100 people, ideally 1,000+), Canada 1–3%. Under Advantage+ they become suggestions.
 - **Never** use exclusions or targeting that proxy protected traits, even on non-SAC campaigns.
 
 ## 7. Creative specs and placements
+
+To make the images, see [creative.md](creative.md) (templates, safe zones, demo kit). The table below is the quick reference.
 
 | Placement | Ratio | Pixels | Notes |
 |---|---|---|---|
@@ -128,3 +130,13 @@ What wins for SocialSpark (hypotheses to test, not facts): the **demonstration**
 ## 10. Boost button vs Ads Manager
 
 Boosting a Page or Instagram post is fine for engagement, but it hides most settings (objective, placements, enhancements, UTMs). For anything measured, build in Ads Manager. A strong organic post can be used there as an existing post (keeps the social proof).
+
+## 11. Build tips from the first launch (2026-10-24)
+
+- **Build everything as drafts, publish once.** Publishing ads one at a time lets the first one spend and learn alone.
+- **Duplicating:** untick "Apply recommendations" (it re-adds music and Advantage+ creative) and "Show existing reactions…" (the copy would share the original's post and comments). Rename the copy before publishing: `{{ad.name}}` is fixed at publish time.
+- **"Too Many Labels" (#1815046):** per-placement images carry hidden labels, and each duplicate inherits the previous ad's. After ~7 chained duplicates the limit is hit. Fix: trash the ad's media and add it fresh (Image ad → select the 4:5 → Replace the Square, Vertical and Horizontal crops). Prevent it: duplicate from the original ad, not the last copy, and re-add media fresh on each copy.
+- **URL parameters** live in the Tracking section (Meta moves the field; it has also sat under Destination). They take only the part after `?`.
+- **Creative builder steps:** Creative setup (Branding, Website highlights, Site links: off) → Media (select the 4:5 only) → Crop (Replace Square, Vertical, Horizontal with the matching files; "Original" selected; "Crop and expand" off) → Text → Image generation (nothing selected) → Enhancements (all off) → Translation (off).
+- **CTA:** "Try for free" isn't offered for website leads; SocialSpark uses **Get offer**.
+- **Campaign score / "Flexible media" recommendation:** dismiss. The score counts automations, not quality.

@@ -29,7 +29,8 @@ LIMITS = {
 }
 HARD_MAX = {"linkedin": {"intro_text": 600, "primary_text": 600, "headline": 200}, "tiktok": {"ad_text": 100, "primary_text": 100}}
 
-TEXT_FIELDS = ["primary_text", "intro_text", "ad_text", "headline", "description", "overlay", "cta"]
+TEXT_FIELDS = ["primary_text", "intro_text", "ad_text", "headline", "description", "overlay", "image_text", "cta"]
+# image_text: words rendered into a creative (from render_creatives.mjs). Phrase rules apply; caption length limits don't.
 
 ACRONYMS = {"CAD", "MLS", "CREA", "PDF", "CMHC", "OACIQ", "AMF", "FSRA", "RECO", "BCFSA", "GTA", "FAQ",
             "USD", "URL", "CTA", "UTM", "HD", "TV", "VA", "QC", "ON", "BC", "AB", "SMS", "API", "FR", "EN", "NB", "NS"}
@@ -72,7 +73,7 @@ RULES = [
 ]
 
 FREE_RE = re.compile(r"\b(free|gratuit|gratuits|gratuite|gratuites)\b", re.I)
-FREE_CONDITION_RE = re.compile(r"(no (credit )?card|sans carte|\b\d+\s+(free|posts?|publications?)|cancel anytime|annulez en tout temps|sans engagement)", re.I)
+FREE_CONDITION_RE = re.compile(r"(no (credit )?card|sans carte|aucune carte|sheets? (is|are) free|free on every plan|\b\d+\s+(free|posts?|publications?)|cancel anytime|annulez en tout temps|sans engagement)", re.I)
 EMOJI_RE = re.compile("[\U0001F300-\U0001FAFF\U00002600-\U000027BF\U0001F1E6-\U0001F1FF]")
 HASHTAG_RE = re.compile(r"(?<!\w)#\w+")
 FRENCH_HINT = re.compile(r"\b(le|la|les|des|vos|votre|pour|avec|une|est|sans|courtier|inscription|publication)\b", re.I)
@@ -171,7 +172,7 @@ def check_ad(ad, default_platform, default_geo, default_lang):
     looks_fr = len(FRENCH_HINT.findall(alltext)) >= 3
     if targets_qc and lang != "fr" and not looks_fr:
         add("ERROR", "Targets Québec but the copy isn't French. The Charter of the French language requires French commercial advertising (another language may accompany it, never more prominent).")
-    if lang == "fr" and not looks_fr:
+    if lang == "fr" and not looks_fr and len(alltext) > 80:
         add("INFO", "Marked French but few French words detected: check the right copy is attached.")
 
     # URL hygiene

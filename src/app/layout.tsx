@@ -3,6 +3,7 @@ import { Inter, Montserrat, Playfair_Display } from "next/font/google";
 import { ConsentBanner } from "@/components/ConsentBanner";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import { MetaPixel } from "@/components/MetaPixel";
 import { COMPANY, SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from "@/lib/site";
 import "./globals.css";
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Footer />
         <ConsentBanner />
         <MetaPixel />
+        <GoogleAnalytics />
       </body>
     </html>
   );

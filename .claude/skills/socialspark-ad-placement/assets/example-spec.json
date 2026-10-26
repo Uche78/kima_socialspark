@@ -1,0 +1,134 @@
+{
+ "_note": "Example covering every template. Copy into ad-creatives/<date>-<slug>/spec.json, capture stills into stills/ beside it (capture_demo_posts.mjs with --path /for/social-media-for-top-producing-realtors --path /mortgage-brokers --path /for/publications-immobilieres-bilingues), then render.",
+ "out": "out",
+ "creatives": [
+  {
+   "name": "p3-A",
+   "template": "demo",
+   "formats": [
+    "meta-4x5",
+    "meta-9x16",
+    "li-1.91x1",
+    "tiktok-9x16"
+   ],
+   "data": {
+    "headline": "Every listing posted the day it lists",
+    "link": "yourbrokerage.ca/listings/48-oakridge-drive",
+    "images": [
+     "stills/social-media-for-top-producing-realtors-0-1080x1350.png"
+    ],
+    "chip": "3 free posts · No credit card"
+   }
+  },
+  {
+   "name": "p13-A",
+   "template": "statement",
+   "formats": [
+    "meta-4x5",
+    "meta-9x16"
+   ],
+   "data": {
+    "eyebrow": "Listing posts",
+    "headline": "50 a month, in your brand and your voice",
+    "price": {
+     "amount": "$49.99",
+     "note": "a month, plus tax · Top Producer"
+    },
+    "images": [
+     "stills/social-media-for-top-producing-realtors-1-1080x1350.png",
+     "stills/social-media-for-top-producing-realtors-0-1080x1350.png",
+     "stills/social-media-for-top-producing-realtors-6-1080x1350.png"
+    ],
+    "chip": "3 posts free to start"
+   }
+  },
+  {
+   "name": "p7-fr-A",
+   "lang": "fr",
+   "template": "split",
+   "formats": [
+    "meta-4x5",
+    "meta-9x16"
+   ],
+   "data": {
+    "headline": "Un lien. Français, anglais ou les deux.",
+    "images": [
+     {
+      "src": "stills/publications-immobilieres-bilingues-7-1080x1350.png",
+      "label": "FR"
+     },
+     {
+      "src": "stills/social-media-for-top-producing-realtors-0-1080x1350.png",
+      "label": "EN"
+     }
+    ],
+    "chip": "3 publications gratuites"
+   }
+  },
+  {
+   "name": "p17-A",
+   "template": "demo",
+   "formats": [
+    "meta-4x5",
+    "meta-9x16"
+   ],
+   "data": {
+    "eyebrow": "For mortgage brokers",
+    "headline": "A feature sheet for every partner listing",
+    "link": "partnerbrokerage.ca/listings/1205-88-harbour",
+    "images": [
+     {
+      "src": "stills/mortgage-brokers-1-1080x1350.png",
+      "blur": [
+       [
+        0.37,
+        0.265,
+        0.6,
+        0.47
+       ],
+       [
+        0.04,
+        0.225,
+        0.58,
+        0.035
+       ]
+      ]
+     }
+    ],
+    "chip": "Building sheets is free"
+   }
+  },
+  {
+   "name": "p3-C",
+   "template": "stack",
+   "formats": [
+    "meta-1x1",
+    "meta-4x5",
+    "meta-9x16",
+    "li-1.91x1"
+   ],
+   "data": {
+    "headline": "Every post in your brand and your voice",
+    "images": [
+     "stills/social-media-for-top-producing-realtors-0-1080x1350.png",
+     "stills/social-media-for-top-producing-realtors-1-1080x1350.png",
+     "stills/social-media-for-top-producing-realtors-6-1080x1350.png",
+     "stills/social-media-for-top-producing-realtors-4-1080x1350.png"
+    ],
+    "chip": "3 free posts · No credit card"
+   }
+  },
+  {
+   "name": "end",
+   "template": "cta",
+   "formats": [
+    "carousel-1x1"
+   ],
+   "data": {
+    "headline": "See your next listing as a post",
+    "sub": "3 free posts · No credit card",
+    "url": "socialspark.usekima.com"
+   }
+  }
+ ]
+}
