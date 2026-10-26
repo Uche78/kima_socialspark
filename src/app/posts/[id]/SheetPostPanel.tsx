@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Chips } from "@/components/Chips";
 import { designForSheet, readSheetConfig, sheetPostSlides, type FeatureSheet } from "@/lib/feature-sheet";
 import { ASPECT_LABELS, PLATFORM_SPECS, type Aspect, type Platform, type Post, type PostFormat, type Profile } from "@/lib/types";
+import { reportPostWritten } from "@/components/MetaPixel";
 
 export type Destination = Platform | "story";
 
@@ -89,6 +90,7 @@ export function SheetPostPanel({ post, profile, sheet, remaining, locked, destin
           const { data: fresh } = await supabase.from("posts").select("*").eq("id", post.id).single<Post>();
           if (fresh) onPost(fresh);
           setWrittenFor(post.platform);
+          if (json.kind === "post") reportPostWritten();
           return;
         }
         if (data?.status === "failed") throw new Error(data.error ?? "Couldn't write the caption. You weren't charged.");

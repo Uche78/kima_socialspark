@@ -17,6 +17,7 @@ import { LatestResult, LatestResultSkeleton } from "./LatestResult";
 import { ListingEditor } from "./ListingEditor";
 import { ListingSummary } from "./ListingSummary";
 import { PostGrid } from "./PostGrid";
+import { reportPostWritten } from "@/components/MetaPixel";
 
 type Props = { listing: Listing; profile: Profile; posts: Post[]; usage: Usage; realtors?: PartnerRealtor[]; sheets?: FeatureSheet[] };
 
@@ -67,6 +68,7 @@ export function ListingWorkspace({ listing: initialListing, profile, posts: init
         setFreshId(post.id);
       }
       setUsage((u) => withUsed(u, (json.kind as AllowanceKind) ?? "post"));
+      if (json.kind === "post") reportPostWritten();
     } catch {
       setError("Generation failed. Please try again.");
     } finally {

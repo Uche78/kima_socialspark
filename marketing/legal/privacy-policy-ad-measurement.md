@@ -21,15 +21,16 @@ We remember your choice in a cookie called `ss_consent` for one year. You can ch
 
 ### What we use, and what is shared, if you allow it
 
-**1. Meta Pixel (in your browser).** A piece of code from Meta Platforms, Inc. that records which SocialSpark pages you visit and when you create an account. Meta receives your browser's information (such as IP address, browser type and device), the page address, and Meta's own cookies (`_fbp`, `_fbc`), which can link your visit to an ad you clicked on Facebook or Instagram.
+**1. Meta Pixel (in your browser).** A piece of code from Meta Platforms, Inc. that records which SocialSpark pages you visit, when you make your first post, and when you create an account. Meta receives your browser's information (such as IP address, browser type and device), the page address, and Meta's own cookies (`_fbp`, `_fbc`), which can link your visit to an ad you clicked on Facebook or Instagram.
 
-**2. Meta Conversions API (from our server).** When you create a SocialSpark account, our server also tells Meta that an account was created, so the count is accurate even if an ad blocker stopped the Pixel. We send:
-- your email address and your SocialSpark account ID, **hashed** (turned into a one-way code with SHA-256) before they leave our server, so Meta can match them to a Meta account but we don't send them in readable form;
+**2. Meta Conversions API (from our server).** When you make your first post (even as a guest, before you have an account) and when you create a SocialSpark account, our server also tells Meta, so the count is accurate even if an ad blocker stopped the Pixel. We send:
+- your email address (once you have an account) and your SocialSpark account ID, **hashed** (turned into a one-way code with SHA-256) before they leave our server, so Meta can match them to a Meta account but we don't send them in readable form;
 - your IP address and browser information;
 - Meta's click and browser identifiers (`_fbc`, `_fbp`), if present;
-- the page where you signed up, whether you chose "Realtor" or "Mortgage broker", and which of our ads and landing pages brought you (the campaign and ad names in the link).
+- for a first post: the type of post and the platform it was made for, and whether you were a guest; for an account: the page where you signed up and whether you chose "Realtor" or "Mortgage broker";
+- which of our ads and landing pages brought you (the campaign and ad names in the link).
 
-The browser and server messages carry the same event ID, so Meta counts your sign-up once.
+The browser and server messages carry the same event ID, so Meta counts each one once.
 
 **3. Which ad brought you (our own records).** When you arrive from one of our ads, the link carries labels such as `utm_campaign` and `utm_content`, and sometimes Meta's click ID (`fbclid`). Before you choose, these stay only in your browser tab and are not sent anywhere. If you allow advertising cookies, we keep them in a cookie called `ss_attr` for up to 90 days, and when you create an account we save them with your account (the landing page, the ad labels, the click ID and the time you arrived). We use this only to see which ads and pages lead to sign-ups.
 

@@ -16,6 +16,22 @@ export function trackMeta(event: string, data?: Record<string, unknown>, eventId
   if (fbq) fbq("track", event, data ?? {}, eventId ? { eventID: eventId } : undefined);
 }
 
+/** Sends a custom (non-standard) browser event to the Meta Pixel, when it's loaded. */
+export function trackMetaCustom(event: string, data?: Record<string, unknown>, eventId?: string) {
+  const fbq = (window as unknown as { fbq?: Fbq }).fbq;
+  if (fbq) fbq("trackCustom", event, data ?? {}, eventId ? { eventID: eventId } : undefined);
+}
+
+/** Call after a new post finishes writing: if it was the visitor's first, the server and browser both tell Meta (one event ID). */
+export function reportPostWritten() {
+  void fetch("/api/track/first-post", { method: "POST", keepalive: true })
+    .then((res) => (res.ok ? res.json() : null))
+    .then((json: { first?: boolean; event_id?: string; data?: Record<string, unknown> } | null) => {
+      if (json?.first && json.event_id) trackMetaCustom("FirstPostGenerated", json.data, json.event_id);
+    })
+    .catch(() => {});
+}
+
 /** Meta Pixel, loaded only after the visitor allows ad tracking. Tracks a PageView on every route change. */
 export function MetaPixel() {
   const consent = useConsent();

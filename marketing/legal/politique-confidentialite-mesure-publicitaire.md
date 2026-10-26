@@ -19,15 +19,16 @@ Nous conservons votre choix dans un témoin nommé `ss_consent` pendant un an. V
 
 ### Ce que nous utilisons et ce qui est communiqué, si vous l'acceptez
 
-**1. Le pixel Meta (dans votre navigateur).** Un code fourni par Meta Platforms, Inc. qui enregistre les pages de SocialSpark que vous consultez et le moment où vous créez un compte. Meta reçoit les renseignements de votre navigateur (comme votre adresse IP, le type de navigateur et l'appareil), l'adresse de la page et ses propres témoins (`_fbp`, `_fbc`), qui peuvent relier votre visite à une publicité sur laquelle vous avez cliqué dans Facebook ou Instagram.
+**1. Le pixel Meta (dans votre navigateur).** Un code fourni par Meta Platforms, Inc. qui enregistre les pages de SocialSpark que vous consultez, le moment où vous faites votre première publication et le moment où vous créez un compte. Meta reçoit les renseignements de votre navigateur (comme votre adresse IP, le type de navigateur et l'appareil), l'adresse de la page et ses propres témoins (`_fbp`, `_fbc`), qui peuvent relier votre visite à une publicité sur laquelle vous avez cliqué dans Facebook ou Instagram.
 
-**2. L'API Conversions de Meta (à partir de notre serveur).** Lorsque vous créez un compte SocialSpark, notre serveur indique aussi à Meta qu'un compte a été créé, afin que le décompte soit exact même si un bloqueur de publicité a empêché le pixel de fonctionner. Nous transmettons :
-- votre adresse courriel et l'identifiant de votre compte SocialSpark, **hachés** (convertis en un code à sens unique au moyen de SHA-256) avant de quitter notre serveur, ce qui permet à Meta de les associer à un compte Meta sans que nous les transmettions sous une forme lisible;
+**2. L'API Conversions de Meta (à partir de notre serveur).** Lorsque vous faites votre première publication (même comme invité, avant d'avoir un compte) et lorsque vous créez un compte SocialSpark, notre serveur en informe aussi Meta, afin que le décompte soit exact même si un bloqueur de publicité a empêché le pixel de fonctionner. Nous transmettons :
+- votre adresse courriel (une fois votre compte créé) et l'identifiant de votre compte SocialSpark, **hachés** (convertis en un code à sens unique au moyen de SHA-256) avant de quitter notre serveur, ce qui permet à Meta de les associer à un compte Meta sans que nous les transmettions sous une forme lisible;
 - votre adresse IP et les renseignements de votre navigateur;
 - les identifiants de clic et de navigateur de Meta (`_fbc`, `_fbp`), s'ils sont présents;
-- la page où vous vous êtes inscrit, le profil choisi à l'inscription (courtier immobilier ou courtier hypothécaire), ainsi que la publicité et la page d'accueil qui vous ont amené chez nous (les noms de campagne et de publicité contenus dans le lien).
+- pour une première publication : le type de publication, la plateforme visée et le fait que vous étiez invité ou non; pour un compte : la page où vous vous êtes inscrit et le profil choisi à l'inscription (courtier immobilier ou courtier hypothécaire);
+- la publicité et la page d'accueil qui vous ont amené chez nous (les noms de campagne et de publicité contenus dans le lien).
 
-Les messages envoyés par le navigateur et par le serveur portent le même identifiant d'événement, de sorte que Meta ne compte votre inscription qu'une seule fois.
+Les messages envoyés par le navigateur et par le serveur portent le même identifiant d'événement, de sorte que Meta ne compte chacun qu'une seule fois.
 
 **3. La publicité qui vous a amené chez nous (nos propres dossiers).** Lorsque vous arrivez à partir de l'une de nos publicités, le lien contient des étiquettes comme `utm_campaign` et `utm_content`, et parfois l'identifiant de clic de Meta (`fbclid`). Tant que vous n'avez pas fait votre choix, ces renseignements restent uniquement dans l'onglet de votre navigateur et ne sont transmis nulle part. Si vous acceptez les témoins publicitaires, nous les conservons dans un témoin nommé `ss_attr` pendant au plus 90 jours et, lorsque vous créez un compte, nous les enregistrons avec votre compte (la page d'accueil, les étiquettes de la publicité, l'identifiant de clic et le moment de votre arrivée). Nous les utilisons uniquement pour savoir quelles publicités et quelles pages mènent à des inscriptions.
 
