@@ -5,6 +5,7 @@
   "ads_login_customer_id": "6205633194",
   "gum_bin": "gum",
   "geo_target_constants": ["2124"],
+  "tiebreak_geo_target_constants": ["2840"],
   "languages": { "en": "1000", "fr": "1002" },
   "publish_mode": "review",
   "max_new_guides_per_day": 1,
@@ -16,7 +17,7 @@
     "instagram", "facebook", "linkedin", "social media", "post", "posts", "caption", "captions", "hashtag", "hashtags", "carousel",
     "marketing", "crea", "reco", "bcfsa", "oaciq", "immobilier", "courtier", "inscription", "visite libre", "publication"
   ],
-  "exclude_terms": ["job", "jobs", "salary", "course", "exam", "licence exam", "license exam", "near me", "for sale", "rent", "rental", "login", "zillow", "realtor.ca login"],
+  "exclude_terms": ["job", "jobs", "salary", "course", "exam", "licence exam", "license exam", "near me", "for sale", "rent", "rental", "login", "zillow", "realtor.ca login", "postcard", "postcards", "flyer", "flyers", "direct mail"],
   "seed_keywords": [
     "just listed post ideas",
     "real estate instagram post ideas",

@@ -40,13 +40,13 @@ If `indexed` is 0 (or far below `submitted`), there's no ranking data to act on 
 ```bash
 python3 .claude/skills/socialspark-content-engine/scripts/pull.py
 ```
-It pulls Search Console query×page for the last 28 days and the 28 before (ending 3 days ago, final data), pages for 28 days, and Keyword Planner historical metrics and ideas for the seed keywords (Canada, English and French). On the first run, open one output file to confirm gum's JSON envelope parses (`analyse.py` searches for `rows` / keyword items anywhere in it).
+It pulls Search Console query×page for the last 28 days and the 28 before (ending 3 days ago, final data), pages for 28 days, and Keyword Planner historical metrics and ideas for the seed keywords (Canada, English and French). It also pulls US volumes for the same English phrases (`tiebreak_geo_target_constants`): niche Canadian phrases mostly sit in the same 10-a-month bucket, so US demand orders them. US numbers never qualify a topic on their own, and no US keyword ideas are pulled, so US-only topics (NAR rules, state licensing) never come up. Guides stay written for Canadians. On the first run, open one output file to confirm gum's JSON envelope parses (`analyse.py` searches for `rows` / keyword items anywhere in it).
 
 ### Step 2: Rank
 ```bash
 python3 .claude/skills/socialspark-content-engine/scripts/analyse.py opportunities
 ```
-Four actions come back, scored by missed clicks (impressions × (1 − CTR), weighted up for positions 8–25, plus Canadian search volume):
+Four actions come back, scored by missed clicks (impressions × (1 − CTR), weighted up for positions 8–25), plus Canadian search volume, plus a smaller weight for US volume. Keyword Planner phrases are grouped into families of variants first (realtor = real estate agent, IG = Instagram), and the demand threshold applies to the family:
 
 | Action | Signal | What you do |
 |---|---|---|

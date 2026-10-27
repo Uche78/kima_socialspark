@@ -74,10 +74,12 @@ def num(v):
         return None
 
 
-def kp_volumes(d: Path):
-    """Keyword → {searches, competition} from Keyword Planner files, whatever gum's exact field names."""
+def kp_volumes(d: Path, tiebreak=False):
+    """Keyword → {searches, competition} from Keyword Planner files, whatever gum's exact field names.
+    Canada by default; `tiebreak` reads the US file, used only to order Canadian candidates."""
     out = {}
-    for f in d.glob("kp-*.json"):
+    files = d.glob("kp-tiebreak-*.json") if tiebreak else (f for f in d.glob("kp-*.json") if not f.name.startswith("kp-tiebreak-"))
+    for f in files:
         doc = load(f)
         test = lambda r: any(k in r for k in ("text", "keyword", "keywordText"))
         for items in find_lists(doc, test):
@@ -160,6 +162,8 @@ def opportunities(d: Path):
     rows = gsc_rows(d / "gsc-query-page-28d.json")
     prev = {(r["keys"][0]): r for r in gsc_rows(d / "gsc-query-page-prev28d.json")}
     vol = kp_volumes(d)
+    us = kp_volumes(d, tiebreak=True)
+    us_of = lambda phrase: (us.get(norm(phrase)) or {}).get("searches")
 
     # Per query: totals, impression-weighted position, the page Google ranks best.
     q = defaultdict(lambda: {"clicks": 0.0, "impressions": 0.0, "pos_x_imp": 0.0, "pages": defaultdict(float), "best": (999, None)})
@@ -183,7 +187,7 @@ def opportunities(d: Path):
         score_sim, cover = covered_by(query, pages)
         searches = (vol.get(norm(query)) or {}).get("searches")
         trend = e["impressions"] - prev.get(query, {}).get("impressions", 0)
-        base = {"query": query, "impressions": int(e["impressions"]), "clicks": int(e["clicks"]), "ctr": round(ctr, 4), "position": round(pos, 1), "top_page": top_page, "searches_ca": searches, "impressions_change": int(trend)}
+        base = {"query": query, "impressions": int(e["impressions"]), "clicks": int(e["clicks"]), "ctr": round(ctr, 4), "position": round(pos, 1), "top_page": top_page, "searches_ca": searches, "searches_us": us_of(query), "impressions_change": int(trend)}
         is_guide = top_page.startswith("/guides/")
         if cover and cover["path"] == top_page and is_guide and 4 <= pos <= 20:
             found.append({**base, "action": "refresh", "target": top_page, "why": f"{top_page} already targets it and sits at {pos:.0f}: add the missing answer, tighten the title, add links to it"})
@@ -202,7 +206,7 @@ def opportunities(d: Path):
             continue
         if covered_by(k, pages)[1]:
             continue
-        found.append({"query": k, "impressions": 0, "clicks": 0, "ctr": 0, "position": None, "top_page": None, "searches_ca": v["searches"], "competition": v.get("competition"), "impressions_change": 0, "action": "new", "target": None, "why": f"{int(v['searches'])} searches a month in Canada (Keyword Planner), nothing on the site for it"})
+        found.append({"query": k, "impressions": 0, "clicks": 0, "ctr": 0, "position": None, "top_page": None, "searches_ca": v["searches"], "searches_us": us_of(k), "competition": v.get("competition"), "impressions_change": 0, "action": "new", "target": None, "why": f"{int(v['searches'])} searches a month in Canada (Keyword Planner), nothing on the site for it"})
 
     # Merge near-duplicate phrases into one opportunity: one guide answers them all. Stricter than coverage
     # (0.5): "real estate captions for instagram" and "real estate instagram post ideas" are two guides.
@@ -213,8 +217,9 @@ def opportunities(d: Path):
         if home:
             home["variants"].append(o["query"])
             home["impressions"] += o["impressions"]
-            if o.get("searches_ca"):
-                home["searches_ca"] = (home.get("searches_ca") or 0) + o["searches_ca"]
+            for key in ("searches_ca", "searches_us"):
+                if o.get(key):
+                    home[key] = (home.get(key) or 0) + o[key]
         else:
             merged.append({**o, "variants": []})
     merged = [m for m in merged if m["impressions"] > 0 or (m.get("searches_ca") or 0) >= CONFIG["min_monthly_searches"]]
@@ -225,11 +230,11 @@ def opportunities(d: Path):
     merged.sort(key=lambda m: m["score"], reverse=True)
 
     (d / "opportunities.json").write_text(json.dumps(merged, indent=2))
-    print(f"# Opportunities, {d.name} ({len(rows)} Search Console rows, {len(vol)} Keyword Planner phrases)\n")
-    print("| # | Action | Query | Impr. 28d | Pos. | CTR | Searches/mo CA | Variants | Why |")
-    print("|---|---|---|---|---|---|---|---|---|")
+    print(f"# Opportunities, {d.name} ({len(rows)} Search Console rows, {len(vol)} Keyword Planner phrases, {len(us)} with US volumes)\n")
+    print("| # | Action | Query | Impr. 28d | Pos. | CTR | Searches/mo CA | US (tiebreak) | Variants | Why |")
+    print("|---|---|---|---|---|---|---|---|---|---|")
     for i, m in enumerate(merged[:25], 1):
-        print(f"| {i} | {m['action']} | {m['query']} | {m['impressions']} | {m['position'] or '–'} | {m['ctr']:.1%} | {int(m['searches_ca']) if m['searches_ca'] is not None else '–'} | {', '.join(m['variants'][:4]) or '–'} | {m['why']} |")
+        print(f"| {i} | {m['action']} | {m['query']} | {m['impressions']} | {m['position'] or '–'} | {m['ctr']:.1%} | {int(m['searches_ca']) if m['searches_ca'] is not None else '–'} | {int(m['searches_us']) if m.get('searches_us') is not None else '–'} | {', '.join(m['variants'][:4]) or '–'} | {m['why']} |")
     if not merged:
         print("Nothing clears the bar today. That's a valid result: don't publish to fill the day.")
     print(f"\nSaved {(d / 'opportunities.json').relative_to(ROOT)}")
@@ -245,6 +250,9 @@ def score(o):
         s *= 1.2
     if o.get("searches_ca"):
         s += 0.5 * o["searches_ca"]
+    # US demand only orders candidates that already passed the Canadian bar; it never qualifies one.
+    if o.get("searches_us"):
+        s += 0.25 * o["searches_us"]
     return s
 
 

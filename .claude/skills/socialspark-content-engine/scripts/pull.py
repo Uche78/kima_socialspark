@@ -56,7 +56,31 @@ def kp(keywords: list[str]):
             continue
         # The API takes up to 10,000 keywords per call for historical metrics and 20 seeds for ideas.
         gum("googleads.keywordPlanIdeas.generateKeywordHistoricalMetrics", {**base, "language": code, "keywords": kws[:1000]}, f"kp-historical-{lang}.json")
-        gum("googleads.keywordPlanIdeas.generateKeywordIdeas", {**base, "language": code, "keywords": kws[:20], "pageSize": 500}, f"kp-ideas-{lang}.json")
+        ideas = gum("googleads.keywordPlanIdeas.generateKeywordIdeas", {**base, "language": code, "keywords": kws[:20], "pageSize": 500}, f"kp-ideas-{lang}.json")
+        # US volumes only rank the Canadian candidates against each other (Canadian phrases mostly sit in the
+        # same 10-a-month bucket). English only, and no US keyword ideas, so US-only topics never come up.
+        tiebreak = CONFIG.get("tiebreak_geo_target_constants")
+        if lang == "en" and tiebreak:
+            phrases = list(dict.fromkeys(kws + idea_texts(ideas)))
+            gum("googleads.keywordPlanIdeas.generateKeywordHistoricalMetrics", {**base, "geoTargetConstants": tiebreak, "language": code, "keywords": phrases[:1000]}, "kp-tiebreak-historical-en.json")
+
+
+def idea_texts(path):
+    """The phrases in a keyword-ideas response, wherever gum's envelope puts them."""
+    if not path:
+        return []
+    found = []
+    def walk(node):
+        if isinstance(node, dict):
+            if isinstance(node.get("text"), str):
+                found.append(node["text"])
+            for v in node.values():
+                walk(v)
+        elif isinstance(node, list):
+            for v in node:
+                walk(v)
+    walk(json.loads(path.read_text()))
+    return found
 
 
 def looks_french(k: str):
