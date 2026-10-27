@@ -16,7 +16,7 @@ export const justListedPostIdeas: Guide = {
   answer:
     "A good Just Listed post leads with the home's single strongest feature, shows the price, address and key details on the image, and ends the caption with one clear ask: book a showing or send a message. Put your name and brokerage on every post. Then post the listing more than once, each time with a different angle: the room that sells it, the floor plan, the street, the open house.",
   published: "2026-10-26",
-  updated: "2026-10-26",
+  updated: "2026-10-27",
   sections: [
     {
       heading: "What a Just Listed post has to do",
@@ -164,6 +164,7 @@ export const justListedPostIdeas: Guide = {
           type: "list",
           items: [
             "**Name your brokerage, clearly.** In Ontario, [RECO's advertising bulletin](https://www.reco.on.ca/getmedia/fc6d0358-a8a1-4e6b-bfaa-2b8c312e1c3b/RECO-Bulletin-5-1-Advertising-requirements.pdf) says all advertising must include the brokerage name and that agents may not advertise unless the brokerage is clearly and prominently identified, and its [online advertising bulletin](https://www.reco.on.ca/getmedia/398b2b0c-2c20-4bec-a8d9-d88fc9e03d18/RECO-Bulletin-5-3-Advertising-online.pdf) applies that to social media. Other provincial regulators have similar rules; check yours.",
+            "**Get written consent before a Sold post.** In Ontario, [RECO Bulletin 5.4](https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-4-advertising-sold-property) requires the parties' written consent, with the dates it's valid, to advertise a property as sold: the seller's before closing, the buyer's after, and both to show the price.",
             "**Write REALTOR® correctly.** It's a CREA trademark that identifies members, not a job title. [CREA asks](https://www.crea.ca/cafe/everything-you-need-to-know-about-creas-trademarks-2/) that the first use be in capital letters with the ® symbol.",
             "**Only post listings you're allowed to post.** If it's another brokerage's listing, follow your regulator's and board's rules on consent first, credit the listing brokerage, and never make it look like your own.",
             "**Have permission for the photos.** Listing photos usually belong to the photographer or the brokerage. Check before you reuse them.",
@@ -234,7 +235,7 @@ export const justListedPostIdeas: Guide = {
     },
     {
       q: "What do I write in a Sold post?",
-      a: "A Sold post speaks to future sellers. Tell the short story of the result and invite people to talk about their own home. Don't state the sale price or terms unless they're public and you're allowed to share them.",
+      a: "A Sold post speaks to future sellers: tell the short story of the result and invite people to talk about their own home. Advertising a sale needs written consent. In Ontario, RECO requires the seller's before closing, the buyer's after, and both to show the price or terms. Check your own regulator's rules.",
     },
   ],
   related: [],
@@ -245,6 +246,7 @@ export const justListedPostIdeas: Guide = {
   sources: [
     { label: "RECO Bulletin 5.1: Advertising requirements", url: "https://www.reco.on.ca/getmedia/fc6d0358-a8a1-4e6b-bfaa-2b8c312e1c3b/RECO-Bulletin-5-1-Advertising-requirements.pdf" },
     { label: "RECO Bulletin 5.3: Advertising online", url: "https://www.reco.on.ca/getmedia/398b2b0c-2c20-4bec-a8d9-d88fc9e03d18/RECO-Bulletin-5-3-Advertising-online.pdf" },
+    { label: "RECO Bulletin 5.4: Advertising sold properties", url: "https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-4-advertising-sold-property" },
     { label: "CREA: Everything you need to know about CREA's trademarks", url: "https://www.crea.ca/cafe/everything-you-need-to-know-about-creas-trademarks-2/" },
   ],
 };

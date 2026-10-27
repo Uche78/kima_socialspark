@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createAdminClient, getUser } from "@/lib/supabase/server";
 import { formatDay, PLATFORM_LABEL, RECONNECT_HINT } from "@/lib/connection-expiry";
+import { SALE_CONSENT_CODE, SALE_CONSENT_PUBLISH_ERROR, saleConsentMissing } from "@/lib/sale-consent";
 
 export async function POST(req: NextRequest, ctx: RouteContext<"/api/posts/[id]/schedule">) {
   const { id } = await ctx.params;
@@ -18,10 +19,12 @@ export async function POST(req: NextRequest, ctx: RouteContext<"/api/posts/[id]/
   if (!social_account_id) return NextResponse.json({ error: "Choose an account to post to." }, { status: 400 });
 
   const [{ data: post }, { data: account }] = await Promise.all([
-    supabase.from("posts").select("platform, image_paths, status").eq("id", id).single(),
+    supabase.from("posts").select("platform, image_paths, status, post_type, sale_consent").eq("id", id).single(),
     supabase.from("social_accounts").select("platform").eq("id", social_account_id).single(),
   ]);
   if (!post || !account) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  // Sold posts need confirmed written consent; checked before the post is changed.
+  if (saleConsentMissing(post)) return NextResponse.json({ error: SALE_CONSENT_PUBLISH_ERROR, code: SALE_CONSENT_CODE }, { status: 409 });
   if (account.platform !== post.platform) return NextResponse.json({ error: "That account is for a different platform." }, { status: 400 });
   if (!post.image_paths?.length) return NextResponse.json({ error: "Save the design before scheduling." }, { status: 400 });
   if (post.status === "published" || post.status === "publishing") return NextResponse.json({ error: "Already published." }, { status: 409 });

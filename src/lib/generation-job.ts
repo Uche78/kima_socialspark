@@ -8,6 +8,7 @@ import type { AllowanceKind } from "./plans";
 import { cleanTourUrl } from "./virtual-tour";
 import { PLATFORM_SPECS, type Aspect, type Design, type Language, type Listing, type MortgageInputs, type Platform, type PostFormat, type Post, type PostType, type Profile, type TextMode } from "./types";
 import { recordAiUsage, type UsageMeter } from "./ai-usage";
+import { defaultShowPrice, priceAllowed, type SaleConsent } from "./sale-consent";
 
 /** Validated generation settings, stored on the job. */
 export type JobParams = {
@@ -31,6 +32,8 @@ export type JobParams = {
   sheet_photo_index?: number | null;
   /** Fill in the caption of this existing (draft) sheet post instead of creating a new post. */
   target_post_id?: string | null;
+  /** Sold posts: the confirmed written consent to advertise the sale, stored on the post. */
+  sale_consent?: SaleConsent | null;
 };
 
 export type GenerationJob = {
@@ -108,6 +111,7 @@ export async function runGenerationJob(jobId: string) {
           includeContactSlide: p.format === "carousel" && p.include_contact_slide,
           tourUrl: p.include_tour ? cleanTourUrl(listing.virtual_tour_url) : null,
           mortgage: p.mortgage,
+          priceConsent: priceAllowed(p.post_type, p.sale_consent),
         }, meter);
   } catch (e) {
     console.error("generation failed", job.id, e);
@@ -155,7 +159,8 @@ export async function runGenerationJob(jobId: string) {
     show_headshot: profile.include_headshot && !!profile.headshot_path,
     show_contact: profile.include_contact,
     show_brokerage: true,
-    show_price: listing.price != null,
+    // Sold posts show the price only with both parties' consent; other post types are unchanged.
+    show_price: defaultShowPrice(p.post_type, listing.price != null, p.sale_consent),
     ...(sheet ? { sheet } : {}),
   };
 
@@ -177,6 +182,7 @@ export async function runGenerationJob(jobId: string) {
       design,
       mortgage: p.mortgage,
       ...(p.sheet_id ? { sheet_id: p.sheet_id } : {}),
+      ...(p.sale_consent ? { sale_consent: p.sale_consent } : {}),
     })
     .select("id")
     .single();

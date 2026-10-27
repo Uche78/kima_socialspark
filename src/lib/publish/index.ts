@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { fullCaption } from "../caption";
 import { publicMediaUrl } from "../photos";
 import type { Post } from "../types";
+import { SALE_CONSENT_PUBLISH_ERROR, saleConsentMissing } from "../sale-consent";
 import { reconnectMessage } from "../connection-expiry";
 import { deleteFacebookPost, MetaError, publishFacebook, publishInstagram } from "./meta";
 import { deleteLinkedInPost, LinkedInAuthError, publishLinkedIn } from "./linkedin";
@@ -15,6 +16,8 @@ class PublishCancelled extends Error {}
  */
 export async function publishPost(admin: SupabaseClient, post: Post) {
   try {
+    // Every publish path ends here, including scheduled posts: a Sold post without confirmed consent fails.
+    if (saleConsentMissing(post)) throw new Error(SALE_CONSENT_PUBLISH_ERROR);
     if (!post.social_account_id) throw new Error("No social account selected.");
     if (!post.image_paths.length) throw new Error("Post images haven't been rendered yet.");
 

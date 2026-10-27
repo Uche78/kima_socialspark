@@ -11,6 +11,7 @@ import type { PartnerRealtor } from "@/lib/broker";
 import type { FeatureSheet, SheetConfig } from "@/lib/feature-sheet";
 import { FeatureSheetForm } from "./FeatureSheetForm";
 import { ASPECT_LABELS, PLATFORM_SPECS, POST_TYPES, textModeOptions, type Aspect, type TextMode, type Design, type Language, type Listing, type MortgageInputs, type Platform, type PostFormat, type PostType, type Profile } from "@/lib/types";
+import { SaleConsentFields } from "@/components/SaleConsentFields";
 
 /** Post types for listing posts (feature sheets have their own form). */
 const { feature_sheet: _sheet, ...LISTING_POST_TYPES } = POST_TYPES; // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -35,6 +36,8 @@ export type PostSettings = {
   realtor_id?: string | null;
   /** Feature sheets: settings to reuse (regenerating keeps the sheet's numbers). */
   sheet?: SheetConfig;
+  /** Sold posts only: the user confirmed written consent (the server records when). */
+  sale_consent?: { covers_price: boolean };
 };
 
 type Props = {
@@ -78,6 +81,11 @@ export function CreatePostCard({ listing, profile, usage, generating, error, onG
   const [contactSlide, setContactSlide] = useState(profile.include_contact);
   const hasTour = !!listing.virtual_tour_url;
   const [includeTour, setIncludeTour] = useState(true);
+  // Sold posts: written consent to advertise the sale (and, separately, to show the price).
+  const [saleConsent, setSaleConsent] = useState(false);
+  const [priceConsent, setPriceConsent] = useState(false);
+  const isSold = postType === "sold";
+  const consentMissing = isSold && !saleConsent;
   const [mortgage, setMortgage] = useState<MortgageInputs>({
     enabled: isBroker,
     price: 0, // 0 = use the listing price
@@ -105,6 +113,7 @@ export function CreatePostCard({ listing, profile, usage, generating, error, onG
       include_contact_slide: format === "carousel" && contactSlide,
       include_tour: hasTour && includeTour,
       mortgage: isBroker ? { ...mortgage, price: mortgagePrice } : null,
+      ...(isSold ? { sale_consent: { covers_price: saleConsent && priceConsent } } : {}),
     });
   }
 
@@ -155,6 +164,8 @@ export function CreatePostCard({ listing, profile, usage, generating, error, onG
           )}
         </div>
       )}
+
+      {isSold && <SaleConsentFields consent={saleConsent} onConsent={setSaleConsent} price={priceConsent} onPrice={setPriceConsent} className="mt-4" />}
 
       <div className="mt-4 space-y-4">
         {isBroker && (
@@ -221,11 +232,13 @@ export function CreatePostCard({ listing, profile, usage, generating, error, onG
       </div>
 
       <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-border pt-4">
-        <button className="btn-primary h-11 px-8" onClick={submit} disabled={generating || listing.photos.length === 0 || remaining === 0}>
+        <button className="btn-primary h-11 px-8" onClick={submit} disabled={generating || listing.photos.length === 0 || remaining === 0 || consentMissing}>
           {generating ? "Writing your post…" : "Generate post"}
         </button>
         <span className="text-sm text-muted">
-          {listing.photos.length === 0
+          {consentMissing
+            ? "Confirm consent to create a Sold post."
+            : listing.photos.length === 0
             ? "Add at least one photo to create a post."
             : usage.paid
             ? `${remaining} of ${usage.posts.limit} new posts left this month${usage.resetsAt ? `, resets ${new Date(usage.resetsAt).toLocaleDateString([], { month: "short", day: "numeric" })}` : ""}.`

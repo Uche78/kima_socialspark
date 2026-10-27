@@ -1,4 +1,5 @@
 import type { SheetConfig } from "./feature-sheet";
+import type { SaleConsent } from "./sale-consent";
 export type Platform = "instagram" | "facebook" | "linkedin";
 export type PostFormat = "single" | "carousel";
 export type Language = "en" | "fr" | "bilingual";
@@ -145,6 +146,8 @@ export type Post = {
   focused_on: string[];
   /** The feature sheet this post was made from (mortgage brokers). */
   sheet_id?: string | null;
+  /** Sold posts: the user confirmed written consent to advertise the sale (null = not confirmed). */
+  sale_consent?: SaleConsent | null;
   caption: string;
   hashtags: string[];
   slides: Slide[];

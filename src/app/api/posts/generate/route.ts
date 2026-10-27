@@ -7,6 +7,7 @@ import { paywallFor } from "@/lib/paywall";
 import { remaining, usageFrom, type AllowanceKind, type EntitlementRow } from "@/lib/plans";
 import { readMortgageSettings, type PartnerRealtor } from "@/lib/broker";
 import { readSheetConfig, sheetConfigFrom, type SheetConfig } from "@/lib/feature-sheet";
+import { confirmedNow, needsSaleConsent, priceAllowed, readConsentRequest, SALE_CONSENT_CODE, SALE_CONSENT_CREATE_ERROR, type SaleConsent } from "@/lib/sale-consent";
 import type { Design, Language, Listing, MortgageInputs, Platform, Post, PostFormat, PostType, Profile, Aspect, TextMode } from "@/lib/types";
 import { PLATFORM_SPECS, POST_TYPES } from "@/lib/types";
 
@@ -44,6 +45,8 @@ type Body = {
   sheet_photo_index?: number | null;
   /** Write (or rewrite) the caption of an existing sheet post: the first caption uses a post, rewrites a regeneration. */
   post_id?: string;
+  /** Sold posts: the user confirmed written consent to advertise the sale (the server adds the time). */
+  sale_consent?: { covers_price?: boolean } | null;
 };
 
 export async function POST(request: Request) {
@@ -105,10 +108,20 @@ export async function POST(request: Request) {
 
   // A regeneration rewrites an existing post of this listing; anything else is a new post.
   let kind: AllowanceKind = target?.caption.trim() ? "regen" : "post";
+  let original: { id: string; sale_consent: SaleConsent | null } | null = null;
   if (body.regenerate_of) {
-    const { data: original } = await supabase.from("posts").select("id").eq("id", body.regenerate_of).eq("listing_id", listing.id).maybeSingle();
+    ({ data: original } = await supabase.from("posts").select("id, sale_consent").eq("id", body.regenerate_of).eq("listing_id", listing.id).maybeSingle());
     if (!original) return NextResponse.json({ error: "Post to regenerate not found." }, { status: 404 });
     kind = "regen";
+  }
+
+  // Sold posts need the user's confirmation of written consent, checked before the paywall so a refusal
+  // costs nothing. A regeneration keeps the consent stored on the post it rewrites.
+  let saleConsent: SaleConsent | null = null;
+  if (needsSaleConsent(body.post_type)) {
+    const requested = readConsentRequest(body.sale_consent);
+    saleConsent = original?.sale_consent ?? (requested ? confirmedNow(requested.covers_price) : null);
+    if (!saleConsent) return NextResponse.json({ error: SALE_CONSENT_CREATE_ERROR, code: SALE_CONSENT_CODE }, { status: 400 });
   }
 
   // Paywall pre-check only: the allowance is used when the post is actually written (see generation-job).
@@ -154,13 +167,15 @@ export async function POST(request: Request) {
     text_mode: textMode,
     include_contact_slide: body.include_contact_slide ?? profile.include_contact,
     include_tour: body.include_tour !== false,
-    mortgage: profile.role === "mortgage_broker" && body.mortgage?.enabled ? body.mortgage : null,
+    // The mortgage slide prints the price, so a Sold post without price consent doesn't get one.
+    mortgage: profile.role === "mortgage_broker" && body.mortgage?.enabled && priceAllowed(body.post_type, saleConsent) ? body.mortgage : null,
     template: body.template ?? "classic",
     aspect: body.aspect ?? null,
     sheet,
     sheet_id: null as string | null,
     sheet_headline: typeof body.sheet_headline === "string" ? body.sheet_headline.slice(0, 80) : "",
     sheet_photo_index: Number.isInteger(body.sheet_photo_index) ? body.sheet_photo_index! : null,
+    sale_consent: saleConsent,
   };
   if (target) {
     params.target_post_id = target.id;

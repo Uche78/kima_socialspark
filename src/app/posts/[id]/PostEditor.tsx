@@ -22,6 +22,8 @@ import { fullCaption } from "@/lib/caption";
 import { connectUrl, RECONNECT_HINT } from "@/lib/connection-expiry";
 import { isLowRes, uniqueSuffix } from "@/lib/media";
 import { ASPECT_LABELS, aspectOf, isStuck, statusLabel, textModeOf, textModeOptions, type TextMode, PLATFORM_SPECS, POST_TYPES, type Design, type Listing, type Post, type Profile, type Slide, type SocialAccount, type Aspect } from "@/lib/types";
+import { SaleConsentFields } from "@/components/SaleConsentFields";
+import { priceAllowed, saleConsentMissing } from "@/lib/sale-consent";
 
 type Props = {
   initialPost: Post;
@@ -72,6 +74,9 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest, r
   const [accountId, setAccountId] = useState(
     post.social_account_id ?? accounts.find((a) => a.platform === post.platform)?.id ?? "",
   );
+  // Sold posts made before the app asked: confirm written consent here before publishing or scheduling.
+  const [consentTick, setConsentTick] = useState(false);
+  const [priceTick, setPriceTick] = useState(false);
   const [scheduleAt, setScheduleAt] = useState(() =>
     localDateTimeValue(post.scheduled_at ? new Date(post.scheduled_at) : new Date(Date.now() + 24 * 3600_000)),
   );
@@ -196,6 +201,21 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest, r
       return "Duplicated. You're now editing the copy.";
     });
 
+  const onConfirmConsent = () =>
+    run("consent", async () => {
+      const res = await fetch(`/api/posts/${post.id}/sale-consent`, { method: "POST", body: JSON.stringify({ covers_price: consentTick && priceTick }) });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error ?? "Couldn't save your confirmation.");
+      setPost((p) => ({
+        ...p,
+        sale_consent: json.sale_consent,
+        ...(json.price_hidden ? { design: { ...p.design, show_price: false } } : {}),
+        ...(json.unscheduled ? { status: "draft" as const, scheduled_at: null } : {}),
+      }));
+      if (json.unscheduled) return "Confirmed. The price is off and the post is back to draft: schedule it again so its images update.";
+      return json.price_hidden ? "Confirmed. The price is off this post. You can publish or schedule it now." : "Confirmed. You can publish or schedule this post now.";
+    });
+
   const onCopy = () =>
     run("copy", async () => {
       await navigator.clipboard.writeText(caption);
@@ -298,6 +318,11 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest, r
     });
 
 
+  // Sold posts: written consent before publishing, and both parties' consent to show the price.
+  const consentMissing = saleConsentMissing(post);
+  // Not confirmed yet (older posts): the notice handles it, and confirming without price consent turns the price off.
+  const priceOk = consentMissing || priceAllowed(post.post_type, post.sale_consent);
+
   return (
     <div className="mx-auto max-w-6xl space-y-4 px-4">
       <div className="flex flex-wrap items-end justify-between gap-3">
@@ -344,6 +369,19 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest, r
 
       {message && (
         <div className={`rounded-lg p-3 text-sm ${message.kind === "ok" ? "bg-green-50 text-green-900" : "bg-red-50 text-red-800"}`}>{message.text}</div>
+      )}
+
+      {consentMissing && (
+        <div className="space-y-3 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+          <p>
+            <strong>Confirm written consent before publishing this Sold post.</strong> Advertising a sale needs the parties&apos; written consent.
+            Publishing and scheduling are paused until you confirm. You can still download it.
+          </p>
+          <SaleConsentFields consent={consentTick} onConsent={setConsentTick} price={priceTick} onPrice={setPriceTick} disabled={!!busy} className="border-amber-200 bg-white" />
+          <button className="btn-primary" onClick={onConfirmConsent} disabled={!!busy || !consentTick}>
+            {busy === "consent" ? "Saving…" : "Confirm"}
+          </button>
+        </div>
       )}
 
       {/* grid-cols-1 caps the single phone column at the screen width (minmax(0, 1fr)) */}
@@ -559,13 +597,14 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest, r
                     ["show_headshot", "Headshot (contact slide)", !!profile.headshot_path],
                     ["show_contact", "Name & contact details", true],
                     ["show_brokerage", "Brokerage name" + (profile.role === "mortgage_broker" ? " & licence #" : ""), true],
-                    ["show_price", "Price", listing.price != null],
+                    ["show_price", "Price", listing.price != null && priceOk],
                   ] as const
                 ).map(([key, label, available]) => (
                   <label key={key} className={`flex items-center gap-2 ${available ? "" : "opacity-50"}`}>
                     <input type="checkbox" disabled={!available} checked={post.design[key] && available} onChange={(e) => patchDesign({ [key]: e.target.checked })} />
                     {label}
                     {!available && key !== "show_price" && <Link href="/settings" className="text-xs underline">add in settings</Link>}
+                    {key === "show_price" && listing.price != null && !priceOk && <span className="text-xs">Needs both parties&apos; consent</span>}
                   </label>
                 ))}
               </div>
@@ -653,13 +692,13 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest, r
                 {platformAccounts.map((a) => <option key={a.id} value={a.id}>{a.account_name}</option>)}
               </select>
             </label>
-            <button className="btn-primary" onClick={onPublish} disabled={!!busy}>{busy === "publish" ? "Publishing… (large albums take up to a minute)" : "Publish now"}</button>
+            <button className="btn-primary" onClick={onPublish} disabled={!!busy || consentMissing} title={consentMissing ? "Confirm written consent first (above)" : undefined}>{busy === "publish" ? "Publishing… (large albums take up to a minute)" : "Publish now"}</button>
             <span className="px-1 pb-2 text-sm text-muted">or</span>
             <label className="block">
               <span className="label">Schedule for</span>
               <input type="datetime-local" className="input" value={scheduleAt} min={localDateTimeValue(new Date())} onChange={(e) => setScheduleAt(e.target.value)} />
             </label>
-            <button className="btn-secondary" onClick={onSchedule} disabled={!!busy}>{busy === "schedule" ? "Scheduling…" : post.status === "scheduled" ? "Reschedule" : "Schedule"}</button>
+            <button className="btn-secondary" onClick={onSchedule} disabled={!!busy || consentMissing} title={consentMissing ? "Confirm written consent first (above)" : undefined}>{busy === "schedule" ? "Scheduling…" : post.status === "scheduled" ? "Reschedule" : "Schedule"}</button>
             {post.status === "scheduled" && <button className="btn-ghost" onClick={onUnschedule} disabled={!!busy}>Cancel schedule</button>}
           </div>
           </>

@@ -68,7 +68,7 @@ When the request includes a virtual tour link, mention the tour once, as part of
 - **Open House**: get people through the door. State the date and time early if they're in the listing data (never invent them; if missing, invite people to DM for showing times). CTA: come by, save the post, or bring a friend who's looking.
 - **Price Reduced**: reframe the value. Lead with what the new price now gets you. Don't state or guess a previous price. CTA: book a showing now.
 - **Coming Soon**: exclusivity and early access. Tease the best features. CTA: DM to get details before it hits the market.
-- **Sold**: social proof for the agent, aimed at future sellers. Tell a short story of the result and what it shows about the agent's service or the local market. Don't state a sale price, terms, days on market or "over asking" unless they're in the data. CTA: "Thinking of selling? Let's talk about what your home could get." If the listing brokerage is not the user's brokerage, the user didn't make this sale and must not appear to: write it as a local market update ("Another Yorkville condo just sold…") about what the sale signals for nearby owners, with no celebration, no "we sold" and no implied involvement.
+- **Sold**: social proof for the agent, aimed at future sellers. Tell a short story of the result and what it shows about the agent's service or the local market. Never state any price (asking or sale), terms, days on market or "over asking", in the caption or on the slides, unless the request says "Sale price consent: given"; even then, use only figures in the data. CTA: "Thinking of selling? Let's talk about what your home could get." If the listing brokerage is not the user's brokerage, the user didn't make this sale and must not appear to: write it as a local market update ("Another Yorkville condo just sold…") about what the sale signals for nearby owners, with no celebration, no "we sold" and no implied involvement.
 - **Featured Property**: showcase the home and position the user as the local expert. CTA: DM or book a showing.
 
 ## Platform playbooks
@@ -114,7 +114,7 @@ The design already renders the post-type badge, price, address, beds/baths/size,
 - Text on photos (from the request):
   - "all": every slide carries on-image text as described above.
   - "cover": only the cover slide carries on-image text. Photo slides get an empty headline and subtext. Don't add a "details" slide.
-  - "none": no on-image text at all; the photos speak for themselves. Give every cover and photo slide an empty headline and subtext, and don't add a "details" slide. The caption must carry the essentials a viewer would otherwise read on the images: price, beds/baths, size, location and any open house time.
+  - "none": no on-image text at all; the photos speak for themselves. Give every cover and photo slide an empty headline and subtext, and don't add a "details" slide. The caption must carry the essentials a viewer would otherwise read on the images: price, beds/baths, size, location and any open house time (but a Sold post follows the Sold rule on prices).
   - With "cover" or "none", choose as many strong photos as the platform allows, in showing order.
 - Choose photo_index values by looking at the photos. Use each photo at most once, and pick the most striking, well-lit shots. Photos marked "low resolution" will look soft when enlarged: never use them for the cover, and avoid them elsewhere when a sharper photo shows the same thing. The details, mortgage and contact slides may reuse a photo as a subtle background or use null.`;
 
@@ -202,6 +202,8 @@ export type GenerateRequest = {
   /** Which slides get on-image text. */
   textMode: TextMode;
   mortgage: MortgageInputs | null;
+  /** Sold posts: both parties consented to showing the price. Other post types: always true. */
+  priceConsent?: boolean;
 };
 
 export async function generatePost(
@@ -232,7 +234,8 @@ export async function generatePost(
   content.push({
     type: "text",
     text: [
-      `<listing>\n${describeListing(listing)}\n</listing>`,
+      // A Sold post without price consent never sees the price, so it can't state it.
+      `<listing>\n${describeListing(postType === "sold" && !req.priceConsent ? { ...listing, price: null } : listing)}\n</listing>`,
       `<user_profile>\n${describeProfile(profile)}\n</user_profile>`,
       `<request>`,
       `Platform: ${spec.label} (caption limit ${spec.captionLimit} characters; ${spec.hashtagTarget}; max ${spec.maxSlides} slides)`,
@@ -244,6 +247,7 @@ export async function generatePost(
       mortgageLine,
       `Contact slide: ${req.includeContactSlide ? "requested" : "not requested"}`,
       `Virtual tour: ${req.tourUrl ?? "not included"}`,
+      ...(postType === "sold" ? [`Sale price consent: ${req.priceConsent ? "given (both the seller and the buyer agreed)" : "not given: state no price, terms, days on market or \"over asking\""}`] : []),
       `Text on photos: ${req.textMode}`,
       `Photos available: ${photos.length} (indices 0-${Math.max(photos.length - 1, 0)})`,
       `</request>`,

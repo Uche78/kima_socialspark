@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createAdminClient, getUser } from "@/lib/supabase/server";
 import { queuePublish } from "@/lib/publish/queue";
+import { SALE_CONSENT_CODE, SALE_CONSENT_PUBLISH_ERROR, saleConsentMissing } from "@/lib/sale-consent";
 import type { Post } from "@/lib/types";
 
 export const maxDuration = 60;
@@ -16,7 +17,11 @@ export async function POST(req: NextRequest, ctx: RouteContext<"/api/posts/[id]/
     override_schedule?: boolean;
   };
 
-  const { data: current } = await supabase.from("posts").select("status, scheduled_at").eq("id", id).maybeSingle();
+  const { data: current } = await supabase.from("posts").select("status, scheduled_at, post_type, sale_consent").eq("id", id).maybeSingle();
+  // Sold posts need confirmed written consent; checked before the post is claimed or changed.
+  if (current && saleConsentMissing(current)) {
+    return NextResponse.json({ error: SALE_CONSENT_PUBLISH_ERROR, code: SALE_CONSENT_CODE }, { status: 409 });
+  }
   if (current?.status === "scheduled" && !override_schedule) {
     return NextResponse.json(
       { error: "This post is scheduled. Cancel the schedule, or confirm publishing it now instead.", scheduled_at: current.scheduled_at },
