@@ -2,6 +2,7 @@
 // (public/hero/CREDITS.md). Slides render with the real SlideCanvas, so they always match the app.
 
 import type { Design, Language, Listing, Platform, PostType, Profile, Slide, TextMode } from "@/lib/types";
+import { priceAllowed } from "../../lib/sale-consent";
 
 export const DEMO_AGENT = {
   name: "Jordan Lee",
@@ -207,7 +208,8 @@ export const DEMO_POSTS: DemoPost[] = [
     template: "minimal",
     aspect: "portrait",
     textMode: "all",
-    slide: { kind: "cover", headline: "Sold in 6 Days", subtext: "Thank you to my Maple Lane clients", photo_index: 1 },
+    // No days on market, price or client thanks: a Sold post shows none of these without the parties' consent.
+    slide: { kind: "cover", headline: "Just Sold on Maple Lane", subtext: "Thinking of selling? Let's talk.", photo_index: 1 },
     caption: "Thinking of selling in Stouffville? Let's talk about what your home could get.",
     slides: 1,
     likes: 309,
@@ -241,7 +243,8 @@ export function demoDesign(p: DemoPost): Design {
     show_headshot: false,
     show_contact: true,
     show_brokerage: true,
-    show_price: true,
+    // Sold demo posts never show a price (no sale consent); every other demo post keeps it.
+    show_price: priceAllowed(p.postType, null),
   };
 }
 
@@ -339,7 +342,7 @@ const FRENCH: Record<string, { headline?: string; subtext?: string; caption: str
   "fb-maple": { headline: "Grande galerie couverte", subtext: "Visite libre cette fin de semaine, 14 h à 16 h", caption: "Venez voir la galerie dont tout le monde parle sur Maple Lane. Visite libre samedi et dimanche, de 14 h à 16 h." },
   "li-harbour": { headline: "Lumière des deux côtés", subtext: "Unité de coin avec vue sur le lac", caption: "Vous déménagez au bord de l'eau à Toronto ? Cette unité de coin met le PATH, la gare Union et le lac à quelques pas." },
   "ig-harbour": { headline: "Vue sur le lac, nouveau prix", subtext: "2 chambres, 2 salles de bain, 940 pi²", caption: "La même vue sur le lac, à meilleur prix. Glissez pour voir la cuisine →" },
-  "ig-maple": { headline: "Vendu en 6 jours", subtext: "Merci à mes clients de Maple Lane", caption: "Vous pensez vendre à Stouffville ? Parlons de ce que votre propriété pourrait obtenir." },
+  "ig-maple": { headline: "Vendu sur Maple Lane", subtext: "Vous pensez vendre ? Parlons-en.", caption: "Vous pensez vendre à Stouffville ? Parlons de ce que votre propriété pourrait obtenir." },
   "li-laurier": { headline: "Bientôt à Centretown", subtext: "Maison de ville moderne de trois étages", caption: "Un premier aperçu pour mon réseau avant que cette maison de ville de Centretown arrive sur le marché. Vous connaissez quelqu'un qui déménage à Ottawa ?" },
 };
 

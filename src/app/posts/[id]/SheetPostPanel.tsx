@@ -7,6 +7,7 @@ import { Chips } from "@/components/Chips";
 import { designForSheet, readSheetConfig, sheetPostSlides, type FeatureSheet } from "@/lib/feature-sheet";
 import { ASPECT_LABELS, PLATFORM_SPECS, type Aspect, type Platform, type Post, type PostFormat, type Profile } from "@/lib/types";
 import { reportPostWritten } from "@/components/MetaPixel";
+import { HashtagLimit } from "@/components/HashtagLimit";
 
 export type Destination = Platform | "story";
 
@@ -181,6 +182,7 @@ export function SheetPostPanel({ post, profile, sheet, remaining, locked, destin
               value={post.hashtags.map((h) => `#${h}`).join(" ")}
               onChange={(e) => onHashtagsChange(e.target.value.split(/\s+/).map((h) => h.replace(/^#/, "")).filter(Boolean))}
             />
+            <HashtagLimit post={post} />
           </label>
           {!locked && (
             <div className="flex flex-wrap items-center gap-3">

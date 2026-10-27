@@ -205,6 +205,8 @@ export const PLATFORM_SPECS: Record<
     maxSlides: number;
     captionLimit: number;
     hashtagTarget: string;
+    /** The platform's hard cap on hashtags in a caption (Instagram: 5); none when unset. */
+    maxHashtags?: number;
   }
 > = {
   instagram: {
@@ -216,7 +218,8 @@ export const PLATFORM_SPECS: Record<
     defaultTextMode: "all",
     maxSlides: 10, // Instagram's own carousel limit
     captionLimit: 2200,
-    hashtagTarget: "5-10 targeted hashtags",
+    hashtagTarget: "3-5 targeted hashtags (Instagram allows at most 5)",
+    maxHashtags: 5, // Instagram's cap since December 2025, counting every hashtag in the caption
   },
   facebook: {
     label: "Facebook",

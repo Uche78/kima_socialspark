@@ -24,6 +24,7 @@ import { isLowRes, uniqueSuffix } from "@/lib/media";
 import { ASPECT_LABELS, aspectOf, isStuck, statusLabel, textModeOf, textModeOptions, type TextMode, PLATFORM_SPECS, POST_TYPES, type Design, type Listing, type Post, type Profile, type Slide, type SocialAccount, type Aspect } from "@/lib/types";
 import { SaleConsentFields } from "@/components/SaleConsentFields";
 import { priceAllowed, saleConsentMissing } from "@/lib/sale-consent";
+import { HashtagLimit } from "@/components/HashtagLimit";
 
 type Props = {
   initialPost: Post;
@@ -488,6 +489,7 @@ export function PostEditor({ initialPost, listing, profile, accounts, isGuest, r
                   value={post.hashtags.map((h) => `#${h}`).join(" ")}
                   onChange={(e) => patch({ hashtags: e.target.value.split(/\s+/).map((h) => h.replace(/^#/, "")).filter(Boolean) })}
                 />
+                <HashtagLimit post={post} />
               </label>
             </div>
           )}

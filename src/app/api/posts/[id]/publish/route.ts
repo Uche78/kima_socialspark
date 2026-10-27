@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createAdminClient, getUser } from "@/lib/supabase/server";
 import { queuePublish } from "@/lib/publish/queue";
 import { SALE_CONSENT_CODE, SALE_CONSENT_PUBLISH_ERROR, saleConsentMissing } from "@/lib/sale-consent";
+import { TOO_MANY_HASHTAGS_CODE, TOO_MANY_HASHTAGS_ERROR, tooManyHashtags } from "@/lib/caption";
 import type { Post } from "@/lib/types";
 
 export const maxDuration = 60;
@@ -17,10 +18,14 @@ export async function POST(req: NextRequest, ctx: RouteContext<"/api/posts/[id]/
     override_schedule?: boolean;
   };
 
-  const { data: current } = await supabase.from("posts").select("status, scheduled_at, post_type, sale_consent").eq("id", id).maybeSingle();
+  const { data: current } = await supabase.from("posts").select("status, scheduled_at, post_type, sale_consent, platform, caption, hashtags").eq("id", id).maybeSingle();
   // Sold posts need confirmed written consent; checked before the post is claimed or changed.
   if (current && saleConsentMissing(current)) {
     return NextResponse.json({ error: SALE_CONSENT_PUBLISH_ERROR, code: SALE_CONSENT_CODE }, { status: 409 });
+  }
+  // Instagram's 5-hashtag cap: the user chooses which to remove, so refuse rather than trim.
+  if (current && tooManyHashtags(current)) {
+    return NextResponse.json({ error: TOO_MANY_HASHTAGS_ERROR, code: TOO_MANY_HASHTAGS_CODE }, { status: 409 });
   }
   if (current?.status === "scheduled" && !override_schedule) {
     return NextResponse.json(

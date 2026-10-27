@@ -1,5 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { fullCaption } from "../caption";
+import { fullCaption, TOO_MANY_HASHTAGS_ERROR, tooManyHashtags } from "../caption";
 import { publicMediaUrl } from "../photos";
 import type { Post } from "../types";
 import { SALE_CONSENT_PUBLISH_ERROR, saleConsentMissing } from "../sale-consent";
@@ -18,6 +18,8 @@ export async function publishPost(admin: SupabaseClient, post: Post) {
   try {
     // Every publish path ends here, including scheduled posts: a Sold post without confirmed consent fails.
     if (saleConsentMissing(post)) throw new Error(SALE_CONSENT_PUBLISH_ERROR);
+    // Instagram's 5-hashtag cap (scheduled posts too): fail with the reason instead of trimming the user's tags.
+    if (tooManyHashtags(post)) throw new Error(TOO_MANY_HASHTAGS_ERROR);
     if (!post.social_account_id) throw new Error("No social account selected.");
     if (!post.image_paths.length) throw new Error("Post images haven't been rendered yet.");
 

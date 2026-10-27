@@ -4,6 +4,7 @@
 import { z } from "zod";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { anthropic, ClaudeRefusalError, MODEL } from "./claude";
+import { capHashtags } from "./caption";
 import { usageOf, type UsageMeter } from "./ai-usage";
 import { describeListing, describeProfile } from "./generate";
 import { brokerageLine, type SheetConfig } from "./feature-sheet";
@@ -35,7 +36,7 @@ Rules (important, mortgage advertising is regulated):
 
 Language: "en" = English; "fr" = Québec French as a Québec mortgage broker writes it (e.g. "préapprobation", "mise de fonds"), not France French; "bilingual" = English first, then the French version after a blank line and "— FR —". Headlines in bilingual mode: English only, max ~5 words.
 
-Platform style: Instagram = short hook in the first line, a few line breaks, 5-10 local and mortgage hashtags. Facebook = conversational and local, 0-3 hashtags. LinkedIn = professional, written for buyers and referral partners (realtors, relocating professionals), 3-5 hashtags.`;
+Platform style: Instagram = short hook in the first line, a few line breaks, 3-5 local and mortgage hashtags (Instagram allows at most 5), only in the hashtags list, never in the caption text. Facebook = conversational and local, 0-3 hashtags. LinkedIn = professional, written for buyers and referral partners (realtors, relocating professionals), 3-5 hashtags.`;
 
 export type SheetCopy = { caption: string; hashtags: string[]; slides: Slide[] };
 
@@ -93,7 +94,7 @@ export async function generateFeatureSheetCopy(req: {
 
   return {
     caption: `${out.caption.trim()}\n\n${complianceLine(profile, language)}`,
-    hashtags: out.hashtags.map((h) => h.replace(/^#/, "").replace(/\s+/g, "")).filter(Boolean),
+    hashtags: capHashtags(out.hashtags, spec.maxHashtags),
     slides,
   };
 }

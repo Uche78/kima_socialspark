@@ -2,6 +2,7 @@ import { z } from "zod";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import type Anthropic from "@anthropic-ai/sdk";
 import { anthropic, ClaudeRefusalError, MODEL } from "./claude";
+import { capHashtags } from "./caption";
 import { usageOf, type UsageMeter } from "./ai-usage";
 export { MAX_FOCUS } from "./focus";
 import { estimateMortgage, formatCurrency } from "./mortgage";
@@ -73,7 +74,7 @@ When the request includes a virtual tour link, mention the tour once, as part of
 
 ## Platform playbooks
 
-- **Instagram**: visual-first and mobile-first. The first ~125 characters show before "more", so the hook must land there. For carousels, give a reason to swipe ("Swipe to see the kitchen →"). Prefer keyword-DM or comment CTAs; "Save this for later" also helps reach. Use emojis only as the user's style allows. Hashtags: 5-10, mixing neighbourhood or city tags, property-type tags and a few niche real estate tags. No generic spam tags like #love or #instagood.
+- **Instagram**: visual-first and mobile-first. The first ~125 characters show before "more", so the hook must land there. For carousels, give a reason to swipe ("Swipe to see the kitchen →"). Prefer keyword-DM or comment CTAs; "Save this for later" also helps reach. Use emojis only as the user's style allows. Hashtags: 3-5 (Instagram allows at most 5): the city or neighbourhood, the property type and the post type, plus the agent's own tag if their style uses one. Put them only in the hashtags list, never in the caption text. No generic spam tags like #love or #instagood.
 - **Facebook**: local and conversational; the audience skews toward local homeowners and their networks. A little storytelling and neighbourhood context works well, as does a question that invites comments. Direct CTA: message, call or book a showing. Hashtags: 0-3.
 - **LinkedIn**: the readers are professionals, relocating employees, investors and referral partners, not just buyers. Lead with an insight, the market or buyer context the listing reflects, or the user's expertise, drawn only from the data provided (no invented statistics). Professional and warm, minimal emoji, no hard sell. CTA: a soft referral ask ("Know someone relocating to Toronto? I'd be glad to help") or an invitation to connect. Hashtags: 3-5 professional ones.
 
@@ -283,7 +284,7 @@ export async function generatePost(
   return {
     focusedOn: out.focused_on.map((f) => f.trim()).filter(Boolean).slice(0, 4),
     caption: withTour(out.caption.trim(), req.tourUrl, platform, language),
-    hashtags: out.hashtags.map((h) => h.replace(/^#/, "").replace(/\s+/g, "")).filter(Boolean),
+    hashtags: capHashtags(out.hashtags, spec.maxHashtags),
     slides,
   };
 }
