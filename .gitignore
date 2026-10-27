@@ -47,3 +47,4 @@ next-env.d.ts
 # SocialSpark ad video productions (media; see .claude/skills/socialspark-ad-video)
 /ad-videos/
 /ad-creatives/
+/marketing/seo/data/

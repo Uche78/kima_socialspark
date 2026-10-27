@@ -1,0 +1,38 @@
+{
+  "site_url": "https://socialspark.usekima.com",
+  "gsc_property": "https://socialspark.usekima.com/",
+  "ads_customer_id": "",
+  "ads_login_customer_id": "",
+  "gum_bin": "gum",
+  "geo_target_constants": ["2124"],
+  "languages": { "en": "1000", "fr": "1002" },
+  "publish_mode": "review",
+  "max_new_guides_per_day": 1,
+  "min_impressions": 30,
+  "min_monthly_searches": 20,
+  "relevant_terms": [
+    "realtor", "realtors", "real estate", "agent", "agents", "listing", "listings", "just listed", "open house", "price reduced",
+    "coming soon", "sold", "property", "home", "house", "condo", "mortgage broker", "mortgage brokers", "feature sheet", "brokerage",
+    "instagram", "facebook", "linkedin", "social media", "post", "posts", "caption", "captions", "hashtag", "hashtags", "carousel",
+    "marketing", "crea", "reco", "bcfsa", "oaciq", "immobilier", "courtier", "inscription", "visite libre", "publication"
+  ],
+  "exclude_terms": ["job", "jobs", "salary", "course", "exam", "licence exam", "license exam", "near me", "for sale", "rent", "rental", "login", "zillow", "realtor.ca login"],
+  "seed_keywords": [
+    "just listed post ideas",
+    "real estate instagram post ideas",
+    "open house social media post",
+    "price reduced real estate post",
+    "sold post real estate",
+    "real estate facebook post ideas",
+    "realtor linkedin post ideas",
+    "real estate hashtags canada",
+    "real estate captions for instagram",
+    "coming soon real estate post",
+    "real estate carousel post",
+    "how to market a listing on social media",
+    "mortgage broker social media post ideas",
+    "mortgage feature sheet",
+    "realtor social media rules ontario",
+    "publication immobilière instagram"
+  ]
+}

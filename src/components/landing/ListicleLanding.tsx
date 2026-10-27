@@ -15,7 +15,7 @@ const NARROW = "mx-auto w-full min-w-0 max-w-6xl px-4";
 const EYEBROW = "text-[11px] font-semibold uppercase tracking-[0.2em] text-[#141414]/70 sm:text-xs";
 const H2 = "font-[family-name:var(--font-heading)] text-3xl font-medium leading-tight tracking-[-0.02em] text-[#141414] sm:text-5xl";
 
-const SCREENS = {
+export const SCREENS = {
   1: { src: "/landing/step-1-import-v3.webp", width: 722, height: 1060, alt: { en: "SocialSpark listing page showing imported photos, price and property details", fr: "Page d'inscription dans SocialSpark avec les photos, le prix et les détails importés" } },
   2: { src: "/landing/step-2-create-v3.webp", width: 1400, height: 1052, alt: { en: "Create a post panel with platform, format, language and post type options", fr: "Panneau de création avec la plateforme, le format, la langue et le type de publication" } },
   3: { src: "/landing/step-3-publish-v3.webp", width: 1400, height: 1050, alt: { en: "Post editor with a branded Instagram slide, caption and Publish now and Schedule buttons", fr: "Éditeur avec une image Instagram à votre image, le texte et les boutons Publish now et Schedule" } },

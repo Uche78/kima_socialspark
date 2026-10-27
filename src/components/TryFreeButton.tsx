@@ -5,7 +5,7 @@ import { LANDING_TEXT, localeOfPath } from "@/lib/landing-i18n";
 
 /**
  * Header call to action for signed-out visitors. On the landing pages (including the persona pages at
- * /for/<slug>) it jumps to the listing link field in the hero and focuses it; anywhere else it goes home.
+ * /for/<slug>) and guides it jumps to the page's first listing link field and focuses it; anywhere else it goes home.
  */
 export function TryFreeButton({ className }: { className: string }) {
   const pathname = usePathname();
@@ -16,7 +16,7 @@ export function TryFreeButton({ className }: { className: string }) {
       type="button"
       className={className}
       onClick={() => {
-        const landing = pathname === "/" || pathname === "/mortgage-brokers" || pathname.startsWith("/for/");
+        const landing = pathname === "/" || pathname === "/mortgage-brokers" || pathname.startsWith("/for/") || pathname.startsWith("/guides/");
         const input = landing ? document.querySelector<HTMLInputElement>('main input[type="url"]') : null;
         if (!input) return router.push("/");
         input.scrollIntoView({ behavior: "smooth", block: "center" });

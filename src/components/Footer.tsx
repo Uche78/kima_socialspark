@@ -10,6 +10,7 @@ const COLUMNS: { title: string; links: { label: string; href: string; external?:
       { label: "For realtors", href: "/" },
       { label: "For mortgage brokers", href: "/mortgage-brokers" },
       { label: "Pricing", href: "/pricing" },
+      { label: "Guides", href: "/guides" },
     ],
   },
   {

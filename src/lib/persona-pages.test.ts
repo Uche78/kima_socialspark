@@ -1,12 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { DEMO_POSTS } from "../components/hero/demo-posts";
+import { HYPE } from "./copy-rules";
 import { FRENCH_PERSONA_SLUGS, money } from "./landing-i18n";
 import { PERSONA_PAGES, PERSONA_PLAN, type PersonaPage } from "./persona-pages";
 import { PAID_PLANS } from "./plans";
 
 // The copy rules from .claude/skills/socialspark-landing-pages, checked for every persona page.
-
-const HYPE = /\b(game[- ]chang\w*|supercharg\w*|effortless\w*|unlock\w*|elevat(e|es|ed|ing)|seamless\w*|revolutionar\w*|cutting[- ]edge|next[- ]level|world[- ]class|best[- ]in[- ]class)\b|introducing|accept no substitutes|don't settle|the #1/i;
 
 /** Every string a visitor reads on the page. */
 function copy(p: PersonaPage) {
