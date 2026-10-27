@@ -11,6 +11,7 @@ and marketing/seo/config.json. Writes opportunities.json next to the data, and k
 """
 import datetime as dt
 import json
+import os
 import re
 import subprocess
 import sys
@@ -276,7 +277,10 @@ def main_checkout():
         return ROOT
 
 
-IDEAS_MD = main_checkout() / CONFIG.get("product_ideas_file", "marketing/seo/product-ideas.md")
+# One list for every run: an absolute path (the engine clone, by default) is used as is, so the morning run and
+# runs from the user's checkout update the same file; a relative path is resolved in the main checkout.
+_ideas = Path(os.path.expanduser(CONFIG.get("product_ideas_file", "marketing/seo/product-ideas.md")))
+IDEAS_MD = _ideas if _ideas.is_absolute() else main_checkout() / _ideas
 IDEAS_JSON = IDEAS_MD.with_suffix(".json")
 
 

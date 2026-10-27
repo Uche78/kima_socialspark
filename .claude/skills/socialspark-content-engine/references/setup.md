@@ -58,9 +58,23 @@ A new site has few impressions for the first weeks. The analyser then leans on K
 
 The run uses gum's local credentials, so it runs on this Mac: it needs the Mac on and the user logged in (a run missed while asleep starts on wake; one missed while shut down is skipped). The project doesn't need to be open.
 
-`scripts/daily.sh` is the morning run. It works in its own git worktree (`~/socialspark-content-engine`, created on first run, reset to local `main` each morning, sharing the main checkout's `node_modules` and `.env.local`), so it never touches the checkout the user works in. It runs `claude -p` in `dontAsk` mode with a fixed tool allowlist (the engine's scripts, `gum read`, tests, lint, the render check on port 3199, commits on `guides/*` branches) and `git push` disallowed, then posts a macOS notification with the run's one-line summary. The full report is in `~/socialspark-content-engine/marketing/seo/data/run-<date>.log`.
+**Why a separate clone.** macOS privacy protection doesn't let launchd jobs read `~/Desktop`, where the project lives, so the job works in its own clone of the GitHub repo at `~/socialspark-content-engine`. The first attempt, a git worktree, failed: a worktree's git data stays in the main checkout.
 
-The worktree runs from local `main`, so skill changes take effect once they're committed there.
+`scripts/daily.sh` is the morning run:
+- Runs from a temporary copy of itself (the reset rewrites the file), `cd`s into the clone, and puts Node (from `.nvmrc`), gum and claude on the PATH.
+- `git fetch`, then resets to `origin/main` and cleans the tree, keeping the gitignored data folder, the product ideas list, `.env.local` and `node_modules`. It reinstalls dependencies only when a lockfile changes. Skill changes take effect once they're pushed to `main`.
+- Runs `claude -p` in `dontAsk` mode with a fixed tool allowlist: the engine's scripts, `gum read`, tests, lint, the render check on port 3199, commits on `guides/*` branches, and `git push -u origin guides/*`. Deny rules block pushing `main` or `HEAD`, refspecs (`guides/x:main`), force, delete, mirror and all.
+- Posts a macOS notification with the run's one-line summary. The full report is in `~/socialspark-content-engine/marketing/seo/data/run-<date>.log`; launchd's own output is in `~/Library/Logs/socialspark-content.log`.
+
+**Reviewing a guide:** each guide arrives as a pushed `guides/<slug>` branch with a link like `https://github.com/Uche78/kima_socialspark/compare/main...guides/<slug>?expand=1`. Open a pull request there and merge it to publish (Netlify deploys `main`), or pull it into the main checkout: `git fetch origin && git merge origin/guides/<slug>`. If Netlify branch deploys are on, each pushed branch also gets a preview URL.
+
+**Setting it up on a new machine:**
+```bash
+git clone https://github.com/Uche78/kima_socialspark.git ~/socialspark-content-engine
+cd ~/socialspark-content-engine && npm ci && (cd .claude/skills/socialspark-ad-video/scripts && npm install)
+cp ~/Desktop/kima_socialspark/.env.local .   # the render check needs the Supabase keys
+```
+git must be able to push to GitHub without a prompt (the repo uses the `store` credential helper).
 
 launchd job, `~/Library/LaunchAgents/com.usekima.socialspark-content.plist`:
 
@@ -73,7 +87,7 @@ launchd job, `~/Library/LaunchAgents/com.usekima.socialspark-content.plist`:
   <key>ProgramArguments</key>
   <array>
     <string>/bin/zsh</string>
-    <string>/Users/uche/Desktop/kima_socialspark/.claude/skills/socialspark-content-engine/scripts/daily.sh</string>
+    <string>/Users/uche/socialspark-content-engine/.claude/skills/socialspark-content-engine/scripts/daily.sh</string>
   </array>
   <key>StartCalendarInterval</key><dict><key>Hour</key><integer>7</integer><key>Minute</key><integer>0</integer></dict>
   <key>StandardOutPath</key><string>/Users/uche/Library/Logs/socialspark-content.log</string>
@@ -85,6 +99,7 @@ launchd job, `~/Library/LaunchAgents/com.usekima.socialspark-content.plist`:
 - Turn on: `launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.usekima.socialspark-content.plist`
 - Run now: `launchctl kickstart gui/$(id -u)/com.usekima.socialspark-content`
 - Turn off: `launchctl bootout gui/$(id -u)/com.usekima.socialspark-content`
-- Review a guide: `git checkout guides/<slug>` in the main checkout (branches are shared between worktrees).
 
-In `review` mode every run leaves a `guides/<slug>` branch to approve. Switch `publish_mode` to `auto` only when the guides have been consistently good without edits (and add `git push` to the allowlist in `daily.sh` then).
+Test changes with launchd itself (`kickstart`), not from a terminal or a Claude session: those already have Desktop access, so they hide the permission problem.
+
+Switch `publish_mode` to `auto` only when the guides have been consistently good without edits (and allow pushing `main` in `daily.sh` then).

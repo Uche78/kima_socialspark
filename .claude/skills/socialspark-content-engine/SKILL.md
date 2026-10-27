@@ -55,7 +55,7 @@ Four actions come back, scored by missed clicks (impressions × (1 − CTR), wei
 | `title` | Page 1 but CTR under a third of the usual for that position | Rewrite `meta.title` / `meta.description` to match the searcher's intent. For `/`, `/pricing` or `/for/` pages, propose the change to the user, don't make it |
 | (nothing) | No row clears the thresholds | Publish nothing. Log "no action". A gap day is better than a filler guide |
 
-The same run keeps the **product ideas list** (`marketing/seo/product-ideas.md` in the main checkout, out of git): real estate marketing searches SocialSpark doesn't serve (postcards, flyers, door hangers, virtual staging, video…, from `product_gap_terms`), grouped by product with Canadian and US volumes, first and last seen. `product_probe_keywords` are checked daily for this list only; they never seed guide ideas. A gap phrase is never a guide topic: a guide on flyers would rank for flyers and convert no one to a social post tool. Report new ideas in the hand-off; whether to build one is the user's call, with `socialspark-personas` for fit.
+The same run keeps the **product ideas list** (`product_ideas_file` in the config: `~/socialspark-content-engine/marketing/seo/product-ideas.md`, in the engine clone, out of git): real estate marketing searches SocialSpark doesn't serve (postcards, flyers, door hangers, virtual staging, video…, from `product_gap_terms`), grouped by product with Canadian and US volumes, first and last seen. `product_probe_keywords` are checked daily for this list only; they never seed guide ideas. A gap phrase is never a guide topic: a guide on flyers would rank for flyers and convert no one to a social post tool. Report new ideas in the hand-off; whether to build one is the user's call, with `socialspark-personas` for fit.
 
 ### Step 3: Choose one
 Take the top row unless something below beats it on **fit**. Fit means the searcher's problem is one SocialSpark solves, or a step on the way to it: listing posts, captions, platforms, open houses, the rules for realtor advertising, mortgage feature sheets. "Realtor salary" has volume and zero fit. Use the clusters in [references/topic-map.md](references/topic-map.md). Before writing, check cannibalisation: if an existing guide is ≥50% the same question, refresh it instead of writing a new one. Say in one line what you picked and why (the numbers).
@@ -89,7 +89,7 @@ This lists pages that already earn impressions for related queries. Then:
 4. Re-read it as the reader: does the first screen answer the question? Would a busy agent copy something from it today? Anything a competitor's page says that this one should? Cut any sentence that's there to fill space.
 
 ### Step 7: Publish (per `publish_mode` in the config)
-- **`review`** (default): create a branch `guides/<slug>`, commit the guide, the link edits and the log entry, and stop. Tell the user what to review. Don't push unless they say so.
+- **`review`** (default): create a branch `guides/<slug>`, commit the guide, the link edits and the log entry. In the **engine clone** (the morning run, `~/socialspark-content-engine`), push that branch with `git push -u origin guides/<slug>` and give the review link `https://github.com/Uche78/kima_socialspark/compare/main...guides/<slug>?expand=1`; the user merges it to publish. Never push `main` or any other branch from there. In the **user's checkout**, don't push unless they say so; if another agent has uncommitted work there, do the run in the engine clone instead.
 - **`auto`**: only when the user has set it in the config themselves. Commit to `main` and push (Netlify deploys). After the deploy is live, resubmit the sitemap:
   ```bash
   gum write searchconsole.sitemaps.submit --allow-write --args '{"siteUrl":"https://socialspark.usekima.com/","feedpath":"https://socialspark.usekima.com/sitemap.xml"}'
@@ -120,7 +120,7 @@ A guide earns its place when readers paste a listing link. The template already 
 
 The run needs gum's local credentials, so it runs on the user's machine, not in a cloud routine. Options, in order:
 1. In an open Claude Code session: `/loop 24h /socialspark-content-engine daily run`.
-2. Unattended: a launchd job running `claude -p "/socialspark-content-engine daily run" --permission-mode acceptEdits` at 7:00 in the repo. Template and steps in [references/setup.md](references/setup.md). Set it up only when the user asks. In `review` mode it leaves a branch per day to approve.
+2. Unattended (set up): launchd runs `scripts/daily.sh` at 7:00 in the engine clone `~/socialspark-content-engine` (outside Desktop, which macOS blocks for launchd jobs), reset to `origin/main` each morning, with a fixed tool allowlist and only `guides/*` pushes allowed. In `review` mode each guide arrives as a pushed branch with a GitHub compare link. Details, controls and the plist in [references/setup.md](references/setup.md).
 
 ## 5. Hand-off
 
