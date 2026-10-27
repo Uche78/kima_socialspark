@@ -33,7 +33,7 @@ gum's Search Console calls take path parameters (`siteUrl`) at the top level and
 
 ## 3. Keyword Planner (Google Ads API)
 
-Keyword Planner needs a Google Ads account (no spend required) and a **developer token** (Google Ads → Tools → API Center; an Explorer or Basic access token is enough for keyword planning).
+Keyword Planner needs a **manager account** with a **developer token** (https://ads.google.com/aw/apicenter) and a regular client account under it whose setup is finished (billing added, campaign paused): an unfinished account is rejected as "not yet enabled". The token needs **Basic access**: Explorer is granted in minutes but rejects KeywordPlanIdeaService ("not allowed for use with explorer access"). Access levels are now requested in Google Cloud (APIs & Services → Google Ads API → Access levels → Manage), not through the API Center form, which leads to the App Conversion Tracking application. Basic is reviewed by hand; the design document Google asks for is an internal, read-only Keyword Planner tool with fewer than 10 calls a day.
 
 ```bash
 printf '%s' "$GOOGLE_ADS_DEVELOPER_TOKEN" | gum auth use-ads-developer-token --stdin
@@ -56,7 +56,13 @@ A new site has few impressions for the first weeks. The analyser then leans on K
 
 ## 5. Daily schedule (only when the user asks)
 
-The run uses gum's local credentials, so it runs on this Mac. Save as `~/Library/LaunchAgents/com.usekima.socialspark-content.plist`, replacing the paths, then `launchctl load ~/Library/LaunchAgents/com.usekima.socialspark-content.plist`:
+The run uses gum's local credentials, so it runs on this Mac: it needs the Mac on and the user logged in (a run missed while asleep starts on wake; one missed while shut down is skipped). The project doesn't need to be open.
+
+`scripts/daily.sh` is the morning run. It works in its own git worktree (`~/socialspark-content-engine`, created on first run, reset to local `main` each morning, sharing the main checkout's `node_modules` and `.env.local`), so it never touches the checkout the user works in. It runs `claude -p` in `dontAsk` mode with a fixed tool allowlist (the engine's scripts, `gum read`, tests, lint, the render check on port 3199, commits on `guides/*` branches) and `git push` disallowed, then posts a macOS notification with the run's one-line summary. The full report is in `~/socialspark-content-engine/marketing/seo/data/run-<date>.log`.
+
+The worktree runs from local `main`, so skill changes take effect once they're committed there.
+
+launchd job, `~/Library/LaunchAgents/com.usekima.socialspark-content.plist`:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -64,15 +70,21 @@ The run uses gum's local credentials, so it runs on this Mac. Save as `~/Library
 <plist version="1.0">
 <dict>
   <key>Label</key><string>com.usekima.socialspark-content</string>
-  <key>WorkingDirectory</key><string>/Users/uche/Desktop/kima_socialspark</string>
   <key>ProgramArguments</key>
   <array>
-    <string>/bin/zsh</string><string>-lc</string>
-    <string>claude -p "/socialspark-content-engine daily run" --permission-mode acceptEdits >> marketing/seo/data/run.log 2>&amp;1</string>
+    <string>/bin/zsh</string>
+    <string>/Users/uche/Desktop/kima_socialspark/.claude/skills/socialspark-content-engine/scripts/daily.sh</string>
   </array>
   <key>StartCalendarInterval</key><dict><key>Hour</key><integer>7</integer><key>Minute</key><integer>0</integer></dict>
+  <key>StandardOutPath</key><string>/Users/uche/Library/Logs/socialspark-content.log</string>
+  <key>StandardErrorPath</key><string>/Users/uche/Library/Logs/socialspark-content.log</string>
 </dict>
 </plist>
 ```
 
-In `review` mode every run leaves a `guides/<slug>` branch to approve. Switch `publish_mode` to `auto` only when the guides have been consistently good without edits.
+- Turn on: `launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.usekima.socialspark-content.plist`
+- Run now: `launchctl kickstart gui/$(id -u)/com.usekima.socialspark-content`
+- Turn off: `launchctl bootout gui/$(id -u)/com.usekima.socialspark-content`
+- Review a guide: `git checkout guides/<slug>` in the main checkout (branches are shared between worktrees).
+
+In `review` mode every run leaves a `guides/<slug>` branch to approve. Switch `publish_mode` to `auto` only when the guides have been consistently good without edits (and add `git push` to the allowlist in `daily.sh` then).
