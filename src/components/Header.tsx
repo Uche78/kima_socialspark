@@ -40,13 +40,13 @@ export async function Header() {
             <LoginLink
               signedOut={!user}
               // Outlined pill everywhere: navy on white pages, off-white over the home page photo.
-              className="btn ml-2 h-10 whitespace-nowrap rounded-full border border-brand bg-transparent px-4 text-brand hover:bg-brand/5 sm:px-5 group-data-[overlay=true]:border-[#f3f1ec]/80 group-data-[overlay=true]:text-[#f3f1ec] group-data-[overlay=true]:hover:bg-white/10"
+              className="btn ml-2 h-10 whitespace-nowrap rounded-full border border-brand bg-transparent px-4 text-brand hover:bg-brand/5 max-[359px]:ml-1 max-[359px]:px-3 max-[359px]:text-[13px] sm:px-5 group-data-[overlay=true]:border-[#f3f1ec]/80 group-data-[overlay=true]:text-[#f3f1ec] group-data-[overlay=true]:hover:bg-white/10"
             >
               {user ? "Save your work" : "Sign in"}
             </LoginLink>
           ) : null}
-          {/* Signed-out visitors: no menu, just a clear call to action. */}
-          {!user && <TryFreeButton className="btn ml-2 h-10 whitespace-nowrap rounded-full bg-[#141414] px-4 text-white hover:bg-black sm:px-5" />}
+          {/* Signed-out visitors: no menu, just a clear call to action. Under 360px the two buttons tighten to fit beside the logo. */}
+          {!user && <TryFreeButton className="btn ml-2 h-10 whitespace-nowrap rounded-full bg-[#141414] px-4 text-white hover:bg-black max-[359px]:ml-1 max-[359px]:px-3 max-[359px]:text-[13px] sm:px-5" />}
           {!guest && <AccountMenu name={profile?.full_name ?? null} email={user.email ?? null} avatarUrl={mediaUrl(profile?.headshot_path)} />}
           <MobileNav
             items={

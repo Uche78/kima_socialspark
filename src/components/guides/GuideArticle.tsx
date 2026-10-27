@@ -191,23 +191,42 @@ function Block({ block }: { block: GuideBlock }) {
       );
     case "table":
       return (
-        <div className="overflow-x-auto rounded-2xl bg-white ring-1 ring-black/5">
-          <table className="w-full min-w-[520px] text-left text-[15px]">
-            <caption className="px-5 pt-4 text-left text-sm text-[#141414]/60">{block.caption}</caption>
-            <thead>
-              <tr className="border-b border-black/10">
-                {block.head.map((h) => <th key={h} scope="col" className="px-5 py-3 font-semibold text-[#141414]">{h}</th>)}
-              </tr>
-            </thead>
-            <tbody>
-              {block.rows.map((r, i) => (
-                <tr key={i} className="border-b border-black/5 last:border-0 align-top">
-                  {r.map((c, j) => (j === 0 ? <th key={j} scope="row" className="px-5 py-3 font-medium text-[#141414]"><RichText text={c} /></th> : <td key={j} className="px-5 py-3 text-[#141414]/75"><RichText text={c} /></td>))}
+        <>
+          {/* Phones: one card per row, each value under its column name, so nothing scrolls sideways. */}
+          <figure className="space-y-3 sm:hidden">
+            <figcaption className="text-sm text-[#141414]/60">{block.caption}</figcaption>
+            {block.rows.map((r, i) => (
+              <div key={i} className="rounded-2xl bg-white px-4 py-4 ring-1 ring-black/5">
+                <p className="font-semibold text-[#141414]"><RichText text={r[0]} /></p>
+                <dl className="mt-2 space-y-2">
+                  {r.slice(1).map((c, j) => (
+                    <div key={j}>
+                      <dt className="text-[11px] font-semibold uppercase tracking-[0.15em] text-[#141414]/55">{block.head[j + 1]}</dt>
+                      <dd className="text-[15px] leading-relaxed text-[#141414]/80"><RichText text={c} /></dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            ))}
+          </figure>
+          <div className="hidden overflow-x-auto rounded-2xl bg-white ring-1 ring-black/5 sm:block">
+            <table className="w-full text-left text-[15px]">
+              <caption className="px-5 pt-4 text-left text-sm text-[#141414]/60">{block.caption}</caption>
+              <thead>
+                <tr className="border-b border-black/10">
+                  {block.head.map((h) => <th key={h} scope="col" className="px-5 py-3 font-semibold text-[#141414]">{h}</th>)}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {block.rows.map((r, i) => (
+                  <tr key={i} className="border-b border-black/5 last:border-0 align-top">
+                    {r.map((c, j) => (j === 0 ? <th key={j} scope="row" className="px-5 py-3 font-medium text-[#141414]"><RichText text={c} /></th> : <td key={j} className="px-5 py-3 text-[#141414]/75"><RichText text={c} /></td>))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
       );
     case "tip":
       return (
