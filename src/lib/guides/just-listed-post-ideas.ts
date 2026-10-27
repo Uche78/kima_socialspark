@@ -16,7 +16,7 @@ export const justListedPostIdeas: Guide = {
   answer:
     "A good Just Listed post leads with the home's single strongest feature, shows the price, address and key details on the image, and ends the caption with one clear ask: book a showing or send a message. Put your name and brokerage on every post. Then post the listing more than once, each time with a different angle: the room that sells it, the floor plan, the street, the open house.",
   published: "2026-10-26",
-  updated: "2026-10-26",
+  updated: "2026-10-27",
   sections: [
     {
       heading: "What a Just Listed post has to do",
@@ -81,7 +81,7 @@ export const justListedPostIdeas: Guide = {
         },
         {
           type: "p",
-          text: "Skip the words every listing uses: stunning, nestled, boasts, must-see, dream home, turnkey, won't last long. Buyers skim past them. A specific fact does more: \"new roof in 2024\" beats \"meticulously maintained\".",
+          text: "Skip the words every listing uses: stunning, nestled, boasts, must-see, dream home, turnkey, won't last long. Buyers skim past them. A specific fact does more: \"new roof in 2024\" beats \"meticulously maintained\". For Open House, Price Reduced, Coming Soon and Sold captions too, see [real estate captions for Instagram](/guides/real-estate-captions-for-instagram).",
         },
         {
           type: "example",
@@ -144,7 +144,7 @@ export const justListedPostIdeas: Guide = {
             ["Lead with", "The visual hook, in the first line", "A bit of story and the neighbourhood", "An insight: who the home suits, what it says about the area"],
             ["Ask for", "A DM or a comment keyword", "A message, a call or a showing", "A referral or a connection, no hard sell"],
             ["Links", "Not clickable in captions: use \"DM me\" or link in bio", "Clickable, on their own line", "Clickable, on their own line"],
-            ["Hashtags", "5 to 10: city, neighbourhood, property type", "0 to 3", "3 to 5 professional ones"],
+            ["Hashtags", "Up to 5 (Instagram's limit): city, neighbourhood, property type", "0 to 3", "3 to 5 professional ones"],
           ],
         },
         {
@@ -226,7 +226,7 @@ export const justListedPostIdeas: Guide = {
     },
     {
       q: "How many hashtags should a Just Listed post have?",
-      a: "On Instagram, 5 to 10 that describe the place and the property: the city, the neighbourhood and the property type. On Facebook, 0 to 3. On LinkedIn, 3 to 5 professional ones. Skip generic tags like #love or #instagood.",
+      a: "On Instagram, up to 5, which is now the most Instagram allows: the city, the neighbourhood, the property type and the post type. On Facebook, 0 to 3. On LinkedIn, 3 to 5 professional ones. Skip generic tags like #love or #instagood.",
     },
     {
       q: "Can I post another agent's listing?",
@@ -237,7 +237,7 @@ export const justListedPostIdeas: Guide = {
       a: "A Sold post speaks to future sellers. Tell the short story of the result and invite people to talk about their own home. Don't state the sale price or terms unless they're public and you're allowed to share them.",
     },
   ],
-  related: [],
+  related: ["real-estate-captions-for-instagram"],
   cta: {
     heading: "See your next listing as a Just Listed post",
     sub: "Paste a link to one of your listings. SocialSpark lays out the image with your name and brokerage and writes the caption, ready to edit.",
@@ -246,5 +246,6 @@ export const justListedPostIdeas: Guide = {
     { label: "RECO Bulletin 5.1: Advertising requirements", url: "https://www.reco.on.ca/getmedia/fc6d0358-a8a1-4e6b-bfaa-2b8c312e1c3b/RECO-Bulletin-5-1-Advertising-requirements.pdf" },
     { label: "RECO Bulletin 5.3: Advertising online", url: "https://www.reco.on.ca/getmedia/398b2b0c-2c20-4bec-a8d9-d88fc9e03d18/RECO-Bulletin-5-3-Advertising-online.pdf" },
     { label: "CREA: Everything you need to know about CREA's trademarks", url: "https://www.crea.ca/cafe/everything-you-need-to-know-about-creas-trademarks-2/" },
+    { label: "Social Media Today: Instagram implements new limits on hashtag use (December 2025)", url: "https://www.socialmediatoday.com/news/instagram-implements-new-limits-on-hashtag-use/808309/" },
   ],
 };
