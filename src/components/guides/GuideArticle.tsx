@@ -9,6 +9,7 @@ import { SheetExample } from "@/components/landing/SheetExample";
 import { guide as guideBySlug, headingId, plain, wordCount, type Guide, type GuideBlock, type GuideVisual } from "@/lib/guides";
 import { LANDING_TEXT } from "@/lib/landing-i18n";
 import { FREE_LIMITS } from "@/lib/plans";
+import { GuideIcon } from "./GuideIcon";
 import { RichText } from "./RichText";
 
 const WRAP = "mx-auto w-full min-w-0 max-w-[1600px] px-4 lg:w-[90%] lg:px-0";
@@ -150,12 +151,23 @@ export function GuideArticle({ guide }: { guide: Guide }) {
   );
 }
 
+/** A guide on /guides and under "Keep reading": icon, cluster, title, one line, and the link pinned to the bottom. */
 export function GuideCard({ guide }: { guide: Guide }) {
   return (
-    <Link href={`/guides/${guide.slug}`} className="flex h-full flex-col rounded-2xl bg-white p-5 ring-1 ring-black/5 transition hover:ring-[#0f2a44]/30 sm:p-6">
-      <span className="font-[family-name:var(--font-heading)] text-lg font-medium leading-snug tracking-[-0.01em] text-[#141414]">{guide.h1}</span>
-      <span className="mt-2 flex-1 text-sm leading-relaxed text-[#141414]/65">{guide.meta.description}</span>
-      <span className="mt-4 text-sm font-medium text-[#0f2a44]">Read the guide →</span>
+    <Link
+      href={`/guides/${guide.slug}`}
+      className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white p-6 ring-1 ring-black/5 transition hover:-translate-y-0.5 hover:shadow-[0_18px_40px_-24px_rgba(15,42,68,0.45)] hover:ring-[#0f2a44]/25 sm:p-7"
+    >
+      <span aria-hidden className="absolute right-0 top-0 h-9 w-9 bg-[#d4a24c] [clip-path:polygon(0_0,100%_0,100%_100%)]" />
+      <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#eeebe4] text-[#0f2a44] ring-1 ring-[#0f2a44]/10">
+        <GuideIcon cluster={guide.cluster} />
+      </span>
+      <span className="mt-6 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#0f2a44]/80">{guide.cluster}</span>
+      <span className="mt-2 font-[family-name:var(--font-heading)] text-lg font-medium leading-snug tracking-[-0.01em] text-[#141414]">{guide.h1}</span>
+      <span className="mt-3 flex-1 text-[15px] leading-relaxed text-[#141414]/65">{guide.dek}</span>
+      <span className="mt-6 text-xs font-semibold uppercase tracking-[0.18em] text-[#0f2a44]">
+        Read the guide <span aria-hidden className="inline-block transition group-hover:translate-x-0.5">→</span>
+      </span>
     </Link>
   );
 }
