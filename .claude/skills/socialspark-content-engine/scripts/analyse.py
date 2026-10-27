@@ -22,6 +22,7 @@ SITE = CONFIG["site_url"].rstrip("/")
 # Rough organic CTR by position (industry averages, web results). Only used to flag titles that
 # underperform their position by a wide margin, never as a target.
 EXPECTED_CTR = {1: 0.28, 2: 0.15, 3: 0.10, 4: 0.07, 5: 0.05, 6: 0.04, 7: 0.03, 8: 0.025, 9: 0.02, 10: 0.018}
+MERGE_AT = 0.6
 STOP = {"a", "an", "the", "to", "for", "of", "in", "on", "and", "or", "how", "what", "is", "do", "you", "your", "with", "my", "de", "la", "le", "les", "des", "pour", "en", "un", "une"}
 
 
@@ -115,8 +116,15 @@ def norm(s: str):
     return re.sub(r"\s+", " ", s.lower().strip())
 
 
+# Words searchers use interchangeably, mapped to one form before comparing phrases.
+SYNONYMS = [(r"\brealtors?\b", "real estate agent"), (r"\bagents\b", "agent"), (r"\big\b", "instagram"), (r"\bfb\b", "facebook")]
+
+
 def tokens(s: str):
-    return {w[:5] for w in re.split(r"[^a-z0-9àâçéèêëîïôûùüÿœ]+", s.lower()) if w and w not in STOP}
+    s = s.lower()
+    for pattern, repl in SYNONYMS:
+        s = re.sub(pattern, repl, s)
+    return {w[:5] for w in re.split(r"[^a-z0-9àâçéèêëîïôûùüÿœ]+", s) if w and w not in STOP}
 
 
 def similar(a: str, b: str):
@@ -124,11 +132,16 @@ def similar(a: str, b: str):
     return len(ta & tb) / len(ta | tb) if ta and tb else 0.0
 
 
+def has_term(text: str, term: str):
+    """Whole-word (or whole-phrase) match, so "exam" doesn't match "examples"."""
+    return re.search(rf"(?<![a-z0-9]){re.escape(term.lower())}(?![a-z0-9])", text) is not None
+
+
 def relevant(q: str):
     ql = q.lower()
-    if any(x in ql for x in CONFIG["exclude_terms"]):
+    if any(has_term(ql, x) for x in CONFIG["exclude_terms"]):
         return False
-    return any(t in ql for t in CONFIG["relevant_terms"])
+    return any(has_term(ql, t) for t in CONFIG["relevant_terms"])
 
 
 def path_of(url: str):
@@ -182,24 +195,32 @@ def opportunities(d: Path):
             found.append({**base, "action": "new", "target": None, "why": f"only {cover['path']} (a sales page) covers it, at position {pos:.0f}: a guide can rank where a sales page won't"})
 
     # Keyword Planner demand with no impressions yet (cold start, or phrases Google doesn't show us for).
+    # Niche Canadian phrases mostly report 10 a month (the lowest bucket), so the threshold applies to a
+    # family of variants after merging, not to each phrase.
     for k, v in vol.items():
-        if k in q or v["searches"] < CONFIG["min_monthly_searches"] or not relevant(k):
+        if k in q or v["searches"] <= 0 or not relevant(k):
             continue
         if covered_by(k, pages)[1]:
             continue
         found.append({"query": k, "impressions": 0, "clicks": 0, "ctr": 0, "position": None, "top_page": None, "searches_ca": v["searches"], "competition": v.get("competition"), "impressions_change": 0, "action": "new", "target": None, "why": f"{int(v['searches'])} searches a month in Canada (Keyword Planner), nothing on the site for it"})
 
-    # Merge near-duplicate phrases into one opportunity: one guide answers them all.
+    # Merge near-duplicate phrases into one opportunity: one guide answers them all. Stricter than coverage
+    # (0.5): "real estate captions for instagram" and "real estate instagram post ideas" are two guides.
     found.sort(key=score, reverse=True)
     merged = []
     for o in found:
-        home = next((m for m in merged if m["action"] == o["action"] and similar(m["query"], o["query"]) >= 0.5), None)
+        home = next((m for m in merged if m["action"] == o["action"] and similar(m["query"], o["query"]) >= MERGE_AT), None)
         if home:
             home["variants"].append(o["query"])
             home["impressions"] += o["impressions"]
+            if o.get("searches_ca"):
+                home["searches_ca"] = (home.get("searches_ca") or 0) + o["searches_ca"]
         else:
             merged.append({**o, "variants": []})
+    merged = [m for m in merged if m["impressions"] > 0 or (m.get("searches_ca") or 0) >= CONFIG["min_monthly_searches"]]
     for m in merged:
+        if m["impressions"] == 0:
+            m["why"] = f"about {int(m['searches_ca'])} searches a month in Canada across {len(m['variants']) + 1} phrasings (Keyword Planner), nothing on the site for it"
         m["score"] = round(score(m), 1)
     merged.sort(key=lambda m: m["score"], reverse=True)
 
