@@ -10,9 +10,11 @@ import { guide as guideBySlug, headingId, plain, wordCount, type Guide, type Gui
 import { LANDING_TEXT } from "@/lib/landing-i18n";
 import { FREE_LIMITS } from "@/lib/plans";
 import { GuideIcon } from "./GuideIcon";
+import { GuideToc } from "./GuideToc";
 import { RichText } from "./RichText";
 
-const WRAP = "mx-auto w-full min-w-0 max-w-[1600px] px-4 lg:w-[90%] lg:px-0";
+// One centred column for the whole article, so the "On this page" rail sits beside the text on any screen width.
+const ARTICLE = "mx-auto w-full min-w-0 max-w-6xl px-4 sm:px-6";
 const EYEBROW = "text-[11px] font-semibold uppercase tracking-[0.2em] text-[#141414]/70 sm:text-xs";
 const H2 = "scroll-mt-24 font-[family-name:var(--font-heading)] text-2xl font-medium leading-tight tracking-[-0.02em] text-[#141414] sm:text-3xl";
 const BODY = "text-[17px] leading-[1.75] text-[#141414]/80";
@@ -29,6 +31,7 @@ export function GuideArticle({ guide }: { guide: Guide }) {
   const minutes = Math.max(1, Math.round(wordCount(guide) / 230));
   const related = guide.related.map(guideBySlug).filter((g): g is Guide => !!g);
   const trust = LANDING_TEXT.en.page.trust(FREE_LIMITS.registered);
+  const toc = [...guide.sections.map((s) => ({ id: headingId(s.heading), label: plain(s.heading) })), { id: "faq", label: "Frequently asked questions" }];
 
   const tryIt = (id?: string) => (
     <div id={id} className="scroll-mt-28 rounded-3xl bg-[#eeebe4] px-5 py-8 sm:px-8 sm:py-10">
@@ -51,7 +54,7 @@ export function GuideArticle({ guide }: { guide: Guide }) {
 
   return (
     <article className="pb-24 sm:pb-32">
-      <header className={`${WRAP} pt-6 sm:pt-10`}>
+      <header className={`${ARTICLE} pt-6 sm:pt-10`}>
         <nav aria-label="Breadcrumb" className="text-sm text-[#141414]/60">
           <ol className="flex flex-wrap gap-1.5">
             <li><Link href="/" className="hover:underline">Home</Link> /</li>
@@ -69,7 +72,7 @@ export function GuideArticle({ guide }: { guide: Guide }) {
         </div>
       </header>
 
-      <div className={`${WRAP} mt-10 grid gap-12 lg:grid-cols-[minmax(0,1fr)_280px] lg:gap-16`}>
+      <div className={`${ARTICLE} mt-10 grid gap-12 lg:grid-cols-[minmax(0,1fr)_250px] lg:gap-14`}>
         <div className="min-w-0 max-w-3xl space-y-14">
           <section aria-label="The short answer" className="rounded-3xl border-l-4 border-[#d4a24c] bg-white px-5 py-6 shadow-[0_1px_0_rgba(0,0,0,0.04)] sm:px-8">
             <p className={EYEBROW}>The short answer</p>
@@ -77,6 +80,24 @@ export function GuideArticle({ guide }: { guide: Guide }) {
               <RichText text={guide.answer} />
             </p>
           </section>
+
+          {/* Phones and tablets: the section list, folded under the answer (the rail is desktop only). */}
+          <details className="group rounded-2xl bg-white px-5 py-4 ring-1 ring-black/5 lg:hidden">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
+              <span className={EYEBROW}>On this page</span>
+              <span className="text-lg leading-none text-[#d4a24c] transition group-open:rotate-45" aria-hidden>+</span>
+            </summary>
+            <ol className="mt-4 space-y-2.5">
+              {toc.map((item) => (
+                <li key={item.id}>
+                  <a href={`#${item.id}`} className="flex gap-3 text-[15px] leading-snug text-[#141414]/75 hover:text-[#141414]">
+                    <span aria-hidden className="mt-[0.5em] h-1.5 w-1.5 shrink-0 rounded-full bg-[#d4a24c]" />
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </details>
 
           {guide.sections.map((s, i) => (
             <Fragment key={s.heading}>
@@ -121,22 +142,17 @@ export function GuideArticle({ guide }: { guide: Guide }) {
         </div>
 
         <aside className="hidden lg:block">
-          <nav aria-label="On this page" className="sticky top-24 space-y-3 text-sm">
+          <nav aria-label="On this page" className="sticky top-24">
             <p className={EYEBROW}>On this page</p>
-            <ol className="space-y-2 border-l border-black/10 pl-4">
-              {guide.sections.map((s) => (
-                <li key={s.heading}>
-                  <a href={`#${headingId(s.heading)}`} className="text-[#141414]/70 hover:text-[#141414]">{plain(s.heading)}</a>
-                </li>
-              ))}
-              <li><a href="#faq" className="text-[#141414]/70 hover:text-[#141414]">Frequently asked questions</a></li>
-            </ol>
+            <div className="mt-4">
+              <GuideToc items={toc} />
+            </div>
           </nav>
         </aside>
       </div>
 
       {related.length > 0 && (
-        <section aria-labelledby="related" className={`${WRAP} mt-20`}>
+        <section aria-labelledby="related" className={`${ARTICLE} mt-20`}>
           <h2 id="related" className={H2}>Keep reading</h2>
           <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {related.map((g) => (
