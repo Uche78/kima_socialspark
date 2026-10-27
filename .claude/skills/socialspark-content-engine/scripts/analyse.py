@@ -6,11 +6,13 @@
   python3 analyse.py checkin <slug> [--date …]            # how one guide is doing: queries, clicks, position
 
 Inputs: marketing/seo/data/<date>/ (from pull.py), the guides in src/lib/guides/*.ts, the persona pages,
-and marketing/seo/config.json. Writes opportunities.json next to the data. Standard library only.
+and marketing/seo/config.json. Writes opportunities.json next to the data, and keeps the product ideas list
+(product_ideas_file in the config: demand for things SocialSpark doesn't make) up to date. Standard library only.
 """
 import datetime as dt
 import json
 import re
+import subprocess
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -140,10 +142,27 @@ def has_term(text: str, term: str):
 
 
 def relevant(q: str):
+    """A topic for a guide: real estate marketing SocialSpark does, not noise and not a product gap."""
     ql = q.lower()
-    if any(has_term(ql, x) for x in CONFIG["exclude_terms"]):
+    if any(has_term(ql, x) for x in CONFIG["exclude_terms"] + CONFIG.get("product_gap_terms", [])):
         return False
     return any(has_term(ql, t) for t in CONFIG["relevant_terms"])
+
+
+def gap_term(q: str):
+    """The product-gap term in a real estate marketing search (postcards, Reels…), or None. Probe phrases from
+    the config always count, even without a real estate word ("virtual staging")."""
+    ql = q.lower()
+    probe = norm(q) in {norm(p) for p in CONFIG.get("product_probe_keywords", [])}
+    if any(has_term(ql, x) for x in CONFIG["exclude_terms"]) or not (probe or any(has_term(ql, t) for t in CONFIG["relevant_terms"])):
+        return None
+    term = next((t for t in CONFIG.get("product_gap_terms", []) if has_term(ql, t)), None)
+    return term or (q if probe else None)
+
+
+def same_gap(a: str, b: str):
+    """Two gap terms name the same product ("flyer" and "flyers" do; "reels" and "newsletter" don't)."""
+    return a[:5] == b[:5]
 
 
 def path_of(url: str):
@@ -228,6 +247,7 @@ def opportunities(d: Path):
             m["why"] = f"about {int(m['searches_ca'])} searches a month in Canada across {len(m['variants']) + 1} phrasings (Keyword Planner), nothing on the site for it"
         m["score"] = round(score(m), 1)
     merged.sort(key=lambda m: m["score"], reverse=True)
+    ideas, new_ideas = product_ideas(d, q, vol, us)
 
     (d / "opportunities.json").write_text(json.dumps(merged, indent=2))
     print(f"# Opportunities, {d.name} ({len(rows)} Search Console rows, {len(vol)} Keyword Planner phrases, {len(us)} with US volumes)\n")
@@ -237,7 +257,83 @@ def opportunities(d: Path):
         print(f"| {i} | {m['action']} | {m['query']} | {m['impressions']} | {m['position'] or '–'} | {m['ctr']:.1%} | {int(m['searches_ca']) if m['searches_ca'] is not None else '–'} | {int(m['searches_us']) if m.get('searches_us') is not None else '–'} | {', '.join(m['variants'][:4]) or '–'} | {m['why']} |")
     if not merged:
         print("Nothing clears the bar today. That's a valid result: don't publish to fill the day.")
+    if ideas:
+        print(f"\n## Product ideas: demand SocialSpark doesn't serve ({len(new_ideas)} new today)\n")
+        print("| Family | Gap | Searches/mo CA | US | Impr. 28d | Variants | New |")
+        print("|---|---|---|---|---|---|---|")
+        for i in ideas[:10]:
+            print(f"| {i['family']} | {i['gap']} | {i['ca']} | {i['us']} | {i['impressions']} | {', '.join(i['variants'][:3]) or '–'} | {'yes' if i['family'] in new_ideas else ''} |")
+        print(f"\nFull list: {IDEAS_MD}")
     print(f"\nSaved {(d / 'opportunities.json').relative_to(ROOT)}")
+
+
+def main_checkout():
+    """The user's checkout, also when running in the engine's worktree (product ideas live there, out of git)."""
+    try:
+        common = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--path-format=absolute", "--git-common-dir"], capture_output=True, text=True, check=True).stdout.strip()
+        return Path(common).parent
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return ROOT
+
+
+IDEAS_MD = main_checkout() / CONFIG.get("product_ideas_file", "marketing/seo/product-ideas.md")
+IDEAS_JSON = IDEAS_MD.with_suffix(".json")
+
+
+def product_ideas(d: Path, q, vol, us):
+    """Group today's product-gap searches into families and merge them into the running list.
+    Returns (families clearing the bar today, names of families seen for the first time)."""
+    seen = defaultdict(lambda: {"ca": 0.0, "us": 0.0, "impressions": 0.0})
+    for phrase, v in vol.items():
+        if gap_term(phrase):
+            seen[phrase]["ca"] += v["searches"]
+    for phrase, v in us.items():
+        if gap_term(phrase):
+            seen[phrase]["us"] += v["searches"]
+    for phrase, e in q.items():
+        if gap_term(phrase):
+            seen[phrase]["impressions"] += e["impressions"]
+    families = []
+    for phrase, n in sorted(seen.items(), key=lambda kv: -(kv[1]["ca"] + kv[1]["us"] + kv[1]["impressions"])):
+        # Same product and close wording (looser than guides: "just sold postcards" and "… for realtors" are one).
+        home = next((f for f in families if same_gap(f["gap"], gap_term(phrase)) and similar(f["family"], phrase) >= 0.5), None)
+        if home:
+            home["variants"].append(phrase)
+            for k in ("ca", "us", "impressions"):
+                home[k] += n[k]
+        else:
+            families.append({"family": phrase, "gap": gap_term(phrase), "variants": [], **n})
+    today = [f for f in families if f["ca"] >= CONFIG["min_monthly_searches"] or f["us"] >= CONFIG.get("product_idea_min_us", 50) or f["impressions"] >= CONFIG["min_impressions"]]
+
+    ledger = json.loads(IDEAS_JSON.read_text()) if IDEAS_JSON.exists() else []
+    new = set()
+    for f in today:
+        f = {**f, "ca": int(f["ca"]), "us": int(f["us"]), "impressions": int(f["impressions"])}
+        entry = next((e for e in ledger if same_gap(e["gap"], f["gap"]) and (similar(e["family"], f["family"]) >= 0.5 or f["family"] in e["variants"])), None)
+        if entry:
+            entry.update({k: f[k] for k in ("ca", "us", "impressions")}, last_seen=d.name)
+            entry["variants"] = sorted(set(entry["variants"]) | set(f["variants"]) - {entry["family"]})
+        else:
+            ledger.append({**f, "first_seen": d.name, "last_seen": d.name})
+            new.add(f["family"])
+    ledger.sort(key=lambda e: -(e["ca"] + e["us"]))
+    IDEAS_JSON.parent.mkdir(parents=True, exist_ok=True)
+    IDEAS_JSON.write_text(json.dumps(ledger, indent=2))
+    lines = [
+        "# Product ideas from search demand",
+        "",
+        "Real estate marketing searches SocialSpark doesn't serve yet, found by the content engine (socialspark-content-engine)",
+        "while choosing guides. Volumes are Keyword Planner's average monthly searches (Canada; US for comparison) and Search",
+        "Console impressions over 28 days, as of the last time each was seen. Demand to look into, not a roadmap: check fit with",
+        "socialspark-personas before building anything. Updated automatically; not in git.",
+        "",
+        "| Family | Gap | Searches/mo CA | US | Impr. 28d | Other phrasings | First seen | Last seen |",
+        "|---|---|---|---|---|---|---|---|",
+    ]
+    lines += [f"| {e['family']} | {e['gap']} | {e['ca']} | {e['us']} | {e['impressions']} | {', '.join(e['variants'][:6]) or '–'} | {e['first_seen']} | {e['last_seen']} |" for e in ledger]
+    IDEAS_MD.write_text("\n".join(lines) + "\n")
+    today = [{**f, "ca": int(f["ca"]), "us": int(f["us"]), "impressions": int(f["impressions"])} for f in today]
+    return today, new
 
 
 def score(o):

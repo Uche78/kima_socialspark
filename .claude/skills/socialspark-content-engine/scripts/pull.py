@@ -54,14 +54,17 @@ def kp(keywords: list[str]):
         kws = [k for k in keywords if (lang == "fr") == looks_french(k)]
         if not kws:
             continue
+        # Product probes (adjacent things SocialSpark doesn't make) get volumes for the product ideas list, but
+        # aren't keyword-idea seeds: they'd pull the guide candidates off-topic.
+        probes = [k for k in CONFIG.get("product_probe_keywords", []) if (lang == "fr") == looks_french(k)] if keywords is CONFIG["seed_keywords"] else []
         # The API takes up to 10,000 keywords per call for historical metrics and 20 seeds for ideas.
-        gum("googleads.keywordPlanIdeas.generateKeywordHistoricalMetrics", {**base, "language": code, "keywords": kws[:1000]}, f"kp-historical-{lang}.json")
+        gum("googleads.keywordPlanIdeas.generateKeywordHistoricalMetrics", {**base, "language": code, "keywords": list(dict.fromkeys(kws + probes))[:1000]}, f"kp-historical-{lang}.json")
         ideas = gum("googleads.keywordPlanIdeas.generateKeywordIdeas", {**base, "language": code, "keywords": kws[:20], "pageSize": 500}, f"kp-ideas-{lang}.json")
         # US volumes only rank the Canadian candidates against each other (Canadian phrases mostly sit in the
         # same 10-a-month bucket). English only, and no US keyword ideas, so US-only topics never come up.
         tiebreak = CONFIG.get("tiebreak_geo_target_constants")
         if lang == "en" and tiebreak:
-            phrases = list(dict.fromkeys(kws + idea_texts(ideas)))
+            phrases = list(dict.fromkeys(kws + probes + idea_texts(ideas)))
             gum("googleads.keywordPlanIdeas.generateKeywordHistoricalMetrics", {**base, "geoTargetConstants": tiebreak, "language": code, "keywords": phrases[:1000]}, "kp-tiebreak-historical-en.json")
 
 

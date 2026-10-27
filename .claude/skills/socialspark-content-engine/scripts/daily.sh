@@ -37,7 +37,7 @@ PROMPT="Run the socialspark-content-engine skill's daily run (all steps in its S
 Context: you're in the engine's own worktree at $WT, detached at local main. Nobody is watching, so don't ask questions: decide, and list anything that needs the user under 'Needs you' in the hand-off.
 - publish_mode is review: if you write or refresh a guide, create branch guides/<slug> with git switch -c, commit there (with the attribution lines), and don't push. On a no-action day, don't commit anything.
 - For the render check use port 3199 (npx next dev -p 3199), name screenshot scripts _shot.mjs at the repo root, and stop the server and delete the script when done.
-- End your final message with one line starting 'SUMMARY:' (under 150 characters) saying what you did."
+- End your final message with one line starting 'SUMMARY:' (under 150 characters) saying what you did, plus any new product ideas."
 
 ALLOWED=(
   Read Edit Write Glob Grep WebSearch WebFetch Skill

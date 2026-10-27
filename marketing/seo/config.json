@@ -17,7 +17,19 @@
     "instagram", "facebook", "linkedin", "social media", "post", "posts", "caption", "captions", "hashtag", "hashtags", "carousel",
     "marketing", "crea", "reco", "bcfsa", "oaciq", "immobilier", "courtier", "inscription", "visite libre", "publication"
   ],
-  "exclude_terms": ["job", "jobs", "salary", "course", "exam", "licence exam", "license exam", "near me", "for sale", "rent", "rental", "login", "zillow", "realtor.ca login", "postcard", "postcards", "flyer", "flyers", "direct mail"],
+  "exclude_terms": ["job", "jobs", "salary", "course", "exam", "licence exam", "license exam", "near me", "for sale", "rent", "rental", "login", "zillow", "realtor.ca login"],
+  "product_gap_terms": [
+    "postcard", "postcards", "flyer", "flyers", "direct mail", "door hanger", "door hangers", "brochure", "brochures",
+    "reel", "reels", "video", "videos", "tiktok", "youtube", "newsletter", "newsletters", "email marketing",
+    "virtual staging", "property website", "single property website", "logo", "business card", "business cards", "yard sign"
+  ],
+  "product_probe_keywords": [
+    "just listed postcards", "just sold postcards", "open house flyer", "real estate flyer template", "real estate listing video",
+    "real estate reels ideas", "real estate tiktok ideas", "real estate newsletter ideas", "virtual staging", "single property website",
+    "real estate door hangers", "real estate brochure template"
+  ],
+  "product_idea_min_us": 50,
+  "product_ideas_file": "marketing/seo/product-ideas.md",
   "seed_keywords": [
     "just listed post ideas",
     "real estate instagram post ideas",

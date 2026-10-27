@@ -55,6 +55,8 @@ Four actions come back, scored by missed clicks (impressions × (1 − CTR), wei
 | `title` | Page 1 but CTR under a third of the usual for that position | Rewrite `meta.title` / `meta.description` to match the searcher's intent. For `/`, `/pricing` or `/for/` pages, propose the change to the user, don't make it |
 | (nothing) | No row clears the thresholds | Publish nothing. Log "no action". A gap day is better than a filler guide |
 
+The same run keeps the **product ideas list** (`marketing/seo/product-ideas.md` in the main checkout, out of git): real estate marketing searches SocialSpark doesn't serve (postcards, flyers, door hangers, virtual staging, video…, from `product_gap_terms`), grouped by product with Canadian and US volumes, first and last seen. `product_probe_keywords` are checked daily for this list only; they never seed guide ideas. A gap phrase is never a guide topic: a guide on flyers would rank for flyers and convert no one to a social post tool. Report new ideas in the hand-off; whether to build one is the user's call, with `socialspark-personas` for fit.
+
 ### Step 3: Choose one
 Take the top row unless something below beats it on **fit**. Fit means the searcher's problem is one SocialSpark solves, or a step on the way to it: listing posts, captions, platforms, open houses, the rules for realtor advertising, mortgage feature sheets. "Realtor salary" has volume and zero fit. Use the clusters in [references/topic-map.md](references/topic-map.md). Before writing, check cannibalisation: if an existing guide is ≥50% the same question, refresh it instead of writing a new one. Say in one line what you picked and why (the numbers).
 
@@ -130,5 +132,6 @@ Links added from: <pages>; links out to: <pages>
 Checks: tests ✓, types ✓, lint ✓, rendered at 1440/390 ✓
 Published: <branch guides/<slug>, awaiting review | pushed to main, sitemap resubmitted>
 Check-ins: <guide: indexed? impressions, position at 4/14/28 days>
+Product ideas: <families new to the list today, with CA/US volumes, or "none new">
 Needs you: <claims to confirm, home page link proposal, GA4 numbers>
 ```
