@@ -81,7 +81,7 @@ export const justListedPostIdeas: Guide = {
         },
         {
           type: "p",
-          text: "Skip the words every listing uses: stunning, nestled, boasts, must-see, dream home, turnkey, won't last long. Buyers skim past them. A specific fact does more: \"new roof in 2024\" beats \"meticulously maintained\".",
+          text: "Skip the words every listing uses: stunning, nestled, boasts, must-see, dream home, turnkey, won't last long. Buyers skim past them. A specific fact does more: \"new roof in 2024\" beats \"meticulously maintained\". For Open House, Price Reduced, Coming Soon and Sold captions too, see [real estate captions for Instagram](/guides/real-estate-captions-for-instagram).",
         },
         {
           type: "example",
@@ -144,7 +144,7 @@ export const justListedPostIdeas: Guide = {
             ["Lead with", "The visual hook, in the first line", "A bit of story and the neighbourhood", "An insight: who the home suits, what it says about the area"],
             ["Ask for", "A DM or a comment keyword", "A message, a call or a showing", "A referral or a connection, no hard sell"],
             ["Links", "Not clickable in captions: use \"DM me\" or link in bio", "Clickable, on their own line", "Clickable, on their own line"],
-            ["Hashtags", "5 to 10: city, neighbourhood, property type", "0 to 3", "3 to 5 professional ones"],
+            ["Hashtags", "Up to 5 (Instagram's limit): city, neighbourhood, property type", "0 to 3", "3 to 5 professional ones"],
           ],
         },
         {
@@ -227,7 +227,7 @@ export const justListedPostIdeas: Guide = {
     },
     {
       q: "How many hashtags should a Just Listed post have?",
-      a: "On Instagram, 5 to 10 that describe the place and the property: the city, the neighbourhood and the property type. On Facebook, 0 to 3. On LinkedIn, 3 to 5 professional ones. Skip generic tags like #love or #instagood.",
+      a: "On Instagram, up to 5, which is now the most Instagram allows: the city, the neighbourhood, the property type and the post type. On Facebook, 0 to 3. On LinkedIn, 3 to 5 professional ones. Skip generic tags like #love or #instagood.",
     },
     {
       q: "Can I post another agent's listing?",
@@ -238,7 +238,7 @@ export const justListedPostIdeas: Guide = {
       a: "A Sold post speaks to future sellers: tell the short story of the result and invite people to talk about their own home. Advertising a sale needs written consent. In Ontario, RECO requires the seller's before closing, the buyer's after, and both to show the price or terms. Check your own regulator's rules.",
     },
   ],
-  related: [],
+  related: ["real-estate-captions-for-instagram"],
   cta: {
     heading: "See your next listing as a Just Listed post",
     sub: "Paste a link to one of your listings. SocialSpark lays out the image with your name and brokerage and writes the caption, ready to edit.",
@@ -248,5 +248,6 @@ export const justListedPostIdeas: Guide = {
     { label: "RECO Bulletin 5.3: Advertising online", url: "https://www.reco.on.ca/getmedia/398b2b0c-2c20-4bec-a8d9-d88fc9e03d18/RECO-Bulletin-5-3-Advertising-online.pdf" },
     { label: "RECO Bulletin 5.4: Advertising sold properties", url: "https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-4-advertising-sold-property" },
     { label: "CREA: Everything you need to know about CREA's trademarks", url: "https://www.crea.ca/cafe/everything-you-need-to-know-about-creas-trademarks-2/" },
+    { label: "Social Media Today: Instagram implements new limits on hashtag use (December 2025)", url: "https://www.socialmediatoday.com/news/instagram-implements-new-limits-on-hashtag-use/808309/" },
   ],
 };

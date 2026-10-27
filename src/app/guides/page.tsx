@@ -16,8 +16,6 @@ export const metadata = {
 const WRAP = "mx-auto w-full min-w-0 max-w-[1600px] px-4 lg:w-[90%] lg:px-0";
 
 export default function GuidesIndex() {
-  // Clusters in the order their newest guide was published.
-  const clusters = [...new Set(GUIDES.map((g) => g.cluster))];
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
@@ -39,20 +37,14 @@ export default function GuidesIndex() {
           Each guide answers one question first, then shows the how: what to write, what to post and which rules apply in Canada. Written by the team behind {SITE_NAME}.
         </p>
       </div>
-      <div className="mt-14 space-y-14">
-        {clusters.map((c) => (
-          <section key={c} aria-label={c}>
-            <h2 className="font-[family-name:var(--font-heading)] text-2xl font-medium tracking-[-0.02em] text-[#141414]">{c}</h2>
-            <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {GUIDES.filter((g) => g.cluster === c).map((g) => (
-                <li key={g.slug}>
-                  <GuideCard guide={g} />
-                </li>
-              ))}
-            </ul>
-          </section>
+      {/* One grid, newest first; each card names its cluster. */}
+      <ul className="mt-12 grid gap-5 sm:mt-14 sm:grid-cols-2 lg:grid-cols-3">
+        {GUIDES.map((g) => (
+          <li key={g.slug}>
+            <GuideCard guide={g} />
+          </li>
         ))}
-      </div>
+      </ul>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
     </div>
   );
