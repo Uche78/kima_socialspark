@@ -53,3 +53,13 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .hero-rise, .hero-fade { animation: none; }
 }
+
+/* Landing page section links (header): glide to the heading and leave it some room. */
+html {
+  scroll-padding-top: 2rem;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}

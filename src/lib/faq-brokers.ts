@@ -11,7 +11,7 @@ export const BROKER_FAQ: { q: string; a: string }[] = [
   },
   {
     q: "How are the payments calculated?",
-    a: "With Canadian rules: minimum down payments of 5% on the first $500,000 and 10% up to $1.5M (20% above), CMHC-style insurance premiums including the 30-year surcharge, semi-annual compounding for fixed rates, and 25- or 30-year amortization. Down payments below the legal minimum are raised automatically. The AI never writes the numbers.",
+    a: "With Canadian rules: minimum down payments of 5% on the first $500,000 and 10% up to $1.5M (20% above), CMHC-style insurance premiums including the 30-year surcharge, semi-annual compounding for fixed rates, and 25- or 30-year amortization. Down payments below the legal minimum are raised automatically. The numbers always come from these calculations, never from the caption writer.",
   },
   {
     q: "Is it compliant with mortgage advertising rules?",

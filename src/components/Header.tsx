@@ -1,9 +1,11 @@
+import Image from "next/image";
 import Link from "next/link";
 import { getUser } from "@/lib/supabase/server";
 import { mediaUrl } from "@/lib/media";
 import { AccountMenu } from "./AccountMenu";
 import { HeaderShell } from "./HeaderShell";
 import { MobileNav } from "./MobileNav";
+import { LandingMenu, LandingNav } from "./LandingNav";
 import { LoginLink } from "./LoginLink";
 import { TryFreeButton } from "./TryFreeButton";
 
@@ -20,10 +22,20 @@ export async function Header() {
     <HeaderShell>
       {/* Phones: logo left, actions right. From md: three columns so the main nav stays centred. */}
       <div className="mx-auto flex h-14 w-full max-w-[1600px] items-center justify-between gap-2 px-4 md:grid md:grid-cols-[1fr_auto_1fr] lg:w-[90%] lg:px-0">
-        <Link href="/" className="justify-self-start py-2 font-[family-name:var(--font-display)] text-xl font-semibold text-brand group-data-[overlay=true]:text-[#f3f1ec]">
-          Social<span className="text-accent">Spark</span>
+        {/* Phones: the app icon, leaving room for the buttons; the wordmark from sm. */}
+        <Link href="/" aria-label="SocialSpark" className="justify-self-start py-2 font-[family-name:var(--font-display)] text-xl font-semibold text-brand group-data-[overlay=true]:text-[#f3f1ec]">
+          <Image src="/logo-mark.png" alt="" width={36} height={36} priority className="h-9 w-9 sm:hidden" />
+          <span className="hidden sm:inline" aria-hidden>
+            Social<span className="text-accent">Spark</span>
+          </span>
         </Link>
         <nav aria-label="Main" className="hidden items-center gap-1 text-sm md:flex">
+          {/* Signed-out visitors on the landing pages: links to the page's sections, from lg where they fit beside the buttons. */}
+          {!user && (
+            <span className="hidden items-center gap-0.5 lg:flex">
+              <LandingNav linkClassName={`btn-ghost px-3 ${ON_PHOTO}`} />
+            </span>
+          )}
           {user && (
             <>
               <Link href="/" className={`btn-ghost ${ON_PHOTO}`}>Listings</Link>
@@ -47,6 +59,7 @@ export async function Header() {
           ) : null}
           {/* Signed-out visitors: no menu, just a clear call to action. Under 360px the two buttons tighten to fit beside the logo. */}
           {!user && <TryFreeButton className="btn ml-2 h-10 whitespace-nowrap rounded-full bg-[#141414] px-4 text-white hover:bg-black max-[359px]:ml-1 max-[359px]:px-3 max-[359px]:text-[13px] sm:px-5" />}
+          {!user && <LandingMenu />}
           {!guest && <AccountMenu name={profile?.full_name ?? null} email={user.email ?? null} avatarUrl={mediaUrl(profile?.headshot_path)} />}
           <MobileNav
             items={

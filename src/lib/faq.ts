@@ -18,6 +18,10 @@ export const FAQ: { q: string; a: string }[] = [
     a: "Never. A post goes out only when you click Publish now or choose a time to schedule it.",
   },
   {
+    q: "Can I post a Sold listing with the price?",
+    a: "Before it makes any Sold post, SocialSpark asks you to confirm you have written consent to advertise the sale. The price appears only if that consent covers it (the seller and the buyer both agreed); otherwise the post tells the story of the sale with no price, terms or days on market. A sale by another brokerage is written as a local market update, never as your own sale.",
+  },
+  {
     q: "Can I use the listing photos?",
     a: "SocialSpark pulls photos from the listing page, or you can upload your own. Make sure you have permission to use them, usually from your brokerage or the photographer.",
   },
@@ -35,6 +39,6 @@ export const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Where is my data stored?",
-    a: "Your account and listings are stored in Canada. Post writing uses AI providers in the United States. We never sell your data.",
+    a: "Your account and listings are stored in Canada. Posts are written with Anthropic, a service provider in the United States that is contractually barred from training on your data. We never sell your data.",
   },
 ];

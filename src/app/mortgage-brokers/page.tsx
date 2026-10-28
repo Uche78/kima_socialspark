@@ -1,5 +1,6 @@
 import { ImportForm } from "@/components/ImportForm";
 import { AudienceSwitch } from "@/components/landing/AudienceSwitch";
+import { CompareTable, FaqList, RulesPanel, Scenario, Summary } from "@/components/landing/HomeBlocks";
 import { PricingSummary } from "@/components/landing/PricingSummary";
 import { SheetExample } from "@/components/landing/SheetExample";
 import { BROKER_FAQ } from "@/lib/faq-brokers";
@@ -28,8 +29,6 @@ const STEPS = [
 ];
 
 const FEATURES = [
-  { title: "Canadian mortgage math, done right", body: "Minimum down payment tiers, CMHC premiums with the 30-year surcharge, semi-annual compounding and the stress test for the optional minimum income." },
-  { title: "Compliance built in", body: "Your brokerage and licence number, the rate's \"as of\" date and a disclaimer on every sheet. Captions never quote rates or payments." },
   { title: "Co-brand with realtors", body: "Save partner realtors once and add them to any sheet with QR codes to both your websites. A simple way to win referrals." },
   { title: "Edit the numbers for free", body: "Change a rate or scenario and the sheet updates instantly. Only writing a new caption uses an allowance." },
   { title: "English, Québec French or both", body: "Sheets and captions in the language your clients read, with titles that follow your province." },
@@ -85,6 +84,11 @@ export default function MortgageBrokersPage() {
         </div>
       </section>
 
+      <Summary
+        text="SocialSpark builds mortgage feature sheets for Canadian mortgage brokers and agents. Paste a listing link and it lays out what the home would cost each month at up to four down payments, using your own rates, with your brokerage, your licence number and a co-branded realtor on the sheet. Post it to Instagram, Facebook or LinkedIn, download a Story, or print it as a PDF."
+        chips={["Sheets and PDFs always free", `${FREE_LIMITS.registered} free posts, no credit card`, "You set the rates, never us", "Data stored in Canada"]}
+      />
+
       {/* How it works */}
       <section className={WRAP} aria-labelledby="broker-how">
         <div className="mx-auto max-w-3xl text-center">
@@ -111,7 +115,7 @@ export default function MortgageBrokersPage() {
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#d4a24c] sm:text-xs">Built for brokers</p>
             <h2 id="broker-features" className="mt-3 font-[family-name:var(--font-heading)] text-3xl font-medium leading-tight tracking-[-0.02em] sm:text-5xl">
-              Numbers you can stand behind.
+              Made for the way you work with realtors.
             </h2>
             <div className="mt-10 grid gap-8 sm:grid-cols-2">
               {FEATURES.map((f) => (
@@ -125,6 +129,53 @@ export default function MortgageBrokersPage() {
         </div>
       </section>
 
+      <Scenario
+        id="broker-now-what"
+        heading="A partner realtor just listed a condo. Now what?"
+        today="Open the payment spreadsheet and retype the price, condo fee and property tax. Work out the insurance premium at each down payment. Find the realtor's logo in an old email, drop everything into a template, and write a caption that doesn't quote a rate. Then do it again for their next listing."
+        withUs="Paste the listing link and pick the realtor from your saved partners. The sheet is built with your rates, their branding and QR codes to both your websites. Send it to them before the open house, post it, or print a stack for the table."
+        cta="Build a sheet for that listing"
+      />
+
+      <RulesPanel
+        id="broker-rules"
+        eyebrow="The math and the disclosures"
+        heading="Every payment is calculated, never guessed."
+        sub="Payments are calculated in code with Canadian rules, from the rates you enter. Every sheet carries the disclosures, so you review it instead of building it."
+        points={[
+          { title: "Minimum down payments", body: "5% on the first $500,000, 10% up to $1.5M and 20% above. A scenario below the legal minimum is raised automatically." },
+          { title: "Mortgage insurance", body: "CMHC-style premiums at each down payment, including the 30-year amortization surcharge." },
+          { title: "Canadian compounding", body: "Semi-annual compounding for fixed rates, over 25- or 30-year amortization, and the stress test for the optional minimum income." },
+          { title: "Your rates, dated", body: "You enter your insured and conventional rates with the date they're as of. SocialSpark never sets or suggests a rate." },
+        ]}
+        card={{
+          title: "On every sheet",
+          items: [
+            "Your brokerage name and licence number",
+            "The rate's “as of” date",
+            "A disclaimer that payments are estimates on approved credit",
+            "Your title as your province uses it",
+            "Captions that never quote rates or payments",
+          ],
+          note: "You're still responsible for your regulator's rules, so review each sheet before you share it.",
+        }}
+      />
+
+      <CompareTable
+        id="broker-compare"
+        heading="SocialSpark or a spreadsheet and a template?"
+        theirs="Spreadsheet + template"
+        rows={[
+          { label: "Monthly payments", ours: "Calculated with Canadian rules", theirs: "Your own formulas, checked by hand" },
+          { label: "Listing details", ours: "Price, photos, condo fee and tax read from the listing", theirs: "Retyped for every home" },
+          { label: "Your rates", ours: "Set once, dated on every sheet", theirs: "Updated in every file" },
+          { label: "Co-branding", ours: "Saved partners, QR codes to both websites", theirs: "Logos hunted down each time" },
+          { label: "Formats", ours: "Social post, Story and letter-size PDF", theirs: "Exported one at a time" },
+          { label: "Open house", ours: "Several sheets in one PDF", theirs: "Printed one by one" },
+          { label: "Captions", ours: "Never quote rates or payments", theirs: "Up to you to check" },
+        ]}
+      />
+
       {/* Pricing */}
       <section id="pricing" className={`${WRAP} scroll-mt-24`} aria-labelledby="pricing-summary">
         <PricingSummary />
@@ -132,20 +183,7 @@ export default function MortgageBrokersPage() {
 
       {/* FAQ */}
       <section className={WRAP} aria-labelledby="broker-faq">
-        <div className="mx-auto max-w-3xl">
-          <h2 id="broker-faq" className="text-center font-[family-name:var(--font-heading)] text-3xl font-medium tracking-[-0.02em] text-[#141414] sm:text-4xl">Questions brokers ask</h2>
-          <div className="mt-8 divide-y divide-border border-y border-border">
-            {BROKER_FAQ.map((f) => (
-              <details key={f.q} className="group py-5">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-lg font-medium text-[#141414] [&::-webkit-details-marker]:hidden">
-                  {f.q}
-                  <span className="text-2xl leading-none text-[#141414]/40 transition group-open:rotate-45">+</span>
-                </summary>
-                <p className="mt-3 leading-relaxed text-[#141414]/70">{f.a}</p>
-              </details>
-            ))}
-          </div>
-        </div>
+        <FaqList id="broker-faq" heading="Questions brokers ask" items={BROKER_FAQ} />
       </section>
 
       {/* Final call to action */}
