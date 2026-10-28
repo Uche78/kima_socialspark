@@ -41,10 +41,12 @@ export function FeatureGrid({ id, eyebrow, heading, items }: { id: string; eyebr
       </div>
       <ul className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {items.map((f) => (
-          <li key={f.title} className="rounded-2xl bg-white p-6 ring-1 ring-black/10 sm:p-7">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#b8862f]">{f.kicker}</p>
-            <h3 className="mt-3 font-[family-name:var(--font-heading)] text-xl font-semibold tracking-[-0.02em] text-[#141414]">{f.title}</h3>
-            <p className="mt-2 leading-relaxed text-[#141414]/70">{f.body}</p>
+          // Same card as the guide cards (GuideCard), with its gold corner, minus the icon and link.
+          <li key={f.title} className="relative overflow-hidden rounded-2xl bg-white p-6 ring-1 ring-black/5 sm:p-7">
+            <span aria-hidden className="absolute right-0 top-0 h-9 w-9 bg-[#d4a24c] [clip-path:polygon(0_0,100%_0,100%_100%)]" />
+            <p className="pr-8 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#0f2a44]/80">{f.kicker}</p>
+            <h3 className="mt-2 font-[family-name:var(--font-heading)] text-lg font-medium leading-snug tracking-[-0.01em] text-[#141414]">{f.title}</h3>
+            <p className="mt-3 text-[15px] leading-relaxed text-[#141414]/65">{f.body}</p>
           </li>
         ))}
       </ul>
