@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 // Section links for signed-out visitors on the two audience landing pages; the anchors are the sections' heading ids.
-// Persona pages (/for/) get none: they're one-goal pages.
+// The guides show the realtor page's, linking back to it. Persona pages (/for/) get none: they're one-goal pages.
 const SECTIONS: Record<string, { href: string; label: string }[]> = {
   "/": [
     { href: "#how-it-works", label: "How it works" },
@@ -25,9 +25,15 @@ const SECTIONS: Record<string, { href: string; label: string }[]> = {
   ],
 };
 
+/** The section links for a page: its own, or on the guides the realtor page's, linking back to it. */
+function sectionsFor(pathname: string) {
+  if (pathname === "/guides" || pathname.startsWith("/guides/")) return SECTIONS["/"].map((i) => ({ ...i, href: `/${i.href}` }));
+  return SECTIONS[pathname];
+}
+
 /** True on the pages with section links. Below lg their Sign in moves into the ☰ menu. */
 export function isLandingWithSections(pathname: string) {
-  return pathname in SECTIONS;
+  return !!sectionsFor(pathname);
 }
 
 /** Where Sign in goes: from the broker page, sign-up starts with Mortgage broker selected. */
@@ -37,14 +43,14 @@ export function loginHref(pathname: string) {
 
 /** The section links inline in the header (from lg). */
 export function LandingNav({ linkClassName }: { linkClassName: string }) {
-  const items = SECTIONS[usePathname()];
+  const items = sectionsFor(usePathname());
   if (!items) return null;
   return (
     <>
       {items.map((i) => (
-        <a key={i.href} href={i.href} className={linkClassName}>
+        <Link key={i.href} href={i.href} className={linkClassName}>
           {i.label}
-        </a>
+        </Link>
       ))}
     </>
   );
@@ -53,7 +59,7 @@ export function LandingNav({ linkClassName }: { linkClassName: string }) {
 /** Below lg: a ☰ menu with the section links and Sign in. "Try it for free" stays in the bar. */
 export function LandingMenu() {
   const pathname = usePathname();
-  const items = SECTIONS[pathname];
+  const items = sectionsFor(pathname);
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -88,9 +94,9 @@ export function LandingMenu() {
       {open && (
         <nav aria-label="Menu" className="card absolute inset-x-3 top-14 z-50 overflow-hidden py-1 shadow-xl">
           {items.map((i) => (
-            <a key={i.href} href={i.href} onClick={() => setOpen(false)} className="block px-5 py-3.5 text-base text-foreground hover:bg-black/5">
+            <Link key={i.href} href={i.href} onClick={() => setOpen(false)} className="block px-5 py-3.5 text-base text-foreground hover:bg-black/5">
               {i.label}
-            </a>
+            </Link>
           ))}
           <div className="mx-5 my-1 border-t border-border" />
           <Link href={loginHref(pathname)} onClick={() => setOpen(false)} className="block px-5 py-3.5 text-base font-semibold text-brand hover:bg-black/5">
