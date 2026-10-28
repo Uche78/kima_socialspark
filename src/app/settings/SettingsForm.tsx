@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { mediaUrl, uniqueSuffix } from "@/lib/media";
 import { formatPhone, isValidEmail, isValidPhone, normalizeEmail } from "@/lib/contact-format";
@@ -17,6 +17,7 @@ import { AccountType } from "./AccountType";
 import { MortgageDefaults } from "./MortgageDefaults";
 import { connectUrl, daysUntil, EXPIRY_WARN_DAYS, formatDay } from "@/lib/connection-expiry";
 import { PLATFORM_SPECS, TONE_PRESETS, type Profile, type SocialAccount } from "@/lib/types";
+import { trackGa } from "@/components/GoogleAnalytics";
 
 type Props = {
   profile: Profile;
@@ -33,6 +34,10 @@ type Props = {
 const MAX_SAMPLES = 5;
 
 export function SettingsForm({ profile: initial, accounts, isGuest, usage, billingSuccess, suggestBroker = false, connected, connectError }: Props) {
+  // Back from Stripe after paying: the last step of the plan funnel (only sent if Analytics is allowed).
+  useEffect(() => {
+    if (billingSuccess) trackGa("purchase", { plan: usage.plan, interval: usage.interval ?? undefined, currency: "CAD" });
+  }, [billingSuccess, usage.plan, usage.interval]);
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
   const [p, setP] = useState(suggestBroker ? { ...initial, role: "mortgage_broker" as const, title: initial.title === "REALTOR®" ? null : initial.title } : initial);

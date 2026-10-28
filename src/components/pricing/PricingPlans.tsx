@@ -1,11 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 import { PlanButton } from "@/components/PlanButton";
 import { PAID_PLAN_IDS, PAID_PLANS, type BillingInterval, type PaidPlanId, type PlanId } from "@/lib/plans";
 import { LANDING_TEXT, money, type Locale } from "@/lib/landing-i18n";
 import { TeamBanner } from "./TeamEnquiry";
+import { subscribePath } from "@/lib/subscribe";
+import { trackGa } from "@/components/GoogleAnalytics";
 
 /** The plan marked "Most popular": a paid plan, or "team" to feature the Team banner instead of a card. */
 export type PlanHighlight = PaidPlanId | "team";
@@ -96,12 +97,16 @@ export function PricingPlans({
                 </ul>
                 <div className="mt-auto pt-6">
                   {mode === "landing" ? (
-                    <Link
-                      href={`/pricing${interval === "year" ? "?interval=year" : ""}`}
+                    // Straight into sign-up for this plan (or checkout, if signed in): no second stop at /pricing.
+                    // A plain link, not <Link>: /subscribe redirects signed-out visitors to sign-in, and a redirect
+                    // during client-side navigation leaves Back showing the sign-in page under the landing page's URL.
+                    <a
+                      href={subscribePath({ plan: id, interval })}
+                      onClick={() => trackGa("select_plan", { plan: id, interval })}
                       className={`inline-flex h-11 w-full items-center justify-center rounded-full text-sm font-medium transition ${highlighted ? "bg-[#141414] text-white hover:bg-black" : "border border-black/15 bg-white text-[#141414] hover:bg-black/5"}`}
                     >
                       {T.choose(p.name)}
-                    </Link>
+                    </a>
                   ) : current ? (
                     <PlanButton plan="portal" label="Manage billing" className="btn-secondary h-11 w-full rounded-full" signedIn={signedIn} />
                   ) : paid ? (
@@ -110,7 +115,7 @@ export function PricingPlans({
                     <PlanButton
                       plan={id}
                       interval={interval}
-                      label={signedIn ? `Choose ${p.name}` : "Create an account to subscribe"}
+                      label={`Choose ${p.name}`}
                       className={`${highlighted ? "btn-primary" : "btn-secondary"} h-11 w-full rounded-full`}
                       signedIn={signedIn}
                     />

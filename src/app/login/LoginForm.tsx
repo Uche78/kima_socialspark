@@ -52,8 +52,9 @@ export function LoginForm({ isGuest, next, role }: { isGuest: boolean; next: str
       setBusy(false);
       return setError(/expired|invalid/i.test(error.message) ? "That code is incorrect or has expired. Check the latest email, or send a new code." : error.message);
     }
-    // New accounts choose Realtor or Mortgage broker first; /welcome passes everyone else straight on.
-    router.replace(`/welcome?next=${encodeURIComponent(next)}${role ? `&role=${role}` : ""}`);
+    // Buying a plan: straight to checkout (the welcome step comes after payment). Otherwise new accounts
+    // choose Realtor or Mortgage broker first; /welcome passes everyone else straight on.
+    router.replace(next.startsWith("/subscribe?") ? next : `/welcome?next=${encodeURIComponent(next)}${role ? `&role=${role}` : ""}`);
     router.refresh();
   }
 

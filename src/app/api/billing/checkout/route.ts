@@ -39,7 +39,8 @@ export async function POST(request: Request) {
       billing_address_collection: "required", // province determines GST/HST/QST
       customer_update: { address: "auto", name: "auto" },
       automatic_tax: { enabled: process.env.STRIPE_AUTOMATIC_TAX === "true" },
-      success_url: `${base}/settings?billing=success#billing`,
+      // Through the welcome step: new accounts choose Realtor or Mortgage broker after paying; others pass straight on.
+      success_url: `${base}/welcome?next=${encodeURIComponent("/settings?billing=success#billing")}`,
       cancel_url: `${base}/pricing?billing=cancelled`,
     });
     return NextResponse.json({ url: session.url });

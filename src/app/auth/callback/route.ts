@@ -28,7 +28,9 @@ export async function GET(request: NextRequest) {
     ok = !!data.user && !data.user.is_anonymous;
   }
 
-  // New accounts choose Realtor or Mortgage broker first; /welcome passes everyone else straight on.
+  // Buying a plan: straight to checkout (the welcome step comes after payment). Otherwise new accounts
+  // choose Realtor or Mortgage broker first; /welcome passes everyone else straight on.
   const role = params.get("role") === "mortgage_broker" ? "&role=mortgage_broker" : "";
-  return NextResponse.redirect(new URL(ok ? `/welcome?next=${encodeURIComponent(next)}${role}` : "/login?error=link_expired", request.url));
+  const after = next.startsWith("/subscribe?") ? next : `/welcome?next=${encodeURIComponent(next)}${role}`;
+  return NextResponse.redirect(new URL(ok ? after : "/login?error=link_expired", request.url));
 }
