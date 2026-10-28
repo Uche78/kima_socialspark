@@ -43,6 +43,7 @@ next-env.d.ts
 
 # Netlify CLI local state
 .netlify
+/deno.lock
 
 # SocialSpark ad video productions (media; see .claude/skills/socialspark-ad-video)
 /ad-videos/

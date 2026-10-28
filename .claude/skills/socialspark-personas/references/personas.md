@@ -93,6 +93,8 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 
 **Reach them.** Facebook and Instagram ads, realtor Facebook groups, brokerage training nights, "just listed post template" searches.
 
+**Print designs (proposed, not built).** Strong. Just Listed and Just Sold postcards to the 100–200 homes around each listing, made from the same link at the same time as the social posts. Adds about 2 posts per listing, which keeps them firmly on Pro.
+
 **Message that lands.** "Paste your listing link. Your Just Listed post is ready before your coffee is."
 
 ---
@@ -115,6 +117,8 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 **Objections.** "Another subscription?" → subscribe the month you have a listing, cancel in two clicks. "I don't have listings" → host open houses and Featured posts for colleagues, with the listing agent's OK and photo permission [15].
 
 **Reach them.** Instagram and TikTok, licensing-course and new-agent groups, brokerage onboarding.
+
+**Print designs (proposed, not built).** Good, mainly door hangers. They hand-deliver them while door-knocking, so there's no postage, the cheapest prospecting there is. Gives them a reason to pay Starter before they have many listings.
 
 **Message that lands.** "Your first listing deserves to look like your fiftieth."
 
@@ -139,6 +143,8 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 
 **Reach them.** Through their assistant, LinkedIn, top-producer events, coaching programs.
 
+**Print designs (proposed, not built).** Strong. They already run monthly farm postcards and Just Listed and Just Sold drops through a designer or print shop. Print volume strengthens the case for Top Producer and yearly billing.
+
 **Message that lands.** "Every listing posted the day it goes live, at every stage, without adding staff."
 
 ---
@@ -161,6 +167,8 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 **Product gap.** Seats, a shared brand kit and central billing are promised, not built. Decide a per-agent price and how the first deal is fulfilled before taking calls.
 
 **Reach them.** LinkedIn, team-lead coaching programs, brokerage leadership events.
+
+**Print designs (proposed, not built).** Medium. Wants one print look across the team; depends on the Team brand kit, which isn't built.
 
 **Message that lands.** "Every agent on your team, one look, without a designer."
 
@@ -185,6 +193,8 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 
 **Reach them.** Real-estate marketing communities, Instagram, LinkedIn job titles.
 
+**Print designs (proposed, not built).** Strong as a user. Print design is part of their job today; the boss still pays.
+
 **Message that lands.** "The listing posts are done. Go make the content only you can."
 
 ---
@@ -207,6 +217,8 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 **Objections.** "Is the French really Québécois?" → show a real sample in the ad. "Centris links?" → test this; if Centris blocks tools, the copy-paste path applies.
 
 **Reach them.** French-language Meta ads served in Québec, Québec agent Facebook groups, real estate board events.
+
+**Print designs (proposed, not built).** Good. Accroche-portes and Vendu cards in Québec French; few print tools write it. Check the OACIQ's rules on advertising a sale before launch.
 
 **Message that lands.** "Vos publications Inscrit, Visite libre et Vendu, en français d'ici, en une minute."
 
@@ -231,6 +243,8 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 
 **Reach them.** Bilingual geo-targeted ads in border regions, Ottawa and Outaouais boards, LinkedIn.
 
+**Print designs (proposed, not built).** Weak. Print adds nothing specific for them beyond bilingual copy.
+
 **Message that lands.** "One listing link. English, French, or both, in the same minute."
 
 ---
@@ -252,6 +266,8 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 **Objections.** "I only need it twice a year" → subscribe that month, cancel in two clicks.
 
 **Reach them.** Facebook, word of mouth from agent friends.
+
+**Print designs (proposed, not built).** Medium. An open house flyer for their one listing. Doesn't change their on-and-off billing.
 
 **Message that lands.** "Got a listing this month? Make it look like you do this every day."
 
@@ -275,6 +291,8 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 **Objections.** "Templates look templated" → show luxury examples in the creative. They may keep a designer for the launch and use SocialSpark for everything after.
 
 **Reach them.** LinkedIn, Instagram, luxury brokerage divisions.
+
+**Print designs (proposed, not built).** Weak for postcards and door hangers. They want premium brochures, which this feature doesn't cover.
 
 **Message that lands.** "Let your photographer's work speak. The post is ready when the photos are."
 
@@ -300,6 +318,8 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 
 **Reach them.** Instagram, investor communities, "condo realtor" searches. They already have a landing page (`/for/social-media-posts-for-condo-realtors`).
 
+**Print designs (proposed, not built).** Weak. Condo buildings restrict door-to-door delivery, and their buyers are online.
+
 **Message that lands.** "Five condos this week? Five posts before lunch."
 
 ---
@@ -322,6 +342,8 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 **Objections.** "I'm not a tech person" → paste a link, click post.
 
 **Reach them.** Rural geo-targeted Facebook ads, regional boards.
+
+**Print designs (proposed, not built).** Strongest. Just Sold postcards and community flyers reach the whole town, and their audience is older and local. Likely moves them from Starter to Pro.
 
 **Message that lands.** "That cottage deserves more than a phone photo on Facebook."
 
@@ -346,6 +368,8 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 
 **Reach them.** Facebook, office managers, their assistants or family, email.
 
+**Print designs (proposed, not built).** Strong. Just Sold postcards to past clients and their sphere are how they've always marketed. Likely moves them from Starter to Pro.
+
 **Message that lands.** "Your listings, posted properly, without learning Instagram."
 
 ---
@@ -367,6 +391,8 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 **Objections.** "My VA also did stories and replies" → SocialSpark does listing posts, not community management. Say so.
 
 **Reach them.** Cost-saving Meta ads, "real estate social media manager" searches.
+
+**Print designs (proposed, not built).** Medium. Replaces print work their VA used to do too.
 
 **Message that lands.** "The listing posts you used to outsource, done in a minute, for a fraction of the retainer."
 
@@ -390,6 +416,8 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 **Product gap.** Seats, an admin view and a shared brand kit are promised, not built, and there's no published per-agent price.
 
 **Reach them.** LinkedIn, direct outreach, provincial association events.
+
+**Print designs (proposed, not built).** Medium. Wants brokerage-branded print for every agent; depends on Team.
 
 **Message that lands.** "A listing-post tool you can offer every agent you recruit."
 
@@ -416,6 +444,8 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 
 **Reach them.** Expired-listing coaching communities and scripts, Facebook groups, prospecting-tool audiences.
 
+**Print designs (proposed, not built).** Strong. Door hangers on the expired listing's street, then Just Listed cards once relisted. A printed piece in the seller pitch makes "I'll market it properly" concrete.
+
 **Message that lands.** "Show the seller their home on Instagram before you hang up."
 
 ---
@@ -440,6 +470,8 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 **Objections.** "Is this compliant?" → the licence, date and disclaimer are automatic, but you review against your regulator. "Will realtors want it?" → ask first, then send a finished sheet.
 
 **Reach them.** LinkedIn, broker Facebook groups, brokerage training, "mortgage feature sheet" searches.
+
+**Print designs (proposed, not built).** Indirect. Their co-branded payment table can appear on a realtor partner's open house flyer.
 
 **Message that lands.** "Stop asking realtors for coffee. Send them a finished feature sheet for their listing."
 
@@ -467,6 +499,8 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 
 **Reach them.** LinkedIn, broker network conferences, their own realtor partners who already use SocialSpark.
 
+**Print designs (proposed, not built).** Indirect, but valuable. Partners' open house flyers carrying their sheet put their name in every open house.
+
 **Message that lands.** "Every partner listing gets a feature sheet the day it goes live."
 
 ---
@@ -489,6 +523,8 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 **Objections.** "Is the fine print right for Québec?" → it follows the province, but you review against AMF rules.
 
 **Reach them.** French-language Québec ads, Québec broker networks, LinkedIn.
+
+**Print designs (proposed, not built).** Indirect, as for 17, in French.
 
 **Message that lands.** "Vos fiches hypothécaires en français d'ici, co-signées avec vos courtiers immobiliers."
 
@@ -513,6 +549,8 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 
 **Reach them.** Instagram and TikTok, first-time-buyer webinars, partner condo agents (persona 10).
 
+**Print designs (proposed, not built).** Indirect. First-time-buyer payment tables on partners' open house flyers.
+
 **Message that lands.** "Show your buyers what that home really costs each month."
 
 ---
@@ -536,6 +574,8 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 
 **Reach them.** LinkedIn, Mortgage Professionals Canada events, broker network conferences.
 
+**Print designs (proposed, not built).** None directly.
+
 **Message that lands.** "Every agent's feature sheet carries your brokerage name and licence number."
 
 ---
@@ -557,6 +597,7 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 - **Compliance is a feature brokers buy.** Name and licence on ads are mandatory [8][10]. Sheets that carry them automatically sell to personas 16–20, and to the realtor brokerage owner (14).
 - **The realtor–broker loop is the growth engine.** Realtor referrals are 34.9% of broker business [6]. Every broker sending sheets to realtors is distribution to realtors, and "Send to broker" works the other way.
 - **Team is sold but not delivered** (personas 4, 14, 20). Before enquiries arrive, set a per-agent price and decide how to fulfil the first deal.
+- **Print designs would favour local, print-minded agents** (proposed; see the feature brief "Print designs for realtors"). Strongest for 11, 12, 1, 3 and 15; weak for 9 and 10. Just Sold print needs written consent in Ontario: the seller's before closing, the buyer's after, and both for any price or terms [26].
 - **Québec and bilingual personas (6, 7, 18)** have the fewest alternatives and the clearest differentiation.
 
 ## Sources
@@ -586,3 +627,4 @@ Tier 1 = strong pain, clear pay trigger, product fits today. Tier 2 = good fit w
 23. Gatineau bilingualism and Ottawa–Gatineau buyers: [JLR 2018](https://solutions.jlr.ca/hubfs/Etudes_et_rapports/2018-JLR-Real-Estate-Portrait-Gatineau.pdf?hsLang=en), [Ottawa Business Journal](https://obj.ca/widening-price-gap-increases-gatineaus-attractiveness-to-ottawa-residents/)
 24. Co-branded open house flyers (US loan officers): [Mortgage Coach](https://support.mortgagecoach.com/hc/en-us/articles/9600220487191-Creating-an-Open-House-Flyer), [ijungo](https://ijungo.com/printpub-co-marketing-with-realtors/)
 25. Royal LePage 2026 newcomer survey: [Royal LePage](https://www.royallepage.ca/en/realestate/royal-lepage-2026-canadian-newcomers), [MPA](https://www.mpamag.com/ca/mortgage-industry/industry-trends/most-newcomer-canadians-want-to-own-a-home-but-cant-save-fast-enough/591990)
+26. RECO Bulletin 5.4, advertising sold property: [reco.on.ca](https://reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-4-advertising-sold-property)
