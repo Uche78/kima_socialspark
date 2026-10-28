@@ -8,23 +8,31 @@ export const WRAP = "mx-auto w-full min-w-0 max-w-[1600px] px-4 lg:w-[90%] lg:px
 export const EYEBROW = "text-[11px] font-semibold uppercase tracking-[0.2em] text-[#141414]/70 sm:text-xs";
 export const H2 = "mt-3 font-[family-name:var(--font-heading)] tracking-[-0.02em] text-3xl font-medium leading-tight text-[#141414] sm:text-5xl";
 
-/** What the product is, in one paragraph an answer engine can quote, and the objections answered as chips. */
-export function Summary({ text, chips }: { text: string; chips: string[] }) {
+/** What the product is: a bold lead, a card per short line (text an answer engine can quote), and the objections answered as chips. */
+export function Summary({ lead, lines, chips }: { lead: string; lines: string[]; chips: string[] }) {
   return (
     <section className={WRAP} aria-label="What it is">
-      <div className="mx-auto max-w-4xl text-center">
-        <p className="text-lg leading-relaxed text-[#141414]/80 sm:text-xl">{text}</p>
-        <ul className="mt-8 flex flex-wrap justify-center gap-2.5">
-          {chips.map((c) => (
-            <li key={c} className="flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-medium text-[#141414] ring-1 ring-black/10">
-              <span className="text-[#d4a24c]" aria-hidden>
-                ✓
-              </span>
-              {c}
-            </li>
-          ))}
-        </ul>
+      <div className="mx-auto max-w-2xl text-center">
+        <p className="font-[family-name:var(--font-heading)] text-2xl font-medium leading-snug tracking-[-0.02em] text-balance text-[#141414] sm:text-[1.7rem]">{lead}</p>
       </div>
+      {/* One card per line: equal widths and heights, text top-left so the cards line up. */}
+      <ul className="mx-auto mt-8 grid max-w-5xl gap-4 md:grid-cols-3">
+        {lines.map((l) => (
+          <li key={l} className="rounded-2xl bg-white p-6 text-pretty text-[17px] leading-relaxed text-[#141414]/80 ring-1 ring-black/5">
+            {l}
+          </li>
+        ))}
+      </ul>
+      <ul className="mx-auto mt-8 flex max-w-4xl flex-wrap justify-center gap-2.5">
+        {chips.map((c) => (
+          <li key={c} className="flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-medium text-[#141414] ring-1 ring-black/10">
+            <span className="text-[#d4a24c]" aria-hidden>
+              ✓
+            </span>
+            {c}
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }

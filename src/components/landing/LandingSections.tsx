@@ -82,8 +82,13 @@ export function LandingSections() {
   return (
     <>
       <Summary
-        text="SocialSpark is a web app for Canadian realtors. Paste the link to a listing on a brokerage or agent website, and it writes the Instagram, Facebook and LinkedIn posts for it: branded images made from the listing photos and a caption in your voice, in English, Québec French or both. You review the post, then publish it or schedule it."
-        chips={["Nothing posts without your click", `${FREE_LIMITS.registered} free posts, no credit card`, "Cancel anytime", "Data stored in Canada"]}
+        lead="Listing posts for Canadian realtors, from one link."
+        lines={[
+          "Paste the link to a listing on a brokerage or agent website.",
+          "SocialSpark writes the Instagram, Facebook and LinkedIn posts: branded images from the listing photos and a caption in your voice.",
+          "In English, Québec French or both. You review each post, then publish or schedule it.",
+        ]}
+        chips={["Nothing posts without your click", `${FREE_LIMITS.registered} free posts, no credit card`, "Cancel anytime", "Stored in Canada"]}
       />
 
       {/* How it works */}

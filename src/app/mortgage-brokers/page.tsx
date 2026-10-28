@@ -60,7 +60,7 @@ export default function MortgageBrokersPage() {
       {/* Hero */}
       <section className={WRAP}>
         <AudienceSwitch current="broker" className="mb-4" />
-        <div className="grid items-center gap-10 overflow-hidden rounded-3xl bg-[#eeebe4] px-5 py-10 sm:px-10 sm:py-14 lg:grid-cols-[1.1fr_1fr] lg:px-[5%]">
+        <div className="grid items-center gap-10 overflow-hidden rounded-3xl bg-[#eeebe4] px-5 py-10 sm:px-10 sm:py-14 lg:h-[clamp(780px,56vw,920px)] lg:grid-cols-[1.1fr_1fr] lg:px-[5%]">
           <div>
             <p className={`${EYEBROW} sm:tracking-[0.25em]`}>For Canadian mortgage brokers</p>
             <h1 className="mt-4 font-[family-name:var(--font-heading)] text-[clamp(1.9rem,8vw,2.4rem)] font-medium leading-[1.1] tracking-[-0.02em] text-[#000103]/90 [overflow-wrap:anywhere] sm:text-6xl lg:text-[3.3rem] 2xl:text-[4rem]">
@@ -78,15 +78,21 @@ export default function MortgageBrokersPage() {
               <a href="#pricing" className="underline underline-offset-4">See pricing</a>
             </p>
           </div>
-          <div className="mx-auto w-full max-w-[460px]">
-            <SheetExample />
+          {/* From lg the panel is as tall as the realtor hero (HeroShowcase); the sheet (4:5) grows to fill that height. */}
+          <div className="mx-auto w-full max-w-[460px] lg:max-w-[calc((clamp(780px,56vw,920px)_-_8rem)_*_0.8)]">
+            <SheetExample hd />
           </div>
         </div>
       </section>
 
       <Summary
-        text="SocialSpark builds mortgage feature sheets for Canadian mortgage brokers and agents. Paste a listing link and it lays out what the home would cost each month at up to four down payments, using your own rates, with your brokerage, your licence number and a co-branded realtor on the sheet. Post it to Instagram, Facebook or LinkedIn, download a Story, or print it as a PDF."
-        chips={["Sheets and PDFs always free", `${FREE_LIMITS.registered} free posts, no credit card`, "You set the rates, never us", "Data stored in Canada"]}
+        lead="Mortgage feature sheets for Canadian brokers and agents."
+        lines={[
+          "SocialSpark shows what the home would cost each month at up to four down payments, using your rates.",
+          "Your brokerage, licence number and a co-branded realtor go on every sheet.",
+          "Post it, download a Story, or print it as a PDF.",
+        ]}
+        chips={["Sheets & PDFs free", `${FREE_LIMITS.registered} free posts, no credit card`, "You set the rates", "Stored in Canada"]}
       />
 
       {/* How it works */}
