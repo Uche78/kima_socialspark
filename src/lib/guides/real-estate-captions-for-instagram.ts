@@ -53,7 +53,7 @@ export const realEstateCaptionsForInstagram: Guide = {
       blocks: [
         {
           type: "p",
-          text: "Each post type has a different job, so each caption leads differently. These examples use the demo listings you'll see on this site; swap in your own facts and keep the shape.",
+          text: "Each post type has a different job, so each caption leads differently. These examples use the demo listings you'll see on this site; swap in your own facts and keep the shape. The same listing needs a different caption again on Facebook, where readers expect more story and a link works; see [real estate Facebook post ideas](/guides/real-estate-facebook-post-ideas).",
         },
         {
           type: "example",
@@ -249,7 +249,7 @@ export const realEstateCaptionsForInstagram: Guide = {
       a: "Yes. Put the English first and the French after a blank line, written as a Québec agent would say it rather than translated word for word.",
     },
   ],
-  related: ["just-listed-post-ideas"],
+  related: ["just-listed-post-ideas", "real-estate-facebook-post-ideas"],
   cta: {
     heading: "See your next listing with a caption in your voice",
     sub: "Paste a link to one of your listings. SocialSpark writes the Instagram caption from the listing, with your hook, your ask and your sign-off, ready to edit.",

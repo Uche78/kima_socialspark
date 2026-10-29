@@ -149,7 +149,7 @@ export const justListedPostIdeas: Guide = {
         },
         {
           type: "p",
-          text: "Portrait images (4:5) take up the most room in the Instagram and Facebook feeds; square works everywhere. Facebook also lets you post a whole photo album, and LinkedIn readers respond well to a short carousel.",
+          text: "Portrait images (4:5) take up the most room in the Instagram and Facebook feeds; square works everywhere. Facebook also lets you post a whole photo album, and LinkedIn readers respond well to a short carousel. For the Facebook caption itself, with more post ideas beyond Just Listed, see [real estate Facebook post ideas](/guides/real-estate-facebook-post-ideas).",
         },
       ],
     },
@@ -238,7 +238,7 @@ export const justListedPostIdeas: Guide = {
       a: "A Sold post speaks to future sellers: tell the short story of the result and invite people to talk about their own home. Advertising a sale needs written consent. In Ontario, RECO requires the seller's before closing, the buyer's after, and both to show the price or terms. Check your own regulator's rules.",
     },
   ],
-  related: ["real-estate-captions-for-instagram"],
+  related: ["real-estate-captions-for-instagram", "real-estate-facebook-post-ideas"],
   cta: {
     heading: "See your next listing as a Just Listed post",
     sub: "Paste a link to one of your listings. SocialSpark lays out the image with your name and brokerage and writes the caption, ready to edit.",
