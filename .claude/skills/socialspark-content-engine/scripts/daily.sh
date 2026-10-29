@@ -68,8 +68,22 @@ ALLOWED=(
 # Deny rules win over the allowlist: no refspecs ("guides/x:main"), no force, no deleting, no other targets.
 DENIED=("Bash(git push*:*)" "Bash(git push*--force*)" "Bash(git push*-f *)" "Bash(git push*--delete*)" "Bash(git push*--mirror*)" "Bash(git push*--all*)" "Bash(git push*main*)" "Bash(git push*HEAD*)")
 
-"$CLAUDE" -p "$PROMPT" --permission-mode dontAsk --allowedTools "${ALLOWED[@]}" --disallowedTools "${DENIED[@]}" >> "$LOG" 2>&1
-STATUS=$?
+# A dropped connection to the API ("API Error: Connection closed mid-response") ends the run with nothing done.
+# Retry up to twice, 10 minutes apart, from a clean main, but only if that attempt pushed no guides/* branch.
+PUSHED_BEFORE="$(git ls-remote -q origin 'refs/heads/guides/*' 2>/dev/null)"
+for ATTEMPT in 1 2 3; do
+  START_LINE=$(($(wc -l < "$LOG") + 1))
+  "$CLAUDE" -p "$PROMPT" --permission-mode dontAsk --allowedTools "${ALLOWED[@]}" --disallowedTools "${DENIED[@]}" >> "$LOG" 2>&1
+  STATUS=$?
+  [ $STATUS -eq 0 ] || [ $ATTEMPT -eq 3 ] && break
+  tail -n +$START_LINE "$LOG" | grep -q '^API Error' || break
+  [ "$(git ls-remote -q origin 'refs/heads/guides/*' 2>/dev/null)" = "$PUSHED_BEFORE" ] || break
+  echo "=== $(date): API error, retrying in 10 minutes (attempt $((ATTEMPT + 1)) of 3) ===" >> "$LOG"
+  /bin/sleep 600
+  git checkout -q --detach origin/main && git reset -q --hard origin/main
+  git clean -qfd -e marketing/seo/data -e marketing/seo/product-ideas.md -e marketing/seo/product-ideas.json -e node_modules -e .env.local
+  git for-each-ref --format='%(refname:short)' 'refs/heads/guides/*' | xargs -n1 git branch -qD 2>/dev/null
+done
 
 git checkout -q --detach origin/main 2>/dev/null || true
 
