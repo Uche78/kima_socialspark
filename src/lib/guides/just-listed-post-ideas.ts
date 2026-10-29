@@ -116,7 +116,7 @@ export const justListedPostIdeas: Guide = {
             { title: "The floor plan", body: "Post the layout and invite people to message for the full plan. It brings serious buyers, not browsers." },
             { title: "The street and the area", body: "What's on the street and nearby, stated as facts you've checked: the park at the end of the road, the transit stop." },
             { title: "The detail shot", body: "The thing a photo tour misses: the original hardwood, the built-ins, the view from the bedroom window." },
-            { title: "The open house invite", body: "Date, time and address early in the caption. Ask people to save the post or bring a friend who's looking." },
+            { title: "The open house invite", body: "Date, time and address early in the caption. Ask people to save the post or bring a friend who's looking. For a full posting timeline, see [open house social media posts](/guides/open-house-social-media-post)." },
             { title: "The LinkedIn version", body: "For your professional network: who the home suits by its features (a home office, a short commute), and a referral ask." },
             { title: "The bilingual post", body: "In Québec, Ottawa–Gatineau or anywhere your buyers read French, the same post in English and French reaches both." },
             { title: "The update", body: "A price change or a new open house date is a fresh reason to post. For a price change, lead with what the new price now gets." },
@@ -238,7 +238,7 @@ export const justListedPostIdeas: Guide = {
       a: "A Sold post speaks to future sellers: tell the short story of the result and invite people to talk about their own home. Advertising a sale needs written consent. In Ontario, RECO requires the seller's before closing, the buyer's after, and both to show the price or terms. Check your own regulator's rules.",
     },
   ],
-  related: ["real-estate-captions-for-instagram", "real-estate-facebook-post-ideas"],
+  related: ["real-estate-captions-for-instagram", "real-estate-facebook-post-ideas", "open-house-social-media-post"],
   cta: {
     heading: "See your next listing as a Just Listed post",
     sub: "Paste a link to one of your listings. SocialSpark lays out the image with your name and brokerage and writes the caption, ready to edit.",

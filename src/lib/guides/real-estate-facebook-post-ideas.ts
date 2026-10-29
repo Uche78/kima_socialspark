@@ -107,7 +107,7 @@ export const realEstateFacebookPostIdeas: Guide = {
             { title: "The full photo album", body: "Facebook shows up to 20 photos as a grid, more than Instagram's carousel limit. Post the whole showing, in order: outside, main living space, kitchen, bedrooms, extras." },
             { title: "The question post", body: "A line tied to the home that invites a comment: \"Which bedroom would you claim?\" or \"Pool or no pool, which matters more to you?\" Comments bring the post back in front of people who missed it." },
             { title: "The neighbourhood context", body: "What's on the street or nearby, stated as facts you've checked: a park at the end of the road, a transit stop, a school boundary (never a school's ranking or reputation)." },
-            { title: "The open house reminder", body: "Date and time again, a day or two before. A second mention catches people who scrolled past the first." },
+            { title: "The open house reminder", body: "Date and time again, a day or two before. A second mention catches people who scrolled past the first. See [open house social media posts](/guides/open-house-social-media-post) for the full save-the-date-to-recap timeline." },
             { title: "The price change", body: "Lead with what the new price now gets, not the old number. A price change is a fresh reason to post, not a repeat of the first one." },
             { title: "The coming soon teaser", body: "One strong photo and a line inviting a message for early details, before the listing is public." },
             { title: "The sold update", body: "Aimed at future sellers, not buyers: a short line about the result and an invitation to talk about their own home's value." },
@@ -222,7 +222,7 @@ export const realEstateFacebookPostIdeas: Guide = {
       a: "Only with the consent your regulator and board require. Credit the listing brokerage in the post and don't make it look like your own listing.",
     },
   ],
-  related: ["just-listed-post-ideas", "real-estate-captions-for-instagram"],
+  related: ["just-listed-post-ideas", "real-estate-captions-for-instagram", "open-house-social-media-post"],
   cta: {
     heading: "See your next listing as a Facebook post",
     sub: "Paste a link to one of your listings. SocialSpark writes a caption for Facebook's audience and lays out a clean listing photo, ready to edit.",

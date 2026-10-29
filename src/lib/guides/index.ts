@@ -5,6 +5,7 @@
 
 import type { Language } from "@/lib/types";
 import { justListedPostIdeas } from "./just-listed-post-ideas";
+import { openHouseSocialMediaPost } from "./open-house-social-media-post";
 import { realEstateCaptionsForInstagram } from "./real-estate-captions-for-instagram";
 import { realEstateFacebookPostIdeas } from "./real-estate-facebook-post-ideas";
 
@@ -68,7 +69,9 @@ export type Guide = {
 };
 
 /** Newest first. Add a guide by importing its file here. */
-export const GUIDES: Guide[] = [justListedPostIdeas, realEstateCaptionsForInstagram, realEstateFacebookPostIdeas].sort((a, b) => b.published.localeCompare(a.published));
+export const GUIDES: Guide[] = [justListedPostIdeas, realEstateCaptionsForInstagram, realEstateFacebookPostIdeas, openHouseSocialMediaPost].sort((a, b) =>
+  b.published.localeCompare(a.published),
+);
 
 export function guide(slug: string) {
   return GUIDES.find((g) => g.slug === slug);
