@@ -37,7 +37,7 @@ Broker angle: an open house flyer could carry the partner broker's co-branded pa
 ## Rules that shape it
 
 - **Sold advertising needs written consent (Ontario).** [RECO Bulletin 5.4](https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-4-advertising-sold-property): consent in writing with the dates it starts and expires. Saying "sold" needs the seller's consent before closing and the buyer's after; price or other terms need both, any time. It applies to the buyer's brokerage too. Other provinces have their own rules.
-- **Brokerage name on every piece**: RECO counts print as advertising ([Bulletin 5.1](https://www.reco.on.ca/getmedia/fc6d0358-a8a1-4e6b-bfaa-2b8c312e1c3b/RECO-Bulletin-5-1-Advertising-requirements.pdf)).
+- **Brokerage name on every piece**: RECO counts print as advertising ([Bulletin 5.1](https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-1-advertising-requirements/)).
 - **Photo licences may not cover print**: the photographer owns listing photos by default, and an MLS or online licence may not extend to print runs (BCREA guidance, per the personas assessment).
 - **Postage is the agent's real cost**: Canada Post Neighbourhood Mail was 18.4¢ a piece in 2025, with a 2026 increase announced (per the personas assessment; check the current price sheet). 500 cards cost far more to mail and print than a month of Pro, so the design is an easy add.
 

@@ -39,4 +39,8 @@ Keyword: "reco advertising guidelines" — ~110/mo average in Canada (Keyword Pl
 - RECO: Discipline and Appeals Committee — a registrant's guide (for offences after 1 December 2023) — https://www.reco.on.ca/enforcement/if-you-are-the-subject-of-a-complaint/if-you-are-involved-in-a-discipline-hearing/registrant-guide-to-discipline-appeal-hearings/
 - CREA trademark use (REALTOR® capitalization) — https://www.crea.ca/cafe/everything-you-need-to-know-about-creas-trademarks-2/ (already cited by sibling guides; reused for the same fact)
 
-Every claim in the guide traces to one of the six primary sources above. The four read-for-gaps pages are never quoted or cited; they only showed what a searcher already finds and what they still wouldn't know.
+Every claim in the guide was checked against these sources after the run; corrections are listed below. The four read-for-gaps pages are never quoted or cited; they only showed what a searcher already finds and what they still wouldn't know.
+
+## Corrections after the fact-check (2026-10-30)
+
+The first draft was checked line by line against the bulletins before review. Changed: removed a logo warning Bulletin 5.1 doesn't contain; added two broker terms the permitted-terms table left out; corrected who agrees to direct contact with a represented party (the other agent); "REALTOR® on first use" isn't CREA's wording; removed unsourced statements about how complaints start; marked the testimonial reading as our interpretation; added the "Brokerage" descriptor to the sample sign-off; and removed the heading and lines implying SocialSpark makes a post compliant.

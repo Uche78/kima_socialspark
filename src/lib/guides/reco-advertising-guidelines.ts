@@ -20,7 +20,7 @@ export const recoAdvertisingGuidelines: Guide = {
   h1: "RECO advertising guidelines for Ontario realtors, explained bulletin by bulletin",
   dek: "What RECO's own bulletins require for brokerage identification, permitted terms, social media, sold listings and the penalties for getting it wrong.",
   answer:
-    "RECO requires every Ontario real estate ad, including social media, to clearly show the brokerage name and the agent's RECO-registered name and title, with no nicknames. REALTOR® is reserved for CREA members. Advertising a property as sold needs the parties' written consent, with start and end dates. Personal Real Estate Corporations can't advertise on their own. Breaking these rules can mean a fine of up to $50,000 for an agent or $100,000 for a brokerage.",
+    "RECO requires every Ontario real estate ad, including social media, to clearly show the brokerage name and the agent's RECO-registered name and title, with no nicknames. REALTOR® is reserved for CREA members. Advertising a property as sold needs the parties' written consent, with start and end dates. Personal Real Estate Corporations can't advertise. Breaking these rules can mean a fine of up to $50,000 for an agent or $100,000 for a brokerage.",
   published: "2026-10-30",
   updated: "2026-10-30",
   sections: [
@@ -33,7 +33,7 @@ export const recoAdvertisingGuidelines: Guide = {
         },
         {
           type: "p",
-          text: "A post about a listing is advertising under TRESA, the same as a yard sign or a newspaper ad. RECO's [Bulletin 5.3](https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-3-advertising-online/) says this directly: the same advertising requirements apply online and on social media as everywhere else, and a brokerage is responsible for every agent's advertising it employs, including on websites and social accounts it doesn't manage itself.",
+          text: "A post about a listing is advertising under TRESA, the same as a yard sign or a newspaper ad. RECO's [Bulletin 5.3](https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-3-advertising-online/) says this directly: the same advertising requirements apply on social media, and brokerages and agents stay responsible for what they publish, even on a site someone else manages for them.",
         },
         {
           type: "tip",
@@ -52,7 +52,7 @@ export const recoAdvertisingGuidelines: Guide = {
         {
           type: "steps",
           items: [
-            { title: "Name the brokerage, clearly and prominently", body: "Every ad must show the brokerage's name as registered with RECO, with the descriptor \"brokerage\" or \"real estate brokerage\". Bulletin 5.1 warns against a brokerage name in small text under a large personal logo: it still has to be prominent, not just present." },
+            { title: "Name the brokerage, clearly and prominently", body: "Every ad must show the brokerage's name as registered with RECO, and Bulletin 5.1's checklist asks that the descriptor \"brokerage\" or \"real estate brokerage\" appear with it. The standard is \"clearly and prominently identified\", so being somewhere on the ad may not be enough." },
             { title: "Use your registered name, not a nickname", body: "If an ad names you, use the exact name RECO has on file. \"Jon\" for a RECO-registered \"Jonathan\" isn't allowed, even if that's what your clients call you." },
             { title: "Pair your name with a permitted term", body: "Every mention of you needs one of the terms in the table below, matching your registration category. Teams get no exception: each member is named with their own registered term, and the brokerage still has to appear." },
             { title: "Make every claim checkable", body: "Sales volume, rankings and awards must be factually correct and verifiable; a comparative claim like \"top producer in the office\" needs a stated basis, and a team award must say the result is shared and give the team's size." },
@@ -60,8 +60,8 @@ export const recoAdvertisingGuidelines: Guide = {
         },
         {
           type: "example",
-          label: "A compliant sign-off",
-          text: "Jane Doe, REALTOR® | ABC Realty Inc.\n\nListing courtesy of XYZ Realty Inc. (if it's another brokerage's listing)",
+          label: "A sign-off with every part in place",
+          text: "Jane Doe, REALTOR® | ABC Realty Inc., Brokerage\n\nListing courtesy of XYZ Realty Inc., Brokerage (if it's another brokerage's listing)",
         },
       ],
     },
@@ -70,7 +70,7 @@ export const recoAdvertisingGuidelines: Guide = {
       blocks: [
         {
           type: "p",
-          text: "[RECO Bulletin 5.2](https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-2-permitted-terms/) lists the only descriptors each registration category can advertise under.",
+          text: "[RECO Bulletin 5.2](https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-2-permitted-terms/) lists the descriptors each registration category can advertise under, along with their French equivalents.",
         },
         {
           type: "table",
@@ -78,7 +78,7 @@ export const recoAdvertisingGuidelines: Guide = {
           head: ["Registration", "Permitted terms"],
           rows: [
             ["Salesperson", "Salesperson, real estate salesperson, sales representative, real estate agent, real estate sales representative, or REALTOR®/REALTOR® salesperson (CREA members only)"],
-            ["Broker", "Broker, real estate broker, broker real estate agent, or REALTOR® broker (CREA members only)"],
+            ["Broker", "Broker, real estate agent, broker real estate agent, real estate broker, or REALTOR®/REALTOR® broker (CREA members only)"],
             ["Broker of record", "Broker of record, specifically, with no substitute term"],
             ["Personal Real Estate Corporation (PREC)", "None: a PREC can't advertise, or represent itself as trading in real estate, under its own name"],
           ],
@@ -86,7 +86,7 @@ export const recoAdvertisingGuidelines: Guide = {
         {
           type: "tip",
           label: "REALTOR® isn't a job title",
-          text: "REALTOR® is a [CREA trademark](https://www.crea.ca/cafe/everything-you-need-to-know-about-creas-trademarks-2/) that identifies CREA members, capitalized with the ® symbol on first use. A RECO-registered salesperson who isn't a CREA member can't use it, in a post or anywhere else.",
+          text: "REALTOR® is a [CREA trademark](https://www.crea.ca/cafe/everything-you-need-to-know-about-creas-trademarks-2/) that identifies CREA members, written in capitals with the ® symbol. A RECO-registered salesperson who isn't a CREA member can't use it, in a post or anywhere else.",
         },
       ],
     },
@@ -101,7 +101,7 @@ export const recoAdvertisingGuidelines: Guide = {
           type: "list",
           items: [
             "**A mixed personal and business account still counts.** If you post real estate content from a personal account, every one of those posts has to meet the same advertising requirements as your business account.",
-            "**Your brokerage has to be readily visible on the profile itself**, not just somewhere in a post: in the account's bio, display name or cover image, so it's accessible without reading every caption.",
+            "**Your profile has to identify you too.** Bulletin 5.3 says the agent and brokerage must be \"readily visible or accessible on the account profile\", using its information fields and its display and cover images.",
             "**A team website or page still needs the employing brokerage's name prominently displayed**, so a team name alone doesn't read as its own brokerage.",
             "**You're responsible for a third-party-managed site, too.** Handing your website to a marketing company doesn't shift the duty to keep it current and accurate off you or your brokerage.",
             "**A link to another site needs to say so.** If you link out to a site you're not affiliated with, say that, so the link doesn't imply an endorsement that isn't there.",
@@ -130,8 +130,8 @@ export const recoAdvertisingGuidelines: Guide = {
           items: [
             { title: "Decide what the post actually shows", body: "\"Sold!\" with no price needs less consent than \"Sold over asking\" or any number. Check the table above against exactly what your caption and image say." },
             { title: "Get it in writing, with dates", body: "Bulletin 5.4 requires the consent to state the date it takes effect and the date it expires. A verbal \"sure, go ahead\" from a past client doesn't meet this." },
-            { title: "Route contact through the other side's agent", body: "If the other party is represented, reach them through their agent unless you already have their direct consent to contact them." },
-            { title: "Take the post down by the expiry date", body: "Bulletin 5.3 extends this to online content directly: a photo or video can't stay up past the date in the written consent. A Sold post from eighteen months ago, still live on a profile grid, is a common way agents fall out of compliance without posting anything new." },
+            { title: "Route contact through the other side's agent", body: "If the party is represented by another agent, your request goes through that agent, unless that agent has agreed to you contacting the person directly." },
+            { title: "Take the post down by the expiry date", body: "Bulletin 5.3 extends this to online content directly: a photo or video can't stay up past the date in the written consent. That includes a Sold post still sitting on your profile grid." },
           ],
         },
       ],
@@ -141,11 +141,11 @@ export const recoAdvertisingGuidelines: Guide = {
       blocks: [
         {
           type: "p",
-          text: "Not under a bulletin of their own, but two existing rules reach them directly. Bulletin 5.1's accuracy requirement means a testimonial has to be genuine and not cherry-picked to mislead; Bulletin 5.3's consent requirement means a client's name or photo in a review post needs their written consent, the same as a buyer's or seller's name in a Sold post.",
+          text: "Not under a bulletin of their own, but two existing rules reach them directly. Bulletin 5.1 requires statements in an ad to be factually correct and verifiable, which we read as covering a testimonial you publish. Bulletin 5.3 says \"showing photos and names of happy buyers requires their written consent\".",
         },
         {
           type: "p",
-          text: "In practice: ask before you post a client's quote with their name or photo attached, and don't publish a testimonial that implies a result (\"got us $50,000 over asking\") without the same consent a Sold post would need for that number.",
+          text: "In practice: get written consent before you post a client's quote with their name or photo, and if the quote mentions the price or terms of a sale, check it against the Sold consent table above. RECO doesn't address testimonials by name, so ask your brokerage.",
         },
       ],
     },
@@ -154,21 +154,17 @@ export const recoAdvertisingGuidelines: Guide = {
       blocks: [
         {
           type: "p",
-          text: "RECO's Discipline and Appeals Committee can act on any contravention of TRESA or its regulations, which includes the advertising bulletins. For conduct on or after December 1, 2023, a panel can order a fine of up to $50,000 for a salesperson or broker, or up to $100,000 for a brokerage, on top of required education, conditions on your registration, or suspension or revocation of it.",
-        },
-        {
-          type: "p",
-          text: "Most advertising complaints start small: a competing agent, a past client or a member of the public flags a post to RECO, often over a missing brokerage name or an unconsented Sold claim. Fixing the post doesn't make the complaint disappear once it's filed, which is why catching these before posting is cheaper than catching them after.",
+          text: "RECO's Discipline and Appeals Committee hears alleged contraventions of TRESA and its regulations, the rules these bulletins explain. For conduct on or after December 1, 2023, a panel can order a fine of up to $50,000 for a salesperson or broker, or up to $100,000 for a brokerage, on top of required education, conditions on your registration, or suspension or revocation of it.",
         },
       ],
     },
     {
-      heading: "Mistakes that trigger a RECO complaint",
+      heading: "Common RECO advertising mistakes to check for",
       blocks: [
         {
           type: "list",
           items: [
-            "**The brokerage name is there, but too small to read.** Bulletin 5.1's \"clearly and prominently\" standard is about what a viewer actually notices, not what's technically present.",
+            "**The brokerage name is there, but too small to read.** Bulletin 5.1 says \"clearly and prominently\", so check how it reads at phone size.",
             "**A nickname instead of the registered name.** Even one that's been on your business cards for years isn't a substitute for what's on file with RECO.",
             "**REALTOR® used by a non-CREA-member registrant**, often copied from a template without checking.",
             "**A Sold post left up past the consent's expiry date.** The post didn't change; the clock ran out on it.",
@@ -179,7 +175,7 @@ export const recoAdvertisingGuidelines: Guide = {
       ],
     },
     {
-      heading: "How to keep every SocialSpark post RECO-compliant",
+      heading: "How to set up SocialSpark so your name and brokerage are on every post",
       blocks: [
         {
           type: "p",
@@ -188,10 +184,11 @@ export const recoAdvertisingGuidelines: Guide = {
         {
           type: "steps",
           items: [
-            { title: "Set your name, title and brokerage once", body: "In your profile: your full name, your registration title and your brokerage name. Every post pulls from there, so you're not retyping it and risking a typo or an old brokerage name." },
-            { title: "Every image shows your details", body: "The post design renders your name, brokerage and contact details on the image itself, not buried only in the caption." },
-            { title: "Every caption ends with your sign-off", body: "Generated captions close with your identification on its own line, for example \"Jane Doe, REALTOR® | ABC Realty Inc.\", and add \"Listing courtesy of\" when the listing belongs to another brokerage." },
-            { title: "Review before you publish", body: "Nothing goes out automatically. Check the post against the rules above, particularly consent for a Sold post, before you click publish." },
+            { title: "Set your name, title and brokerage once", body: "In your profile: your full name as registered with RECO, your title, and your brokerage name as registered, with \"Brokerage\" included. Posts use what you save there, so check it matches your registration." },
+            { title: "Check your details on the image", body: "The design puts your brokerage and contact details on the image by default. You can switch them off in the editor, so leave them on or make sure the post still identifies you." },
+            { title: "Read the sign-off", body: "Captions end with your name, title and brokerage on their own line, as saved in your profile, and add \"Listing courtesy of\" when the listing belongs to another brokerage." },
+            { title: "Confirm consent on a Sold post", body: "Before it makes a Sold post, SocialSpark asks you to confirm you have written consent to advertise the sale. Whether that consent is valid and in date is still yours to check." },
+            { title: "Review before you publish", body: "Nothing goes out without your click. Check the post against the rules above first." },
           ],
         },
         {
@@ -220,7 +217,7 @@ export const recoAdvertisingGuidelines: Guide = {
     },
     {
       q: "Do I need written consent for a testimonial or a client's photo?",
-      a: "RECO has no bulletin specifically on testimonials, but a client's name or photo in a post needs their written consent under Bulletin 5.3, and the claim in the testimonial still has to meet Bulletin 5.1's accuracy rule.",
+      a: "RECO has no bulletin specifically on testimonials, but Bulletin 5.3 says photos and names of happy buyers need their written consent, and Bulletin 5.1 requires statements in an ad to be accurate and verifiable.",
     },
     {
       q: "Can I call myself a REALTOR® if I'm not a CREA member?",
@@ -228,7 +225,7 @@ export const recoAdvertisingGuidelines: Guide = {
     },
     {
       q: "How long can a listing photo or video stay online after I get consent?",
-      a: "Only until the expiry date stated in the written consent. RECO Bulletin 5.3 says the content has to come down by then, and a brokerage is expected to actively check for and remove what's expired.",
+      a: "Only until the expiry date stated in the written consent. RECO Bulletin 5.3 says content can't remain online past the end date in the written consent, and that you must remove content you no longer have permission to use.",
     },
     {
       q: "What's the maximum fine for breaking RECO's advertising rules?",
@@ -238,7 +235,7 @@ export const recoAdvertisingGuidelines: Guide = {
   related: ["just-listed-post-ideas", "real-estate-captions-for-instagram", "open-house-social-media-post"],
   cta: {
     heading: "See your name, title and brokerage on every post",
-    sub: "Paste a listing link. SocialSpark puts your registered name, title and brokerage on the image and ends the caption with your sign-off, ready to review before you publish.",
+    sub: "Paste a listing link. SocialSpark uses the name, title and brokerage in your profile, on the image and in the caption's sign-off, ready to review before you publish.",
   },
   sources: [
     { label: "RECO Bulletin 5.1: Advertising requirements", url: "https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-1-advertising-requirements/" },

@@ -174,7 +174,7 @@ export const realEstateCaptionsForInstagram: Guide = {
         {
           type: "list",
           items: [
-            "**Name your brokerage.** In Ontario, [RECO's advertising bulletin](https://www.reco.on.ca/getmedia/fc6d0358-a8a1-4e6b-bfaa-2b8c312e1c3b/RECO-Bulletin-5-1-Advertising-requirements.pdf) requires the brokerage name, clearly and prominently, in all advertising, including social media. Other provinces have similar rules. For the full set of RECO's advertising rules, see [RECO advertising guidelines](/guides/reco-advertising-guidelines).",
+            "**Name your brokerage.** In Ontario, [RECO's advertising bulletin](https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-1-advertising-requirements/) requires the brokerage name, clearly and prominently, in all advertising, including social media. Other provinces have similar rules. For the full set of RECO's advertising rules, see [RECO advertising guidelines](/guides/reco-advertising-guidelines).",
             "**Get written consent before a Sold caption.** In Ontario, [RECO Bulletin 5.4](https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-4-advertising-sold-property) requires the parties' written consent, with the dates it's valid, to advertise a property as sold: the seller's before closing, the buyer's after, and both to mention the price or terms.",
             "**Write REALTOR® correctly.** It's a CREA trademark for members, not a job title; [CREA asks](https://www.crea.ca/cafe/everything-you-need-to-know-about-creas-trademarks-2/) for capitals and the ® symbol.",
             "**Describe the home, not the buyer.** Human rights laws prohibit discriminatory housing ads. \"Three bedrooms on one floor\" is fine; \"perfect for a young family\" isn't.",
@@ -256,7 +256,7 @@ export const realEstateCaptionsForInstagram: Guide = {
   },
   sources: [
     { label: "Social Media Today: Instagram implements new limits on hashtag use (December 2025)", url: "https://www.socialmediatoday.com/news/instagram-implements-new-limits-on-hashtag-use/808309/" },
-    { label: "RECO Bulletin 5.1: Advertising requirements", url: "https://www.reco.on.ca/getmedia/fc6d0358-a8a1-4e6b-bfaa-2b8c312e1c3b/RECO-Bulletin-5-1-Advertising-requirements.pdf" },
+    { label: "RECO Bulletin 5.1: Advertising requirements", url: "https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-1-advertising-requirements/" },
     { label: "RECO Bulletin 5.4: Advertising sold properties", url: "https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-4-advertising-sold-property" },
     { label: "CREA: Everything you need to know about CREA's trademarks", url: "https://www.crea.ca/cafe/everything-you-need-to-know-about-creas-trademarks-2/" },
   ],

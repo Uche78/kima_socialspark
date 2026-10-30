@@ -160,7 +160,7 @@ export const openHouseSocialMediaPost: Guide = {
         {
           type: "list",
           items: [
-            "**Name your brokerage, clearly.** In Ontario, [RECO's advertising bulletin](https://www.reco.on.ca/getmedia/fc6d0358-a8a1-4e6b-bfaa-2b8c312e1c3b/RECO-Bulletin-5-1-Advertising-requirements.pdf) requires the brokerage name in all advertising, including social media. Other provinces have similar rules. For the full set of RECO's advertising rules, see [RECO advertising guidelines](/guides/reco-advertising-guidelines).",
+            "**Name your brokerage, clearly.** In Ontario, [RECO's advertising bulletin](https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-1-advertising-requirements/) requires the brokerage name in all advertising, including social media. Other provinces have similar rules. For the full set of RECO's advertising rules, see [RECO advertising guidelines](/guides/reco-advertising-guidelines).",
             "**Only host and post what you're allowed to.** If it's a colleague's or another brokerage's listing, follow your board's and regulator's rules on consent, credit the listing brokerage, and don't make it look like your own listing.",
             "**Write REALTOR® correctly.** It's a CREA trademark for members, not a job title; [CREA asks](https://www.crea.ca/cafe/everything-you-need-to-know-about-creas-trademarks-2/) for capitals and the ® symbol on first use.",
             "**Describe the home, not the visitor.** Human rights laws prohibit discriminatory housing ads. \"Four bedrooms on two floors\" is fine; \"perfect for a young family\" isn't.",
@@ -243,7 +243,7 @@ export const openHouseSocialMediaPost: Guide = {
     sub: "Paste a link to one of your listings. SocialSpark lays out the date, time and details with your name and brokerage, and writes a caption ready to edit.",
   },
   sources: [
-    { label: "RECO Bulletin 5.1: Advertising requirements", url: "https://www.reco.on.ca/getmedia/fc6d0358-a8a1-4e6b-bfaa-2b8c312e1c3b/RECO-Bulletin-5-1-Advertising-requirements.pdf" },
+    { label: "RECO Bulletin 5.1: Advertising requirements", url: "https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-1-advertising-requirements/" },
     { label: "CREA: Everything you need to know about CREA's trademarks", url: "https://www.crea.ca/cafe/everything-you-need-to-know-about-creas-trademarks-2/" },
     { label: "Social Media Today: Instagram implements new limits on hashtag use (December 2025)", url: "https://www.socialmediatoday.com/news/instagram-implements-new-limits-on-hashtag-use/808309/" },
   ],
