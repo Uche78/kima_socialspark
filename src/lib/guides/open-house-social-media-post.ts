@@ -160,7 +160,7 @@ export const openHouseSocialMediaPost: Guide = {
         {
           type: "list",
           items: [
-            "**Name your brokerage, clearly.** In Ontario, [RECO's advertising bulletin](https://www.reco.on.ca/getmedia/fc6d0358-a8a1-4e6b-bfaa-2b8c312e1c3b/RECO-Bulletin-5-1-Advertising-requirements.pdf) requires the brokerage name in all advertising, including social media. Other provinces have similar rules.",
+            "**Name your brokerage, clearly.** In Ontario, [RECO's advertising bulletin](https://www.reco.on.ca/getmedia/fc6d0358-a8a1-4e6b-bfaa-2b8c312e1c3b/RECO-Bulletin-5-1-Advertising-requirements.pdf) requires the brokerage name in all advertising, including social media. Other provinces have similar rules. For the full set of RECO's advertising rules, see [RECO advertising guidelines](/guides/reco-advertising-guidelines).",
             "**Only host and post what you're allowed to.** If it's a colleague's or another brokerage's listing, follow your board's and regulator's rules on consent, credit the listing brokerage, and don't make it look like your own listing.",
             "**Write REALTOR® correctly.** It's a CREA trademark for members, not a job title; [CREA asks](https://www.crea.ca/cafe/everything-you-need-to-know-about-creas-trademarks-2/) for capitals and the ® symbol on first use.",
             "**Describe the home, not the visitor.** Human rights laws prohibit discriminatory housing ads. \"Four bedrooms on two floors\" is fine; \"perfect for a young family\" isn't.",
@@ -237,7 +237,7 @@ export const openHouseSocialMediaPost: Guide = {
       a: "On Instagram, up to 5, which is now the most Instagram allows: the city, the neighbourhood, the property type and #OpenHouse. On Facebook, 0 to 3. On LinkedIn, 3 to 5 professional ones.",
     },
   ],
-  related: ["just-listed-post-ideas", "real-estate-facebook-post-ideas", "real-estate-captions-for-instagram"],
+  related: ["just-listed-post-ideas", "real-estate-facebook-post-ideas", "real-estate-captions-for-instagram", "reco-advertising-guidelines"],
   cta: {
     heading: "See your next open house as a ready-to-post invite",
     sub: "Paste a link to one of your listings. SocialSpark lays out the date, time and details with your name and brokerage, and writes a caption ready to edit.",

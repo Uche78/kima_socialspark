@@ -8,6 +8,7 @@ import { justListedPostIdeas } from "./just-listed-post-ideas";
 import { openHouseSocialMediaPost } from "./open-house-social-media-post";
 import { realEstateCaptionsForInstagram } from "./real-estate-captions-for-instagram";
 import { realEstateFacebookPostIdeas } from "./real-estate-facebook-post-ideas";
+import { recoAdvertisingGuidelines } from "./reco-advertising-guidelines";
 
 /**
  * Text with inline links and emphasis: [anchor text](/guides/other-guide) or [text](https://…), and **bold**.
@@ -69,7 +70,7 @@ export type Guide = {
 };
 
 /** Newest first. Add a guide by importing its file here. */
-export const GUIDES: Guide[] = [justListedPostIdeas, realEstateCaptionsForInstagram, realEstateFacebookPostIdeas, openHouseSocialMediaPost].sort((a, b) =>
+export const GUIDES: Guide[] = [justListedPostIdeas, realEstateCaptionsForInstagram, realEstateFacebookPostIdeas, openHouseSocialMediaPost, recoAdvertisingGuidelines].sort((a, b) =>
   b.published.localeCompare(a.published),
 );
 

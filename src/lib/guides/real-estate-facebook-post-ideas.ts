@@ -149,7 +149,7 @@ export const realEstateFacebookPostIdeas: Guide = {
         {
           type: "list",
           items: [
-            "**Name your brokerage, clearly.** In Ontario, [RECO's advertising bulletin](https://www.reco.on.ca/getmedia/fc6d0358-a8a1-4e6b-bfaa-2b8c312e1c3b/RECO-Bulletin-5-1-Advertising-requirements.pdf) requires the brokerage name in all advertising, including social media. Other provinces have similar rules.",
+            "**Name your brokerage, clearly.** In Ontario, [RECO's advertising bulletin](https://www.reco.on.ca/getmedia/fc6d0358-a8a1-4e6b-bfaa-2b8c312e1c3b/RECO-Bulletin-5-1-Advertising-requirements.pdf) requires the brokerage name in all advertising, including social media. Other provinces have similar rules. For the full set of RECO's advertising rules, see [RECO advertising guidelines](/guides/reco-advertising-guidelines).",
             "**Get written consent before a Sold post.** In Ontario, [RECO Bulletin 5.4](https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-4-advertising-sold-property) requires the parties' written consent, with the dates it's valid, to advertise a property as sold.",
             "**Write REALTOR® correctly.** It's a CREA trademark for members, not a job title; [CREA asks](https://www.crea.ca/cafe/everything-you-need-to-know-about-creas-trademarks-2/) for capitals and the ® symbol on first use.",
             "**Only post listings you're allowed to post.** If it's another brokerage's listing, follow your board and regulator's rules on consent, credit the listing brokerage, and never make it look like your own.",
@@ -222,7 +222,7 @@ export const realEstateFacebookPostIdeas: Guide = {
       a: "Only with the consent your regulator and board require. Credit the listing brokerage in the post and don't make it look like your own listing.",
     },
   ],
-  related: ["just-listed-post-ideas", "real-estate-captions-for-instagram", "open-house-social-media-post"],
+  related: ["just-listed-post-ideas", "real-estate-captions-for-instagram", "open-house-social-media-post", "reco-advertising-guidelines"],
   cta: {
     heading: "See your next listing as a Facebook post",
     sub: "Paste a link to one of your listings. SocialSpark writes a caption for Facebook's audience and lays out a clean listing photo, ready to edit.",
