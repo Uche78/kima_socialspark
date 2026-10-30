@@ -242,9 +242,11 @@ export function CreatePostCard({ listing, profile, usage, generating, error, onG
             ? "Add at least one photo to create a post."
             : usage.paid
             ? `${remaining} of ${usage.posts.limit} new posts left this month${usage.resetsAt ? `, resets ${new Date(usage.resetsAt).toLocaleDateString([], { month: "short", day: "numeric" })}` : ""}.`
+            : remaining > 0
+            ? `${remaining} of ${usage.posts.limit} free posts left for this listing.`
             : usage.isGuest
-            ? remaining > 0 ? "Free preview: generate 1 post." : "Preview used. Create a free account for 2 more."
-            : <>{remaining} of {usage.posts.limit} free generations left. <Link href="/pricing" className="underline">See plans</Link></>}
+            ? <>Free posts for this listing used. <Link href="/login" className="underline">Create a free account</Link> for more listings.</>
+            : <>Free posts for this listing used. <Link href="/pricing" className="underline">See plans</Link></>}
         </span>
         {error && <span className="w-full text-sm text-red-700">{error}</span>}
       </div>

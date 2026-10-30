@@ -195,7 +195,7 @@ export const realEstateFacebookPostIdeas: Guide = {
         },
         {
           type: "p",
-          text: `Your first ${FREE_LIMITS.registered} posts are free, with no credit card. See [the plans](/pricing) if you post a lot of listings, or go back to [Just Listed post ideas](/guides/just-listed-post-ideas) for what belongs on the image itself.`,
+          text: `Your first ${FREE_LIMITS.registered} listings are free, with ${FREE_LIMITS.captionsPerListing} posts each and no credit card. See [the plans](/pricing) if you post a lot of listings, or go back to [Just Listed post ideas](/guides/just-listed-post-ideas) for what belongs on the image itself.`,
         },
       ],
     },

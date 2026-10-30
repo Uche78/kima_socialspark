@@ -31,6 +31,6 @@ export const BROKER_FAQ: { q: string; a: string }[] = [
   },
   {
     q: "What does a sheet count as on my plan?",
-    a: "Building and editing sheets is free, and so are PDFs and Story images. Writing the caption for a social post uses one post from your plan, the same as for realtors.",
+    a: "Building and editing sheets doesn't use your plan, and neither do PDFs and Story images. Writing the caption for a social post uses one post, the same as for realtors: on the free plan, each of your 3 free listings comes with 2.",
   },
 ];

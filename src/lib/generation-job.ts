@@ -123,7 +123,7 @@ export async function runGenerationJob(jobId: string) {
 
   // Use the allowance now that there's a post to show for it (atomic; rechecks the limit).
   const { data: quota, error: quotaError } = await admin
-    .rpc("consume_generation_for", { p_user: job.user_id, p_guest: job.is_guest, p_kind: job.kind })
+    .rpc("consume_generation_for", { p_user: job.user_id, p_guest: job.is_guest, p_kind: job.kind, p_listing: job.listing_id })
     .single<{ allowed: boolean; used: number; lim: number; is_guest: boolean; plan: string; resets_at: string | null }>();
   if (quotaError || !quota) return fail("Couldn't check your plan. Please try again.");
   if (!quota.allowed) {
@@ -141,7 +141,7 @@ export async function runGenerationJob(jobId: string) {
       .select("id")
       .maybeSingle();
     if (updateError || !updated) {
-      await admin.rpc("refund_generation", { p_user: job.user_id, p_kind: job.kind });
+      await admin.rpc("refund_generation", { p_user: job.user_id, p_kind: job.kind, p_listing: job.listing_id });
       return fail("Couldn't save the caption. Please try again.");
     }
     await admin.from("generation_jobs").update({ status: "done", post_id: updated.id, updated_at: now() }).eq("id", job.id);
@@ -187,7 +187,7 @@ export async function runGenerationJob(jobId: string) {
     .select("id")
     .single();
   if (error || !post) {
-    await admin.rpc("refund_generation", { p_user: job.user_id, p_kind: job.kind });
+    await admin.rpc("refund_generation", { p_user: job.user_id, p_kind: job.kind, p_listing: job.listing_id });
     return fail("Couldn't save the post. Please try again.");
   }
 

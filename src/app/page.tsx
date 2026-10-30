@@ -9,7 +9,7 @@ import { HeroShowcase } from "@/components/hero/HeroShowcase";
 import { LandingSections } from "@/components/landing/LandingSections";
 import { HomeStructuredData } from "@/components/StructuredData";
 import { PARTNER_COLUMNS, readMortgageSettings, type PartnerRealtor } from "@/lib/broker";
-import { remaining, usageFrom, type EntitlementRow } from "@/lib/plans";
+import { FREE_LIMITS, importsLeft, remaining, usageFrom, type EntitlementRow } from "@/lib/plans";
 import type { Listing, Post, Profile } from "@/lib/types";
 
 export default async function Home() {
@@ -40,6 +40,11 @@ export default async function Home() {
   // instead of the marketing hero (whose example posts could be mistaken for their own).
   const returning = listings.length > 0 || !!profile;
   const setup = profile && listings.length === 0 ? await setupState(supabase, user!.id, profile, broker) : null;
+  // Free plan (accounts and guests): how many listing imports are left, shown with the import box.
+  const { data: ent } = user ? await supabase.from("entitlements").select("*").eq("user_id", user.id).maybeSingle<EntitlementRow>() : { data: null };
+  const usage = user ? usageFrom(ent, !!user.is_anonymous) : null;
+  const left = usage ? importsLeft(usage) : null;
+  const allowance = usage?.imports && left != null ? { left, limit: usage.imports.limit, guest: usage.isGuest } : null;
   // Realtors with an account can send a listing to a mortgage broker from its card: their saved brokers, loaded once.
   const { data: partnerBrokers } =
     profile?.role === "realtor" && listings.length > 0
@@ -69,7 +74,7 @@ export default async function Home() {
                 </p>
               </div>
               <div className="w-full lg:max-w-2xl">
-                <ImportForm />
+                <ImportForm allowance={allowance} />
                 {setup && (
                   <p className="mt-1 text-sm text-[#141414]/65">
                     <strong className="font-semibold text-[#141414]/80">Tip:</strong> use the listing page on a brokerage or agent website. REALTOR.ca blocks automatic retrieval, so
@@ -156,6 +161,9 @@ async function setupState(
     hasHeadshot: !!profile.headshot_path,
     hasPartner: (partners ?? 0) > 0,
     hasSocial: (social ?? 0) > 0,
-    postsLeft: remaining(usageFrom(entitlement, false), "post"),
+    ...(() => {
+      const u = usageFrom(entitlement, false);
+      return u.paid ? { paid: true, postsLeft: remaining(u, "post"), listingsLeft: null } : { paid: false, postsLeft: null, listingsLeft: importsLeft(u) ?? FREE_LIMITS.registered };
+    })(),
   };
 }

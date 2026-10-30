@@ -5,6 +5,7 @@ import type { Listing, Post, Profile } from "@/lib/types";
 import { PARTNER_COLUMNS, partnerKindFor, type PartnerRealtor } from "@/lib/broker";
 import type { FeatureSheet } from "@/lib/feature-sheet";
 import { ListingWorkspace } from "./ListingWorkspace";
+import { freeCaptionsUsed } from "@/lib/free-usage";
 
 // Private or utility page: keep it out of search results.
 export const metadata = { title: "Listing", robots: { index: false, follow: false } };
@@ -40,7 +41,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
         posts={posts ?? []}
         realtors={realtors ?? []}
         sheets={sheets ?? []}
-        usage={usageFrom(entitlement, !!user.is_anonymous)}
+        usage={usageFrom(entitlement, !!user.is_anonymous, await freeCaptionsUsed(supabase, listing.id))}
       />
     </div>
   );

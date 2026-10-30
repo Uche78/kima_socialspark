@@ -34,7 +34,7 @@ export const LANDING_TEXT = {
     },
     pricing: {
       eyebrow: "Pricing",
-      heading: (n: number) => `Try ${n} posts free. No credit card.`,
+      heading: (n: number) => `Try ${n} listings free. No credit card.`,
       sub: "Upgrade when you're ready. Every plan includes every feature, for realtors and mortgage brokers. Prices in CAD, plus tax.",
       compare: "Compare plans in detail",
       billing: "Billing",
@@ -53,7 +53,7 @@ export const LANDING_TEXT = {
     },
     team: { label: "Team", title: "Brokerage or team?", body: "Seats for every agent, one invoice and a shared brand kit.", cta: "Talk to us" },
     page: {
-      trust: (n: number) => [`${n} posts free`, "No credit card", "Nothing posts without your click", "Data stored in Canada"],
+      trust: (n: number) => [`${n} listings free`, "No credit card", "Nothing posts without your click", "Data stored in Canada"],
       reasons: (n: number) => `${n} reasons`,
       proof: "Proof",
       examples: "Example posts for sample listings, drawn with SocialSpark's real post designs.",
@@ -62,7 +62,7 @@ export const LANDING_TEXT = {
       allowance: (name: string, posts: number, regens: number) => `${name}: ${posts} posts and ${regens} regenerations a month`,
       teamAllowance: "Seats for every agent, one invoice and a shared brand kit",
       extras: ["Unlimited edits, downloads and publishing", "Scheduling for Instagram, Facebook and LinkedIn"],
-      guarantees: (n: number) => [`Start with ${n} posts free, no credit card`, "Cancel anytime", "Yearly: two months free"],
+      guarantees: (n: number) => [`Start with ${n} listings free, no credit card`, "Cancel anytime", "Yearly: two months free"],
       planPosts: "posts a month, plus",
       planRegens: "regenerations",
       everyFeature: "Every feature included.",
@@ -83,7 +83,7 @@ export const LANDING_TEXT = {
     },
     pricing: {
       eyebrow: "Tarifs",
-      heading: (n: number) => `Essayez ${n} publications gratuites. Sans carte de crédit.`,
+      heading: (n: number) => `Essayez ${n} inscriptions gratuites. Sans carte de crédit.`,
       sub: "Passez à un forfait quand vous êtes prêt. Chaque forfait comprend toutes les fonctions, pour les courtiers immobiliers et hypothécaires. Prix en dollars canadiens, taxes en sus.",
       compare: "Comparer les forfaits en détail (en anglais)",
       billing: "Facturation",
@@ -104,7 +104,7 @@ export const LANDING_TEXT = {
     },
     team: { label: "Équipe", title: `Agence ou équipe${NB}?`, body: "Un accès pour chaque courtier, une seule facture et une image de marque commune.", cta: "Parlez-nous" },
     page: {
-      trust: (n: number) => [`${n} publications gratuites`, "Sans carte de crédit", "Rien n'est publié sans votre clic", "Données hébergées au Canada"],
+      trust: (n: number) => [`${n} inscriptions gratuites`, "Sans carte de crédit", "Rien n'est publié sans votre clic", "Données hébergées au Canada"],
       reasons: (n: number) => `${n} raisons`,
       proof: "Preuves",
       examples: "Exemples de publications pour des propriétés fictives, avec les vrais gabarits de SocialSpark.",
@@ -113,7 +113,7 @@ export const LANDING_TEXT = {
       allowance: (name: string, posts: number, regens: number) => `${name}${NB}: ${posts} publications et ${regens} régénérations par mois`,
       teamAllowance: "Un accès pour chaque courtier, une seule facture et une image de marque commune",
       extras: ["Modifications, téléchargements et publication illimités", "Planification pour Instagram, Facebook et LinkedIn"],
-      guarantees: (n: number) => [`Commencez avec ${n} publications gratuites, sans carte de crédit`, "Annulez en tout temps", `Annuel${NB}: deux mois gratuits`],
+      guarantees: (n: number) => [`Commencez avec ${n} inscriptions gratuites, sans carte de crédit`, "Annulez en tout temps", `Annuel${NB}: deux mois gratuits`],
       planPosts: "publications par mois, plus",
       planRegens: "régénérations",
       everyFeature: "Toutes les fonctions incluses.",

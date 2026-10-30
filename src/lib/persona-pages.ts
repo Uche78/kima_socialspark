@@ -200,7 +200,7 @@ const TOP_PRODUCERS: ListiclePage = {
       { q: "Will it post something wrong?", a: "Never on its own. A post goes out only when you click Publish now or choose a time to schedule it, and you can edit every caption and image first." },
       { q: "Will the posts sound like me?", a: "Yes. In Brand & voice, choose a tone and paste a few of your past posts. SocialSpark follows your style, and you can edit every caption before it goes out." },
       { q: "Does it work with REALTOR.ca?", a: "REALTOR.ca blocks automated tools, so use “Copy and paste the page”: open the listing, select all, copy, and paste it into SocialSpark. Brokerage and agent websites work with just the link." },
-      { q: "What counts as a post?", a: "A single image or a whole carousel counts as one post. Asking for a new version uses a regeneration. Edits, downloads and publishing are always free, and a post that fails to generate never counts." },
+      { q: "What counts as a post?", a: "A single image or a whole carousel counts as one post. Asking for a new version uses a regeneration. Edits, downloads and publishing are always free, and a post that fails to generate never counts. On the free plan, each of your 3 free listings comes with 2 posts, and a new version counts as one." },
       { q: "Can I cancel anytime?", a: "Yes. Cancel from Plan & billing in a couple of clicks. Your plan stays active until the end of the billing period." },
     ],
   },
@@ -330,7 +330,7 @@ const MARKETING_COORDINATORS: ListiclePage = {
   figures: [OUTSOURCED_COST],
   meta: {
     title: "Listing Post Tool for Marketing Coordinators",
-    description: `Marketing coordinators: turn each listing link into a branded Instagram, Facebook or LinkedIn post and caption in the agent's voice. ${FREE} free posts.`,
+    description: `Marketing coordinators: turn each listing link into a branded Instagram, Facebook or LinkedIn post and caption in the agent's voice. ${FREE} free listings.`,
   },
   hero: {
     eyebrow: "For real estate marketing coordinators",
@@ -383,7 +383,7 @@ const MARKETING_COORDINATORS: ListiclePage = {
     {
       label: "The plan",
       title: `${TP.posts} listing posts a month for ${TP.price}.`,
-      body: `The Top Producer plan is ${TP.price} a month plus tax for ${TP.posts} posts, with every feature included. That's at least 4 listings at every stage on two platforms. For comparison, one Canadian brokerage's social content plan is about $400 a month for around 40 posts. Make ${FREE} free posts on a real listing and show your boss the result.`,
+      body: `The Top Producer plan is ${TP.price} a month plus tax for ${TP.posts} posts, with every feature included. That's at least 4 listings at every stage on two platforms. For comparison, one Canadian brokerage's social content plan is about $400 a month for around 40 posts. Make ${FREE_LIMITS.captionsPerListing} free posts on a real listing and show your boss the result.`,
       visual: { kind: "plan" },
     },
   ],
@@ -402,16 +402,16 @@ const MARKETING_COORDINATORS: ListiclePage = {
       { label: "Fair-housing wording", ours: "Describes the home, never the buyer", theirs: "Up to whoever writes it" },
     ],
   },
-  offer: { heading: "Everything the listing posts need, in one plan", sub: `Start with ${FREE} free posts on a real listing, no credit card. Then show your boss.` },
+  offer: { heading: "Everything the listing posts need, in one plan", sub: `Start with ${FREE} free listings, no credit card. Then show your boss.` },
   objections: {
     heading: "Questions marketing coordinators ask",
     items: [
       { q: "What's the fastest way to make listing posts for a real estate agent?", a: "Start from the listing link instead of a blank template. SocialSpark, a Canadian web app, turns a listing link into a branded post and caption for Instagram, Facebook or LinkedIn in under a minute, which you then check, edit and schedule." },
-      { q: "How do I get my boss to pay for SocialSpark?", a: `Show them a real result. Make ${FREE} free posts on one of their listings, no credit card needed. The Top Producer plan is ${TP.price} a month plus tax for ${TP.posts} posts, and it cancels in a couple of clicks.` },
+      { q: "How do I get my boss to pay for SocialSpark?", a: `Show them a real result. Make ${FREE_LIMITS.captionsPerListing} free posts on one of their listings, no credit card needed. The Top Producer plan is ${TP.price} a month plus tax for ${TP.posts} posts, and it cancels in a couple of clicks.` },
       { q: "Will SocialSpark replace my job?", a: "No. It makes the first draft of each listing post. You decide what goes out, edit anything, and choose when it posts, and the content that isn't a listing post stays yours." },
       { q: "Can I use my own scheduler?", a: "Yes. Download the images as JPEG or ZIP and copy the caption into the tool you already use. You can also publish or schedule from SocialSpark to Instagram, Facebook and LinkedIn." },
       { q: "Can I manage several agents from one account?", a: "Today one account carries one agent's branding. Team accounts with a seat for each agent are planned; ask about them with the Team enquiry under the plans." },
-      { q: "What counts as a post?", a: "A single image or a whole carousel counts as one post. Asking for a new version uses a regeneration. Edits, downloads and publishing are always free, and a post that fails to generate never counts." },
+      { q: "What counts as a post?", a: "A single image or a whole carousel counts as one post. Asking for a new version uses a regeneration. Edits, downloads and publishing are always free, and a post that fails to generate never counts. On the free plan, each of your 3 free listings comes with 2 posts, and a new version counts as one." },
       { q: "Does it work with REALTOR.ca?", a: "REALTOR.ca blocks automated tools, so use “Copy and paste the page”: open the listing, select all, copy, and paste it into SocialSpark. Brokerage and agent websites work with just the link." },
       { q: "Will SocialSpark post anything without me?", a: "Never. A post goes out only when you click Publish now or choose a time to schedule it." },
     ],
@@ -497,7 +497,7 @@ const BILINGUAL_AGENTS_FR: ListiclePage = {
       { label: "Libellé conforme", ours: "Décrit la propriété, jamais l'acheteur", theirs: "Selon qui écrit" },
     ],
   },
-  offer: { heading: "Tout ce qu'il faut pour publier dans les deux langues", sub: `Commencez avec ${FREE} publications gratuites, sans carte de crédit. Passez à un forfait quand chaque inscription sort à temps.` },
+  offer: { heading: "Tout ce qu'il faut pour publier dans les deux langues", sub: `Commencez avec ${FREE} inscriptions gratuites, sans carte de crédit. Passez à un forfait quand chaque inscription sort à temps.` },
   objections: {
     heading: "Questions des courtiers bilingues",
     items: [
@@ -525,7 +525,7 @@ const BILINGUAL_AGENTS_EN: ListiclePage = {
   figures: [QC_PRICE_FORMAT],
   meta: {
     title: "Bilingual Real Estate Social Media Posts",
-    description: `Paste a listing link and get a branded post with captions in English, Québec French or both, for Instagram, Facebook and LinkedIn. ${FREE} free posts.`,
+    description: `Paste a listing link and get a branded post with captions in English, Québec French or both, for Instagram, Facebook and LinkedIn. ${FREE} free listings.`,
   },
   hero: {
     eyebrow: "For bilingual real estate agents",
@@ -591,7 +591,7 @@ const BILINGUAL_AGENTS_EN: ListiclePage = {
       { label: "Fair-housing wording", ours: "Describes the home, never the buyer", theirs: "Up to whoever writes it" },
     ],
   },
-  offer: { heading: "Everything you need to post in both languages", sub: `Start with ${FREE} free posts, no credit card. Upgrade when every listing goes out in both languages.` },
+  offer: { heading: "Everything you need to post in both languages", sub: `Start with ${FREE} free listings, no credit card. Upgrade when every listing goes out in both languages.` },
   objections: {
     heading: "Questions bilingual agents ask",
     items: [
@@ -683,7 +683,7 @@ const OUTSOURCING_AGENTS: ListiclePage = {
       { label: "Cancelling", ours: "A couple of clicks in Plan & billing", theirs: "Per their terms" },
     ],
   },
-  offer: { heading: "Your listing posts, without the retainer", sub: `Start with ${FREE} free posts on your next listing, no credit card. Cancel anytime.` },
+  offer: { heading: "Your listing posts, without the retainer", sub: `Start with ${FREE} free listings, no credit card. Cancel anytime.` },
   objections: {
     heading: "Questions agents ask before they stop outsourcing",
     items: [
@@ -697,7 +697,7 @@ const OUTSOURCING_AGENTS: ListiclePage = {
     ],
   },
   planFit: `Every post type on two platforms is at most 12 posts a listing. Top Producer's ${TP.posts} cover at least 4 listings in full; Pro's ${PRO.posts} cover 5 at Just Listed and Sold.`,
-  close: { heading: "Your listing posts, back in your hands.", sub: `Paste a link and see your first post in under a minute. ${FREE} free posts, no credit card.` },
+  close: { heading: "Your listing posts, back in your hands.", sub: `Paste a link and see your first post in under a minute. ${FREE} free listings, no credit card.` },
 };
 
 const STARTER = PAID_PLANS.starter;
@@ -711,7 +711,7 @@ const NEW_AGENTS: ListiclePage = {
   reader: "New real estate agents in Canada, in their first or second year",
   meta: {
     title: "Social Media Posts for New Real Estate Agents",
-    description: `New agents: turn a listing link into a branded Instagram, Facebook or LinkedIn post that looks established. ${FREE} free posts, no credit card.`,
+    description: `New agents: turn a listing link into a branded Instagram, Facebook or LinkedIn post that looks established. ${FREE} free listings, no credit card.`,
   },
   hero: {
     eyebrow: "For new real estate agents",
@@ -759,7 +759,7 @@ const NEW_AGENTS: ListiclePage = {
     {
       label: "The plan",
       title: "Pay in the months you have a listing.",
-      body: `Starter is ${STARTER.price} a month plus tax for ${STARTER.posts} posts: enough for one listing on two platforms from Coming Soon to Sold. Subscribe the month you list and cancel in a couple of clicks when you're between listings. Start with ${FREE} free posts.`,
+      body: `Starter is ${STARTER.price} a month plus tax for ${STARTER.posts} posts: enough for one listing on two platforms from Coming Soon to Sold. Subscribe the month you list and cancel in a couple of clicks when you're between listings. Start with ${FREE} free listings.`,
       visual: { kind: "plan" },
     },
   ],
@@ -777,12 +777,12 @@ const NEW_AGENTS: ListiclePage = {
       { label: "Fair-housing wording", ours: "Describes the home, never the buyer", theirs: "Up to you" },
     ],
   },
-  offer: { heading: "Everything your first listing needs", sub: `Start with ${FREE} free posts, no credit card. Subscribe the month you list, cancel when it sells.` },
+  offer: { heading: "Everything your first listing needs", sub: `Start with ${FREE} free listings, no credit card. Subscribe the month you list, cancel when it sells.` },
   objections: {
     heading: "Questions new agents ask",
     items: [
       { q: "What should a new real estate agent post on social media?", a: "Post every stage of each listing you have (Coming Soon, Just Listed, Open House, Price Reduced, Sold), and the open houses and Featured Properties you help with, with the listing agent's permission. SocialSpark, a Canadian web app, turns a listing link into a branded post for each in under a minute." },
-      { q: "I don't have listings yet. Is it useful?", a: `Yes, for open houses you host and Featured Property posts, with the listing agent's OK and permission for the photos. The ${FREE} free posts let you try it before you pay anything.` },
+      { q: "I don't have listings yet. Is it useful?", a: `Yes, for open houses you host and Featured Property posts, with the listing agent's OK and permission for the photos. The ${FREE} free listings let you try it before you pay anything.` },
       { q: "Do I need design skills?", a: "No. Paste a listing link and SocialSpark designs the post with your name, brokerage and colours. You can change text, photos and colours if you want to." },
       { q: "Can I use the listing photos?", a: "Listing photos usually belong to the photographer. Make sure you have permission, usually from your brokerage or the photographer, or upload your own." },
       { q: "Can I cancel when I don't have a listing?", a: "Yes. Cancel from Plan & billing in a couple of clicks. Your plan stays active until the end of the billing period, and you can subscribe again the month you list." },
@@ -791,7 +791,7 @@ const NEW_AGENTS: ListiclePage = {
     ],
   },
   planFit: `Five post types on two platforms is ${STARTER.posts} posts, so Starter covers one listing from Coming Soon to Sold.`,
-  close: { heading: "Your first listing deserves to look like a top producer's.", sub: `Paste the link and see your first post in under a minute. ${FREE} free posts, no credit card.` },
+  close: { heading: "Your first listing deserves to look like a top producer's.", sub: `Paste the link and see your first post in under a minute. ${FREE} free listings, no credit card.` },
 };
 
 /** Persona 8, The Part-Timer. The user's copy. */
@@ -851,7 +851,7 @@ const PART_TIME_REALTORS: ListiclePage = {
     {
       label: "The plan",
       title: "Pay for the month you list. Cancel when it sells.",
-      body: `Starter is ${STARTER.price} a month plus tax for ${STARTER.posts} posts: one listing on two platforms from Coming Soon to Sold. Cancel in a couple of clicks, and your plan stays active until the end of the month you paid for. Start with ${FREE} free posts, no credit card.`,
+      body: `Starter is ${STARTER.price} a month plus tax for ${STARTER.posts} posts: one listing on two platforms from Coming Soon to Sold. Cancel in a couple of clicks, and your plan stays active until the end of the month you paid for. Start with ${FREE} free listings, no credit card.`,
       visual: { kind: "plan" },
     },
   ],
@@ -868,7 +868,7 @@ const PART_TIME_REALTORS: ListiclePage = {
       { label: "Posting during work hours", ours: "Scheduled ahead", theirs: "Posted when you get home" },
     ],
   },
-  offer: { heading: "Everything one listing needs, for one month", sub: `Start with ${FREE} free posts, no credit card. Subscribe when you list, cancel when it sells.` },
+  offer: { heading: "Everything one listing needs, for one month", sub: `Start with ${FREE} free listings, no credit card. Subscribe when you list, cancel when it sells.` },
   objections: {
     heading: "Questions part-time agents ask",
     items: [
@@ -881,7 +881,7 @@ const PART_TIME_REALTORS: ListiclePage = {
     ],
   },
   planFit: `Five post types on two platforms is ${STARTER.posts} posts, so Starter covers your listing from Coming Soon to Sold.`,
-  close: { heading: "Got a listing this month? Make it look like you do this every day.", sub: `Paste the link and see your first post in under a minute. ${FREE} free posts, no credit card.` },
+  close: { heading: "Got a listing this month? Make it look like you do this every day.", sub: `Paste the link and see your first post in under a minute. ${FREE} free listings, no credit card.` },
 };
 
 /** Persona 11, The Small-Town & Cottage Agent. The user's copy. */
@@ -960,7 +960,7 @@ const COTTAGE_RURAL_REALTORS: ListiclePage = {
       { label: "Time", ours: "Under a minute from the link", theirs: "Quick, but it shows" },
     ],
   },
-  offer: { heading: "Everything a long listing needs, all year", sub: `Start with ${FREE} free posts, no credit card. Pay yearly and two months are free.` },
+  offer: { heading: "Everything a long listing needs, all year", sub: `Start with ${FREE} free listings, no credit card. Pay yearly and two months are free.` },
   objections: {
     heading: "Questions cottage and rural agents ask",
     items: [
@@ -974,7 +974,7 @@ const COTTAGE_RURAL_REALTORS: ListiclePage = {
     ],
   },
   planFit: `Five post types on two platforms is ${STARTER.posts} posts, so Starter covers one listing from Coming Soon to Sold each month.`,
-  close: { heading: "That cottage deserves more than a phone photo on Facebook.", sub: `Paste the link and see your first post in under a minute. ${FREE} free posts, no credit card.` },
+  close: { heading: "That cottage deserves more than a phone photo on Facebook.", sub: `Paste the link and see your first post in under a minute. ${FREE} free listings, no credit card.` },
 };
 
 /** Persona 12, The Reluctant Veteran. The user's copy (no age references, by the copy's own rule). */
@@ -986,7 +986,7 @@ const EXPERIENCED_REALTORS: ListiclePage = {
   reader: "Experienced, referral-based real estate agents in Canada",
   meta: {
     title: "Social Media for Experienced Realtors",
-    description: `Your listings, posted properly, without learning Instagram. Captions in your voice, and nothing posts without your click. ${FREE} free posts.`,
+    description: `Your listings, posted properly, without learning Instagram. Captions in your voice, and nothing posts without your click. ${FREE} free listings.`,
   },
   hero: {
     eyebrow: "For experienced realtors",
@@ -1051,7 +1051,7 @@ const EXPERIENCED_REALTORS: ListiclePage = {
       { label: "In a listing presentation", ours: "Finished examples to show", theirs: "Plans to describe" },
     ],
   },
-  offer: { heading: "Everything your listings need, decided once", sub: `Start with ${FREE} free posts, no credit card. Pay yearly and two months are free.` },
+  offer: { heading: "Everything your listings need, decided once", sub: `Start with ${FREE} free listings, no credit card. Pay yearly and two months are free.` },
   objections: {
     heading: "Questions experienced agents ask",
     items: [
@@ -1065,7 +1065,7 @@ const EXPERIENCED_REALTORS: ListiclePage = {
     ],
   },
   planFit: `Five post types on two platforms is ${STARTER.posts} posts, so Starter covers one listing from Coming Soon to Sold each month.`,
-  close: { heading: "Your listings, posted properly, without learning Instagram.", sub: `Paste the link and see your first post in under a minute. ${FREE} free posts, no credit card.` },
+  close: { heading: "Your listings, posted properly, without learning Instagram.", sub: `Paste the link and see your first post in under a minute. ${FREE} free listings, no credit card.` },
 };
 
 export const PERSONA_PAGES: PersonaPage[] = [TOP_PRODUCERS, CONDO_REALTORS, MARKETING_COORDINATORS, BILINGUAL_AGENTS_FR, BILINGUAL_AGENTS_EN, OUTSOURCING_AGENTS, NEW_AGENTS, PART_TIME_REALTORS, COTTAGE_RURAL_REALTORS, EXPERIENCED_REALTORS];

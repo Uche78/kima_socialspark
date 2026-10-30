@@ -5,6 +5,7 @@ import type { JobParams } from "@/lib/generation-job";
 import { queueGeneration } from "@/lib/generation-queue";
 import { paywallFor } from "@/lib/paywall";
 import { remaining, usageFrom, type AllowanceKind, type EntitlementRow } from "@/lib/plans";
+import { freeCaptionsUsed } from "@/lib/free-usage";
 import { readMortgageSettings, type PartnerRealtor } from "@/lib/broker";
 import { readSheetConfig, sheetConfigFrom, type SheetConfig } from "@/lib/feature-sheet";
 import { confirmedNow, needsSaleConsent, priceAllowed, readConsentRequest, SALE_CONSENT_CODE, SALE_CONSENT_CREATE_ERROR, type SaleConsent } from "@/lib/sale-consent";
@@ -127,7 +128,8 @@ export async function POST(request: Request) {
   // Paywall pre-check only: the allowance is used when the post is actually written (see generation-job).
   const { data: entitlement } = await supabase.from("entitlements").select("*").eq("user_id", user.id).maybeSingle<EntitlementRow>();
   const isGuest = !!user.is_anonymous;
-  const usage = usageFrom(entitlement, isGuest);
+  // Free plan: captions are counted per listing.
+  const usage = usageFrom(entitlement, isGuest, await freeCaptionsUsed(supabase, listing.id));
   if (remaining(usage, kind) <= 0) {
     const pool = kind === "regen" && usage.regens ? usage.regens : usage.posts;
     const { error, paywall } = paywallFor({ isGuest, plan: usage.plan, lim: pool.limit, resetsAt: usage.resetsAt }, kind);

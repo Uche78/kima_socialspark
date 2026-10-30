@@ -211,7 +211,7 @@ export const justListedPostIdeas: Guide = {
         },
         {
           type: "p",
-          text: `Your first ${FREE_LIMITS.registered} posts are free, with no credit card. If you post a lot of listings, see [the plans](/pricing).`,
+          text: `Your first ${FREE_LIMITS.registered} listings are free, with ${FREE_LIMITS.captionsPerListing} posts each and no credit card. If you post a lot of listings, see [the plans](/pricing).`,
         },
       ],
     },

@@ -55,7 +55,7 @@ export function LatestResult({ post, listing, profile, fresh, usage, remaining, 
   const [message, setMessage] = useState<string | null>(null);
   const [changingFocus, setChangingFocus] = useState(false);
   const [newFocus, setNewFocus] = useState<string[]>(post.focus ?? []);
-  const cost = usage.paid ? ` (${remaining} regeneration${remaining === 1 ? "" : "s"} left)` : ` (uses 1 of ${remaining} free generation${remaining === 1 ? "" : "s"})`;
+  const cost = usage.paid ? ` (${remaining} regeneration${remaining === 1 ? "" : "s"} left)` : ` (uses 1 of ${remaining} free post${remaining === 1 ? "" : "s"} left for this listing)`;
   const { targets, download, size, canvasProps } = usePostExport(post, listing, profile);
   const slide = post.slides[active] ?? post.slides[0];
   const caption = fullCaption(post);

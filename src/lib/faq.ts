@@ -31,7 +31,7 @@ export const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "What counts as a post?",
-    a: "A single image or a whole carousel counts as one post. Asking for a new version of a post uses a regeneration. Edits, downloads and publishing are always free, and a post that fails to generate never counts.",
+    a: "A single image or a whole carousel counts as one post. Asking for a new version of a post uses a regeneration. Edits, downloads and publishing are always free, and a post that fails to generate never counts. On the free plan, each of your 3 free listings comes with 2 posts, and a new version counts as one.",
   },
   {
     q: "Can I cancel anytime?",

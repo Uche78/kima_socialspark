@@ -2,6 +2,7 @@ import Link from "next/link";
 import { SheetExample } from "@/components/landing/SheetExample";
 import { PlatformPostCard } from "@/components/hero/PlatformPostCard";
 import { DEMO_POSTS } from "@/components/hero/demo-posts";
+import { FREE_LIMITS } from "@/lib/plans";
 
 export type SetupState = {
   broker: boolean;
@@ -11,8 +12,11 @@ export type SetupState = {
   hasHeadshot: boolean;
   hasPartner: boolean;
   hasSocial: boolean;
-  /** Posts left on their plan (a caption uses one). */
-  postsLeft: number;
+  paid: boolean;
+  /** Paid plans: new posts left this month. */
+  postsLeft: number | null;
+  /** Free plan: listing imports left (each with 2 posts). */
+  listingsLeft: number | null;
 };
 
 /** "Missing: headshot" when one of a two-part step is done (all or nothing needs no note). */
@@ -93,8 +97,9 @@ export function GettingStarted(s: SetupState) {
           </span>
         </div>
         <p className="mt-1 text-sm text-muted">
-          {s.postsLeft} free {s.postsLeft === 1 ? "post" : "posts"} left.{" "}
-          {s.broker ? "Building sheets, PDFs and Story images are always free." : "Edits and publishing are always free."}
+          {s.paid
+            ? `${s.postsLeft} ${s.postsLeft === 1 ? "post" : "posts"} left this month. Listings and ${s.broker ? "feature sheets" : "edits"} are unlimited.`
+            : `${s.listingsLeft} of ${FREE_LIMITS.registered} free listings left, with ${FREE_LIMITS.captionsPerListing} posts each. ${s.broker ? "Sheets, PDFs and Stories" : "Edits, downloads and publishing"} are free on those listings.`}
         </p>
         <ol className="mt-6 flex flex-1 flex-col justify-between divide-y divide-border">
           {steps.map((step, i) => (

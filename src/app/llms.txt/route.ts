@@ -28,13 +28,13 @@ Mortgage brokers turn a listing link into a branded mortgage feature sheet: mont
 ${BROKER_FAQ.map((f) => `### ${f.q}\n${f.a}`).join("\n\n")}
 
 ## [Pricing](${SITE_URL}/pricing) (CAD, plus applicable tax)
-- Free: ${FREE_LIMITS.registered} posts in total, one-time, no credit card.
+- Free: ${FREE_LIMITS.registered} listings, one-time, no credit card, with ${FREE_LIMITS.captionsPerListing} posts per listing (a new version counts as one); sheets, edits, downloads and publishing are free on those listings. Paid plans have unlimited listings.
 ${PAID_PLAN_IDS.map((id) => {
   const p = PAID_PLANS[id];
   return `- ${p.name}: ${p.price}/month, or ${p.yearly}/year (two months free): ${p.posts} new posts and ${p.regens} regenerations a month.`;
 }).join("\n")}
 - Teams and brokerages: seats, one invoice and a shared brand kit; contact us from the pricing page.
-- A single image or a full carousel counts as one post. Edits, downloads and publishing are free, and mortgage feature sheets, PDFs and Stories are free to build. Allowances reset every month, on yearly plans too. Cancel anytime.
+- A single image or a full carousel counts as one post. Edits, downloads and publishing are free, and mortgage feature sheets, PDFs and Stories don't use a plan's posts. Allowances reset every month, on yearly plans too. Cancel anytime.
 
 ## Frequently asked questions
 ${FAQ.map((f) => `### ${f.q}\n${f.a}`).join("\n\n")}

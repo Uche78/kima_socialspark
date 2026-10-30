@@ -74,7 +74,7 @@ export default function MortgageBrokersPage() {
               <ImportForm role="mortgage_broker" />
             </div>
             <p className="mt-2 text-sm text-[#141414]/60">
-              {FREE_LIMITS.registered} posts free, no credit card. Building sheets and PDFs are always free.{" "}
+              {FREE_LIMITS.registered} listings free, with {FREE_LIMITS.captionsPerListing} posts each, no credit card. Sheets and PDFs are unlimited on those listings.{" "}
               <a href="#pricing" className="underline underline-offset-4">See pricing</a>
             </p>
           </div>
@@ -92,7 +92,7 @@ export default function MortgageBrokersPage() {
           "Your brokerage, licence number and a co-branded realtor go on every sheet.",
           "Post it, download a Story, or print it as a PDF.",
         ]}
-        chips={["Sheets & PDFs free", `${FREE_LIMITS.registered} free posts, no credit card`, "You set the rates", "Stored in Canada"]}
+        chips={["Unlimited sheets & PDFs", `${FREE_LIMITS.registered} free listings, no credit card`, "You set the rates", "Stored in Canada"]}
       />
 
       {/* How it works */}

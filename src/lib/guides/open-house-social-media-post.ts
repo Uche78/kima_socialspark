@@ -206,7 +206,7 @@ export const openHouseSocialMediaPost: Guide = {
         },
         {
           type: "p",
-          text: `Your first ${FREE_LIMITS.registered} posts are free, with no credit card. See [the plans](/pricing) if you run open houses often, or go back to [Just Listed post ideas](/guides/just-listed-post-ideas) for the post that comes before it.`,
+          text: `Your first ${FREE_LIMITS.registered} listings are free, with ${FREE_LIMITS.captionsPerListing} posts each and no credit card. See [the plans](/pricing) if you run open houses often, or go back to [Just Listed post ideas](/guides/just-listed-post-ideas) for the post that comes before it.`,
         },
       ],
     },

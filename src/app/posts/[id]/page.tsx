@@ -5,6 +5,7 @@ import { PARTNER_COLUMNS, type PartnerRealtor } from "@/lib/broker";
 import type { FeatureSheet } from "@/lib/feature-sheet";
 import { remaining, usageFrom, type EntitlementRow } from "@/lib/plans";
 import { PostEditor } from "./PostEditor";
+import { freeCaptionsUsed } from "@/lib/free-usage";
 
 // Private or utility page: keep it out of search results.
 export const metadata = { title: "Post", robots: { index: false, follow: false } };
@@ -30,7 +31,8 @@ export default async function PostPage({ params }: PageProps<"/posts/[id]">) {
         supabase.from("entitlements").select("*").eq("user_id", user.id).maybeSingle<EntitlementRow>(),
       ])
     : [{ data: null }, { data: null }];
-  const usage = usageFrom(entitlement, !!user.is_anonymous);
+  // Free plan: captions are counted per listing.
+  const usage = usageFrom(entitlement, !!user.is_anonymous, await freeCaptionsUsed(supabase, post.listing_id));
   const left = remaining(usage, post.caption?.trim() ? "regen" : "post");
 
   const { data: realtors } =

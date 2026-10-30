@@ -6,7 +6,7 @@ import { FREE_LIMITS, PAID_PLANS, PLAN_FEATURES, usageFrom, type EntitlementRow 
 const { starter: S, professional: P, top_producer: T } = PAID_PLANS;
 export const metadata = {
   title: "Pricing",
-  description: `Try ${FREE_LIMITS.registered} SocialSpark posts free, no credit card. ${S.name} ${S.price}/month, ${P.name} ${P.price}/month and ${T.name} ${T.price}/month (CAD, plus tax), or pay yearly and get two months free. Every plan includes every feature.`,
+  description: `Try SocialSpark free on ${FREE_LIMITS.registered} listings, no credit card. ${S.name} ${S.price}/month, ${P.name} ${P.price}/month and ${T.name} ${T.price}/month (CAD, plus tax), or pay yearly and get two months free. Every plan includes every feature.`,
   alternates: { canonical: "/pricing" },
 };
 
@@ -22,7 +22,7 @@ export default async function PricingPage({ searchParams }: PageProps<"/pricing"
       <div className="text-center">
         <h1 className="font-[family-name:var(--font-heading)] tracking-[-0.02em] text-3xl text-brand sm:text-4xl">Simple pricing for busy agents</h1>
         <p className="mt-2 text-muted">
-          Try {FREE_LIMITS.registered} posts free, no credit card.{" "}
+          Try {FREE_LIMITS.registered} listings free, with {FREE_LIMITS.captionsPerListing} posts each. No credit card.{" "}
           {!signedIn && (
             <Link href="/login" className="font-medium text-foreground underline underline-offset-2">
               Create a free account
@@ -43,7 +43,7 @@ export default async function PricingPage({ searchParams }: PageProps<"/pricing"
         <p className="mt-4 text-xs text-muted">
           A single image or a complete carousel counts as one post. Regenerating a post uses a regeneration. Failed generations don&apos;t count.
           Allowances reset every month, on yearly plans too, and don&apos;t roll over. No automatic overage charges. Cancel any time.
-          Free: guests can preview {FREE_LIMITS.guest} post; a free account gets {FREE_LIMITS.registered} in total, one time.
+          Free: guests can try {FREE_LIMITS.guest} listing; a free account gets {FREE_LIMITS.registered} listings in total, one time, each with {FREE_LIMITS.captionsPerListing} posts (a new version counts as one). Sheets, edits, downloads and publishing are free on those listings. Paid plans: unlimited listings.
         </p>
       </div>
     </div>

@@ -1,12 +1,17 @@
-// Plans and allowances. Enforced by consume_generation_for() in the database
-// (supabase/migrations/20261026120000_top_producer_yearly.sql); mirrored here for display.
+// Plans and allowances. Enforced in the database by consume_generation_for() (captions) and
+// consume_import_for() (listing imports), see supabase/migrations/20261029120000_free_limits.sql;
+// mirrored here for display.
 // Plan IDs are stable (Stripe metadata and the database use them); names are what people see.
 
 export type PlanId = "free" | "starter" | "professional" | "top_producer";
 export type PaidPlanId = Exclude<PlanId, "free">;
 export type AllowanceKind = "post" | "regen";
 
-export const FREE_LIMITS = { guest: 1, registered: 3 } as const;
+/**
+ * Free plan, lifetime: listing imports (guests 1, accounts 3), and captions per listing (new posts and
+ * rewrites alike). Everything else on those listings is free: sheets, edits, downloads, PDFs, publishing.
+ */
+export const FREE_LIMITS = { guest: 1, registered: 3, captionsPerListing: 2 } as const;
 
 export type BillingInterval = "month" | "year";
 
@@ -49,7 +54,8 @@ export function nextPlan(plan: PlanId): PaidPlanId | null {
 /** The entitlements row fields the app reads. */
 export type EntitlementRow = {
   plan: string | null;
-  generations_used: number | null;
+  generations_used?: number | null;
+  imports_used?: number | null;
   period_posts_used?: number | null;
   period_regens_used?: number | null;
   period_end?: string | null;
@@ -63,7 +69,7 @@ export type Usage = {
   plan: PlanId;
   paid: boolean;
   isGuest: boolean;
-  /** Free users: one lifetime pool of attempts (new posts and regenerations both count). */
+  /** Paid: this month's new posts. Free: captions written for one listing (new posts and rewrites share it). */
   posts: { used: number; limit: number };
   /** Paid users only; null when regenerations draw from the same pool as posts. */
   regens: { used: number; limit: number } | null;
@@ -73,9 +79,15 @@ export type Usage = {
   interval: BillingInterval | null;
   /** Paid plans: when the subscription renews or ends (yearly plans renew once a year). */
   renewsAt: string | null;
+  /** Free plan: listing imports used of the lifetime limit. Null on paid plans (unlimited). */
+  imports: { used: number; limit: number } | null;
 };
 
-export function usageFrom(e: EntitlementRow | null | undefined, isGuest: boolean): Usage {
+/**
+ * The user's allowances. On the free plan, captions are counted per listing: pass that listing's free
+ * captions used (from free_caption_usage) wherever a caption could be written for it.
+ */
+export function usageFrom(e: EntitlementRow | null | undefined, isGuest: boolean, listingCaptionsUsed = 0): Usage {
   const plan = (e?.plan ?? "free") as PlanId;
   const active = e?.subscription_status === "active" || e?.subscription_status === "trialing";
   const inPeriod = !e?.period_end || new Date(e.period_end).getTime() > Date.now();
@@ -93,19 +105,26 @@ export function usageFrom(e: EntitlementRow | null | undefined, isGuest: boolean
       cancelAtPeriodEnd: !!e?.cancel_at_period_end,
       interval: e?.billing_interval === "year" ? "year" : "month",
       renewsAt: e?.period_end ?? null,
+      imports: null,
     };
   }
   return {
     plan: "free",
     paid: false,
     isGuest,
-    posts: { used: e?.generations_used ?? 0, limit: isGuest ? FREE_LIMITS.guest : FREE_LIMITS.registered },
+    posts: { used: listingCaptionsUsed, limit: FREE_LIMITS.captionsPerListing },
     regens: null,
     resetsAt: null,
     cancelAtPeriodEnd: false,
     interval: null,
     renewsAt: null,
+    imports: { used: e?.imports_used ?? 0, limit: isGuest ? FREE_LIMITS.guest : FREE_LIMITS.registered },
   };
+}
+
+/** Free listing imports left (null = unlimited, on a paid plan). */
+export function importsLeft(u: Usage): number | null {
+  return u.imports ? Math.max(u.imports.limit - u.imports.used, 0) : null;
 }
 
 /** The current month of allowance: rolls an ended window forward a month at a time, like the database. */

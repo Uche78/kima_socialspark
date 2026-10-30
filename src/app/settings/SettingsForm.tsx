@@ -403,9 +403,13 @@ export function SettingsForm({ profile: initial, accounts, isGuest, usage, billi
         ) : (
           <div className="space-y-1.5">
             <p>
-              <strong>{isGuest ? "Guest" : "Free"}</strong>: {Math.min(usage.posts.used, usage.posts.limit)} of {usage.posts.limit} free generations used.
+              <strong>{isGuest ? "Guest" : "Free"}</strong>: {Math.min(usage.imports?.used ?? 0, usage.imports?.limit ?? 0)} of {usage.imports?.limit} free{" "}
+              {usage.imports?.limit === 1 ? "listing" : "listings"} used, with {usage.posts.limit} posts per listing.
             </p>
-            <p className="text-muted">Free generations don&apos;t reset. Paid plans start at {PAID_PLANS.starter.price} CAD/month.</p>
+            <p className="text-muted">
+              Sheets, edits, downloads and publishing are free on those listings. The free plan doesn&apos;t reset. Paid plans start at {PAID_PLANS.starter.price} CAD/month,
+              with unlimited listings.
+            </p>
             <div className="pt-2">
               <Link href={isGuest ? "/login" : "/pricing"} className="btn-primary rounded-full">
                 {isGuest ? "Create a free account" : "Choose a plan"}

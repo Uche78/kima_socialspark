@@ -44,7 +44,7 @@ export function HomeStructuredData() {
       ],
       publisher: { "@id": `${SITE_URL}/#org` },
       offers: [
-        { "@type": "Offer", name: "Free", price: "0", priceCurrency: "CAD", description: `${FREE_LIMITS.registered} posts to try, no credit card`, url: `${SITE_URL}/pricing` },
+        { "@type": "Offer", name: "Free", price: "0", priceCurrency: "CAD", description: `${FREE_LIMITS.registered} listings to try, ${FREE_LIMITS.captionsPerListing} posts each, no credit card`, url: `${SITE_URL}/pricing` },
         ...PAID_PLAN_IDS.flatMap((id) => {
           const p = PAID_PLANS[id];
           const what = `${p.posts} new posts and ${p.regens} regenerations a month`;

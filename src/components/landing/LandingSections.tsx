@@ -88,7 +88,7 @@ export function LandingSections() {
           "SocialSpark writes the Instagram, Facebook and LinkedIn posts: branded images from the listing photos and a caption in your voice.",
           "In English, Québec French or both. You review each post, then publish or schedule it.",
         ]}
-        chips={["Nothing posts without your click", `${FREE_LIMITS.registered} free posts, no credit card`, "Cancel anytime", "Stored in Canada"]}
+        chips={["Nothing posts without your click", `${FREE_LIMITS.registered} free listings, no credit card`, "Cancel anytime", "Stored in Canada"]}
       />
 
       {/* How it works */}

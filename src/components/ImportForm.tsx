@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Role } from "@/lib/types";
@@ -33,8 +34,14 @@ function isRealtorCa(raw: string) {
   }
 }
 
-/** `locale`: the form in French on French landing pages (what it opens, the app, stays English). */
-export function ImportForm({ role, locale = "en" }: { role?: Role; locale?: Locale } = {}) {
+/** Free listing imports left, when known (signed-in users on the free plan or guests). Null/absent: no note. */
+export type ImportAllowance = { left: number; limit: number; guest: boolean } | null;
+
+/**
+ * `locale`: the form in French on French landing pages (what it opens, the app, stays English).
+ * `allowance`: shows the free listings left, and the paywall up front when they're used up.
+ */
+export function ImportForm({ role, locale = "en", allowance = null }: { role?: Role; locale?: Locale; allowance?: ImportAllowance } = {}) {
   const T = LANDING_TEXT[locale].form;
   const fieldId = useId();
   const router = useRouter();
@@ -45,6 +52,8 @@ export function ImportForm({ role, locale = "en" }: { role?: Role; locale?: Loca
   const [pasteOpen, setPasteOpen] = useState(false);
   const [pasteBusy, setPasteBusy] = useState(false);
   const [pasteError, setPasteError] = useState<string | null>(null);
+  // The free plan's import limit: "signup" (guests) or "upgrade" (free accounts), from the API or known up front.
+  const [limit, setLimit] = useState<"signup" | "upgrade" | null>(allowance && allowance.left === 0 ? (allowance.guest ? "signup" : "upgrade") : null);
 
   /** Opens what was just imported: mortgage brokers go straight to a new sheet in the Sheet Builder. */
   async function openImported(json: { id: string; broker?: boolean }) {
@@ -72,6 +81,7 @@ export function ImportForm({ role, locale = "en" }: { role?: Role; locale?: Loca
       });
       const json = await res.json();
       if (!res.ok) {
+        if (res.status === 402) setLimit(json.paywall === "signup" ? "signup" : "upgrade");
         setPasteError(json.error ?? "Couldn't read that page.");
         setPasteBusy(false);
         return;
@@ -102,6 +112,7 @@ export function ImportForm({ role, locale = "en" }: { role?: Role; locale?: Loca
       const res = await fetch("/api/listings/import", { method: "POST", body: JSON.stringify({ url: url.trim() }) });
       const json = await res.json();
       if (!res.ok) {
+        if (res.status === 402) setLimit(json.paywall === "signup" ? "signup" : "upgrade");
         setError(json.error ?? "Couldn't retrieve that listing.");
         setOfferManual(!!json.manualEntry);
         setBusy(false);
@@ -129,11 +140,11 @@ export function ImportForm({ role, locale = "en" }: { role?: Role; locale?: Loca
           placeholder={T.placeholder}
           value={url}
           onChange={(e) => setUrl(e.target.value)}
-          disabled={busy}
+          disabled={busy || !!limit}
         />
         <button
           className="inline-flex h-14 items-center justify-center gap-2 rounded-full bg-[#141414] px-8 text-base font-medium text-white transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-60"
-          disabled={busy}
+          disabled={busy || !!limit}
         >
           {busy ? T.busy : <>{T.submit} <span aria-hidden>→</span></>}
         </button>
@@ -144,7 +155,23 @@ export function ImportForm({ role, locale = "en" }: { role?: Role; locale?: Loca
           {T.realtorCa[0]} {pasteLink(T.pasteInstead)}{T.realtorCa[1]}
         </div>
       )}
-      {error && (
+      {limit && (
+        <div role="status" className="mt-3 rounded-2xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+          {error ??
+            (limit === "signup"
+              ? "You've added your free preview listing. Create a free account to add more."
+              : `You've added the ${allowance?.limit ?? 3} free listings on the free plan. Choose a plan to add more. Everything you've made stays yours to edit, download and publish.`)}{" "}
+          <Link href={limit === "signup" ? "/login" : "/pricing"} className="font-semibold underline">
+            {limit === "signup" ? "Create a free account" : "See plans"}
+          </Link>
+        </div>
+      )}
+      {!limit && allowance && allowance.left > 0 && (
+        <p className="mt-2 text-sm text-[#141414]/65">
+          {allowance.left} of {allowance.limit} free {allowance.limit === 1 ? "listing" : "listings"} left, with 2 posts each.
+        </p>
+      )}
+      {error && !limit && (
         <div className="mt-3 rounded-2xl border border-red-200 bg-red-50 p-3 text-sm text-red-800">
           {error}
           {offerManual && (

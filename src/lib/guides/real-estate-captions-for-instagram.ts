@@ -222,7 +222,7 @@ export const realEstateCaptionsForInstagram: Guide = {
         },
         {
           type: "p",
-          text: `Your first ${FREE_LIMITS.registered} posts are free, with no credit card. For a Just Listed post in particular, [the Just Listed guide](/guides/just-listed-post-ideas) covers what goes on the image.`,
+          text: `Your first ${FREE_LIMITS.registered} listings are free, with ${FREE_LIMITS.captionsPerListing} posts each and no credit card. For a Just Listed post in particular, [the Just Listed guide](/guides/just-listed-post-ideas) covers what goes on the image.`,
         },
       ],
     },
