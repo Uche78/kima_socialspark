@@ -44,3 +44,5 @@ Every claim in the guide was checked against these sources after the run; correc
 ## Corrections after the fact-check (2026-10-30)
 
 The first draft was checked line by line against the bulletins before review. Changed: removed a logo warning Bulletin 5.1 doesn't contain; added two broker terms the permitted-terms table left out; corrected who agrees to direct contact with a represented party (the other agent); "REALTOR® on first use" isn't CREA's wording; removed unsourced statements about how complaints start; marked the testimonial reading as our interpretation; added the "Brokerage" descriptor to the sample sign-off; and removed the heading and lines implying SocialSpark makes a post compliant.
+
+The line-by-line fact-check (a `## Fact-check` table) is required from 2026-10-31; this guide's check is recorded in the list above.

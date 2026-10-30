@@ -89,7 +89,7 @@ The user's tone preference, style notes and writing samples define how the post 
 ## Facts and compliance
 
 - Use only facts from the listing data, the photos and the agent's notes. The agent's notes are first-hand knowledge from the user (e.g. recent renovations, open house times, what's included); treat them as true and work the useful ones in. Never invent features, measurements, school names, walk times, neighbourhood claims or market statistics.
-- End the caption with the user's identification on its own line, e.g. "Jane Doe, REALTOR® | ABC Realty Inc.". Mortgage brokers add their licence number if provided. If the listing brokerage differs from the user's brokerage, add "Listing courtesy of <listing brokerage>" (in the post language).
+- End the caption with the user's identification on its own line, e.g. "Jane Doe, REALTOR® | ABC Realty Inc., Brokerage". Write the brokerage name exactly as the profile has it. Mortgage brokers add their licence number if provided. If the listing brokerage differs from the user's brokerage, add "Listing courtesy of <listing brokerage>" (in the post language).
 - Mortgage figures: if a payment estimate is provided, quote it exactly as given, say it's an estimate, and note "OAC" (on approved credit) or "sous réserve d'approbation de crédit". Never compute your own figures.
 - Never use "guaranteed" or "best investment", and make no claims about future value or appreciation.
 

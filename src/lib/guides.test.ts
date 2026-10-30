@@ -1,3 +1,4 @@
+import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { DEMO_POSTS } from "../components/hero/demo-posts";
 import { dollarAmounts, HYPE, PLACEHOLDER, SLOP } from "./copy-rules";
@@ -140,6 +141,15 @@ describe("guides", () => {
       expect(g.sections.flatMap((s) => s.blocks).some((b) => b.type === "table" || b.type === "steps"), `${at}: needs a table or numbered steps`).toBe(true);
       expect(g.sources.length, `${at}: sources`).toBeGreaterThanOrEqual(2);
       expect(links.some((h) => h.startsWith("https://")), `${at}: cite a source inline, next to the fact`).toBe(true);
+    }
+  });
+
+  it("have a gap brief with a line-by-line fact-check", () => {
+    // Required for guides published from this date; see step 6 of the skill.
+    for (const g of GUIDES.filter((g) => g.published >= "2026-10-31")) {
+      const brief = `marketing/seo/research/${g.slug}.md`;
+      expect(existsSync(brief), `${brief} is missing`).toBe(true);
+      expect(readFileSync(brief, "utf8"), `${brief}: fact-check table`).toMatch(/^## Fact-check/m);
     }
   });
 

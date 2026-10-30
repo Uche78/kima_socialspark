@@ -38,7 +38,7 @@ export const realEstateCaptionsForInstagram: Guide = {
             { title: "Hook: the one thing that's different", body: "Instagram shows roughly the first line before \"more\", so that line has to stand on its own. Name the feature a buyer would mention to a friend: the heated saltwater pool, the wraparound porch, the lake view from the bedroom." },
             { title: "Proof: two or three facts", body: "Back the hook up with details from the listing: bedrooms and baths, what was renovated, what's included. Only facts you've checked. A wrong walk time or school name costs you the one buyer who knows the area." },
             { title: "Ask: one thing to do next", body: "\"DM 'TOUR' for the full photo set\", \"Message me for a private showing\", \"Open house Saturday 2 to 4\". Links in Instagram captions aren't clickable, so ask for a DM or point to the link in your bio." },
-            { title: "Sign-off: your name and brokerage", body: "On its own line at the end, like \"Jane Doe, REALTOR® | ABC Realty Inc.\". If it's another brokerage's listing, add \"Listing courtesy of\" and its name." },
+            { title: "Sign-off: your name and brokerage", body: "On its own line at the end, like \"Jane Doe, REALTOR® | ABC Realty Inc., Brokerage\". If it's another brokerage's listing, add \"Listing courtesy of\" and its name." },
           ],
         },
         {
@@ -58,32 +58,32 @@ export const realEstateCaptionsForInstagram: Guide = {
         {
           type: "example",
           label: "Just Listed",
-          text: "Saturday mornings by a heated saltwater pool, ten minutes from the lake. 🌊\n\n5 bedrooms, 4.5 baths and 3,850 sq. ft. in Oakville, with a kitchen built for hosting.\n\nDM \"TOUR\" and I'll send you the full photo set.\n\nJane Doe, REALTOR® | ABC Realty Inc.",
+          text: "Saturday mornings by a heated saltwater pool, ten minutes from the lake. 🌊\n\n5 bedrooms, 4.5 baths and 3,850 sq. ft. in Oakville, with a kitchen built for hosting.\n\nDM \"TOUR\" and I'll send you the full photo set.\n\nJane Doe, REALTOR® | ABC Realty Inc., Brokerage",
         },
         {
           type: "example",
           label: "Open House",
-          text: "Come see the wraparound porch everyone on Maple Lane talks about.\n\nOpen house Saturday and Sunday, 2 to 4 PM. 4 bedrooms, 3 baths, 2,400 sq. ft. in Stouffville.\n\nSave this post, or send it to a friend who's looking.\n\nJane Doe, REALTOR® | ABC Realty Inc.",
+          text: "Come see the wraparound porch everyone on Maple Lane talks about.\n\nOpen house Saturday and Sunday, 2 to 4 PM. 4 bedrooms, 3 baths, 2,400 sq. ft. in Stouffville.\n\nSave this post, or send it to a friend who's looking.\n\nJane Doe, REALTOR® | ABC Realty Inc., Brokerage",
         },
         {
           type: "example",
           label: "Price Reduced",
-          text: "Same lake views, better number.\n\nThis corner suite at Harbour Street has 2 bedrooms, 2 baths and a soaker tub, a short walk from Union Station.\n\nSwipe through the kitchen →, then message me to book a showing.\n\nJane Doe, REALTOR® | ABC Realty Inc.",
+          text: "Same lake views, better number.\n\nThis corner suite at Harbour Street has 2 bedrooms, 2 baths and a soaker tub, a short walk from Union Station.\n\nSwipe through the kitchen →, then message me to book a showing.\n\nJane Doe, REALTOR® | ABC Realty Inc., Brokerage",
         },
         {
           type: "example",
           label: "Coming Soon",
-          text: "A first look before this Centretown townhouse hits the market.\n\n3 bedrooms, 2.5 baths and 1,900 sq. ft. in the middle of Ottawa.\n\nDM me \"EARLY\" to see it before it's listed.\n\nJane Doe, REALTOR® | ABC Realty Inc.",
+          text: "A first look before this Centretown townhouse hits the market.\n\n3 bedrooms, 2.5 baths and 1,900 sq. ft. in the middle of Ottawa.\n\nDM me \"EARLY\" to see it before it's listed.\n\nJane Doe, REALTOR® | ABC Realty Inc., Brokerage",
         },
         {
           type: "example",
           label: "Sold",
-          text: "Another family is moving into Maple Lane.\n\nIf you've been wondering what your Stouffville home could get, I'm happy to walk you through what's selling on your street.\n\nThinking of selling? Let's talk.\n\nJane Doe, REALTOR® | ABC Realty Inc.",
+          text: "Another family is moving into Maple Lane.\n\nIf you've been wondering what your Stouffville home could get, I'm happy to walk you through what's selling on your street.\n\nThinking of selling? Let's talk.\n\nJane Doe, REALTOR® | ABC Realty Inc., Brokerage",
         },
         {
           type: "example",
           label: "Featured Property",
-          text: "The soaker tub is the reason to book this showing.\n\nA 940 sq. ft. corner suite with 2 bedrooms and lake views on Toronto's waterfront.\n\nAsk me for the floor plan.\n\nJane Doe, REALTOR® | ABC Realty Inc.",
+          text: "The soaker tub is the reason to book this showing.\n\nA 940 sq. ft. corner suite with 2 bedrooms and lake views on Toronto's waterfront.\n\nAsk me for the floor plan.\n\nJane Doe, REALTOR® | ABC Realty Inc., Brokerage",
         },
         {
           type: "visual",
@@ -156,7 +156,7 @@ export const realEstateCaptionsForInstagram: Guide = {
         {
           type: "example",
           label: "Coming Soon, bilingual",
-          text: "A first look before this Centretown townhouse hits the market. 3 bedrooms, 2.5 baths. DM me \"EARLY\" for the details.\n\n— FR —\n\nUn premier coup d'œil avant l'arrivée sur le marché : maison en rangée de 3 chambres à coucher et 2,5 salles de bain au centre-ville d'Ottawa. Écrivez-moi « TÔT » pour les détails.\n\nJane Doe, REALTOR® | ABC Realty Inc.",
+          text: "A first look before this Centretown townhouse hits the market. 3 bedrooms, 2.5 baths. DM me \"EARLY\" for the details.\n\n— FR —\n\nUn premier coup d'œil avant l'arrivée sur le marché : maison en rangée de 3 chambres à coucher et 2,5 salles de bain au centre-ville d'Ottawa. Écrivez-moi « TÔT » pour les détails.\n\nJane Doe, REALTOR® | ABC Realty Inc., Brokerage",
         },
         {
           type: "p",

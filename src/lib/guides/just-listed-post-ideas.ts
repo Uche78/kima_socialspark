@@ -76,7 +76,7 @@ export const justListedPostIdeas: Guide = {
             { title: "Open with the hook", body: "On Instagram only the first line or so shows before \"more\", about 125 characters. Put the one thing that makes this home different there. Not \"Just listed!\", which the image already says." },
             { title: "Add two or three supporting facts", body: "Pick the details that back up the hook, taken from the listing: what was renovated, what's included, the lot size. Never add a fact you haven't checked, like a school name or a walk time." },
             { title: "Ask for one thing", body: "\"Message me for a private showing\", \"DM 'PLAN' for the floor plan\", or \"Open house Saturday 2 to 4\". One ask is easier to act on than three." },
-            { title: "Sign off with your name and brokerage", body: "Put it on its own line at the end, for example \"Jane Doe, REALTOR® | ABC Realty Inc.\". If it's another brokerage's listing, credit it too: \"Listing courtesy of XYZ Realty\"." },
+            { title: "Sign off with your name and brokerage", body: "Put it on its own line at the end, for example \"Jane Doe, REALTOR® | ABC Realty Inc., Brokerage\". If it's another brokerage's listing, credit it too: \"Listing courtesy of XYZ Realty\"." },
           ],
         },
         {
@@ -86,17 +86,17 @@ export const justListedPostIdeas: Guide = {
         {
           type: "example",
           label: "Example: Instagram",
-          text: "Saturday mornings by a heated saltwater pool, ten minutes from the lake. 🌊\n\n5 bedrooms, 4.5 baths and a kitchen built for hosting, with a walk-out to the backyard.\n\nDM \"TOUR\" and I'll send you the full photo set and book a private showing.\n\nJane Doe, REALTOR® | ABC Realty Inc.",
+          text: "Saturday mornings by a heated saltwater pool, ten minutes from the lake. 🌊\n\n5 bedrooms, 4.5 baths and a kitchen built for hosting, with a walk-out to the backyard.\n\nDM \"TOUR\" and I'll send you the full photo set and book a private showing.\n\nJane Doe, REALTOR® | ABC Realty Inc., Brokerage",
         },
         {
           type: "example",
           label: "Example: Facebook",
-          text: "Just listed in Oakville: 5 beds, 4.5 baths and a chef's kitchen made for hosting.\n\nThe backyard is the part you'll remember: a heated saltwater pool with room around it for the whole family. Know someone who's been waiting for a home like this? Tag them below.\n\nMessage me to book a private showing.\n\nJane Doe, REALTOR® | ABC Realty Inc.",
+          text: "Just listed in Oakville: 5 beds, 4.5 baths and a chef's kitchen made for hosting.\n\nThe backyard is the part you'll remember: a heated saltwater pool with room around it for the whole family. Know someone who's been waiting for a home like this? Tag them below.\n\nMessage me to book a private showing.\n\nJane Doe, REALTOR® | ABC Realty Inc., Brokerage",
         },
         {
           type: "example",
           label: "Example: LinkedIn",
-          text: "Five-bedroom homes with a pool rarely come up in this part of Oakville, and this one is ten minutes from the lake.\n\nIf you know someone relocating to the area for work, I'd be glad to show them through it, or to talk about what's coming up next.\n\nJane Doe, REALTOR® | ABC Realty Inc.",
+          text: "Five-bedroom homes with a pool rarely come up in this part of Oakville, and this one is ten minutes from the lake.\n\nIf you know someone relocating to the area for work, I'd be glad to show them through it, or to talk about what's coming up next.\n\nJane Doe, REALTOR® | ABC Realty Inc., Brokerage",
         },
       ],
     },

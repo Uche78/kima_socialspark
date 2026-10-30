@@ -22,7 +22,8 @@ Works with:
 | Discovery | `src/app/sitemap.ts` (real `updated` dates), `src/app/llms.txt/route.ts`, footer "Guides" link | Automatic for every entry |
 | Schema | `src/lib/guides/schema.ts` | schema.org JSON-LD for every guide, built from the page's own content: Organization, WebSite, WebPage (speakable), Article (citations), BreadcrumbList, FAQPage, and a HowTo for each "How to …" section with steps. No extra fields to fill in |
 | Quality gate | `src/lib/guides.test.ts` (+ `src/lib/copy-rules.ts`) | Title/description lengths, the keyword in title+H1, a heading and the answer, 1,000–3,500 words, 4–10 sections, 3–8 FAQs, honest dates, internal links resolve, no orphans, one guide per keyword, no stray prices, no hype, no filler phrases, question headings, short FAQ answers, a table or steps, sources cited inline, schema matches the page |
-| Research | `marketing/seo/research/<slug>.md` | The gap brief for each guide: pages read and the missing opportunities the guide fills (step 4) |
+| Research | `marketing/seo/research/<slug>.md` | The gap brief for each guide: pages read, the missing opportunities it fills (step 4), and the line-by-line fact-check (step 6) |
+| Compliance flags | `marketing/seo/compliance-flags.md` | Where SocialSpark itself breaks or risks a rule the research found (step 6) |
 | Config | `marketing/seo/config.json` | GSC property, Ads customer id, geo/languages, thresholds, relevant/excluded terms, seed keywords, `publish_mode` |
 | Data | `marketing/seo/data/<date>/` (gitignored) | Raw gum output and `opportunities.json` |
 | Log | `marketing/seo/guide-log.md` | Every decision, why, links added, and check-in results |
@@ -86,6 +87,19 @@ This lists pages that already earn impressions for related queries. Then:
 - The test fails on orphans (once there are two guides), broken internal links and self-links.
 
 ### Step 6: Verify
+**First, the line-by-line fact-check.** Reading the sources before writing isn't enough: on 2026-10-30 a draft written with RECO's bulletins open still invented a rule and got two details wrong. So after drafting, go through the finished guide one claim at a time:
+- List every outside claim and every claim about SocialSpark, in the `## Fact-check` table of the gap brief: `| Claim | Source | Exact words | Result |`.
+- Open the source again and copy its exact words (a primary source for outside claims, the file and line for product claims). Your memory of it, a ranking page or an earlier guide doesn't count.
+- Anything not in the source gets corrected, cut, or marked in the guide as our reading. Nothing is left as "probably true". That includes general statements like "most agents…" or "a common mistake": source them or cut them.
+- Check what's missing as well as what's wrong: tables and lists that claim to be complete must match the source in full.
+- Say "every claim is sourced" in the hand-off only if the table shows it.
+
+**Then check SocialSpark against the same rules.** For every rule the guide states or a source contains, ask whether SocialSpark follows it: captions (`generate.ts`), images (`SlideCanvas.tsx`), the sign-off, the consent checks, demo posts, site copy, FAQs and older guides. Look in the code, don't assume. Any place SocialSpark breaks a rule, or makes it easy for a user to break one, is a **compliance flag**:
+- Add it to `marketing/seo/compliance-flags.md`: date, the rule with the source's exact words and link, where SocialSpark falls short (file or page), how serious it is, and a suggested fix.
+- Put it at the top of the hand-off under `Compliance flags`, and in the `SUMMARY:` line of an unattended run. Never leave one out because it's awkward, and never word a guide around one to hide it.
+- Fix it only if it's in guide copy on your branch. Product code, prompts and site pages are the user's call: report them, don't change them.
+
+**Then the checks:**
 1. `npx next typegen && npx tsc --noEmit -p .` and `npx eslint src/lib/guides src/components/guides src/app/guides`.
 2. `npx vitest run src/lib/guides.test.ts`. Fix the copy, not the test; change a rule only with the user's agreement. This also covers the SEO, GEO and AEO rules and the schema.
 3. Render `/guides/<slug>` on the dev server (check `lsof -iTCP -sTCP:LISTEN`; start one with `npx next dev -p <port>` if none; if the new slug 404s, touch `src/app/guides/[slug]/page.tsx`). Screenshot at 1440 and 390 px after scrolling (Playwright lives in `.claude/skills/socialspark-ad-video/scripts/node_modules`; run scripts from the repo root). Check: no horizontal scroll, tables scroll inside their box on phones, visuals show real posts, both import forms work, the header's "Try it for free" focuses the first form.
@@ -129,11 +143,13 @@ The run needs gum's local credentials, so it runs on the user's machine, not in 
 ## 5. Hand-off
 
 ```
+Compliance flags: <where SocialSpark breaks or risks a rule, with the source; or "none found">
 Today: <new|refresh|title|no action>: <URL>
 Why: "<query>": <impressions> impressions, position <n>, CTR <x%>, <volume>/mo in Canada (<source>)
 Research: <the pages read, with URLs>; brief: marketing/seo/research/<slug>.md
 Angle: the missing opportunities this guide fills
 Links added from: <pages>; links out to: <pages>
+Fact-check: <claims checked>, <corrected or cut>; table in the brief
 Checks: tests ✓, types ✓, lint ✓, rendered at 1440/390 ✓
 Published: <branch guides/<slug>, awaiting review | pushed to main, sitemap resubmitted>
 Check-ins: <guide: indexed? impressions, position at 4/14/28 days>

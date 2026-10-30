@@ -51,7 +51,7 @@ export const realEstateFacebookPostIdeas: Guide = {
             { title: "Open with a line of context, not a badge", body: "Skip \"Just listed!\" or a string of emojis. Start with the street, the neighbourhood, or the detail a local would recognize: \"Another one on Maple Lane\", \"First time this corner unit has been up in three years\"." },
             { title: "Add the facts from the listing", body: "Price, bedrooms, bathrooms, square footage, and one or two details a buyer filters on. Only facts you've checked against the listing; never a school name, walk time or market claim you haven't confirmed." },
             { title: "Ask for the direct action", body: "Facebook readers respond to a plain ask: \"Message me to book a showing\", \"Call or text for details\", or a question that invites a comment. A clickable link to the listing or a virtual tour can go on its own line." },
-            { title: "Sign off with your name and brokerage", body: "On its own line, for example \"Jane Doe, REALTOR® | ABC Realty Inc.\" If it's another brokerage's listing, add \"Listing courtesy of\" and its name." },
+            { title: "Sign off with your name and brokerage", body: "On its own line, for example \"Jane Doe, REALTOR® | ABC Realty Inc., Brokerage\" If it's another brokerage's listing, add \"Listing courtesy of\" and its name." },
           ],
         },
         {
@@ -66,22 +66,22 @@ export const realEstateFacebookPostIdeas: Guide = {
         {
           type: "example",
           label: "Just Listed",
-          text: "Just listed in Oakville: 5 beds, 4.5 baths and a kitchen built for hosting.\n\nThe backyard is the part you'll remember: a heated saltwater pool with room around it for the whole family. Know someone who's been waiting for a home like this? Tag them below.\n\nMessage me to book a private showing.\n\nJane Doe, REALTOR® | ABC Realty Inc.",
+          text: "Just listed in Oakville: 5 beds, 4.5 baths and a kitchen built for hosting.\n\nThe backyard is the part you'll remember: a heated saltwater pool with room around it for the whole family. Know someone who's been waiting for a home like this? Tag them below.\n\nMessage me to book a private showing.\n\nJane Doe, REALTOR® | ABC Realty Inc., Brokerage",
         },
         {
           type: "example",
           label: "Open House",
-          text: "Open house this Saturday and Sunday, 2 to 4 PM, on Maple Lane in Stouffville.\n\n4 bedrooms, 3 baths, 2,400 sq. ft., and the wraparound porch everyone on the street already asks about.\n\nStop by, or message me and I'll save you a time to walk through quietly.\n\nJane Doe, REALTOR® | ABC Realty Inc.",
+          text: "Open house this Saturday and Sunday, 2 to 4 PM, on Maple Lane in Stouffville.\n\n4 bedrooms, 3 baths, 2,400 sq. ft., and the wraparound porch everyone on the street already asks about.\n\nStop by, or message me and I'll save you a time to walk through quietly.\n\nJane Doe, REALTOR® | ABC Realty Inc., Brokerage",
         },
         {
           type: "example",
           label: "Price Reduced",
-          text: "Same lake views on Harbour Street, better number.\n\n2 bedrooms, 2 baths and a soaker tub, a short walk from Union Station. The kind of corner suite that doesn't usually move on price.\n\nCall or message me to book a showing before the weekend.\n\nJane Doe, REALTOR® | ABC Realty Inc.",
+          text: "Same lake views on Harbour Street, better number.\n\n2 bedrooms, 2 baths and a soaker tub, a short walk from Union Station. The kind of corner suite that doesn't usually move on price.\n\nCall or message me to book a showing before the weekend.\n\nJane Doe, REALTOR® | ABC Realty Inc., Brokerage",
         },
         {
           type: "example",
           label: "Sold",
-          text: "Another family is moving into Maple Lane.\n\nIf you've been wondering what your Stouffville home could get in this market, I'm happy to walk you through what's selling on your street, no pressure.\n\nThinking of selling? Let's talk.\n\nJane Doe, REALTOR® | ABC Realty Inc.",
+          text: "Another family is moving into Maple Lane.\n\nIf you've been wondering what your Stouffville home could get in this market, I'm happy to walk you through what's selling on your street, no pressure.\n\nThinking of selling? Let's talk.\n\nJane Doe, REALTOR® | ABC Realty Inc., Brokerage",
         },
         {
           type: "visual",

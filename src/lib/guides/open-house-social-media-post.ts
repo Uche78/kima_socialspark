@@ -83,7 +83,7 @@ export const openHouseSocialMediaPost: Guide = {
             { title: "Lead with the reason, not the address", body: "The image already states the address and time. Open the caption with the one detail that makes this open house worth the drive: the porch, the view, the renovation." },
             { title: "Repeat the day and time in words", body: "Even though it's on the image, say it again in the caption: \"Saturday and Sunday, 2 to 4 PM.\" Some platforms crop images differently in the feed, and people share captions without the photo." },
             { title: "Ask people to come, save the post, or share it", body: "\"Stop by\", \"save this for Saturday\", or \"tag someone who's looking\" all work. Skip asking for an RSVP unless you actually need one; many Canadian open houses are drop-in." },
-            { title: "Sign off with your name and brokerage", body: "On its own line, e.g. \"Jane Doe, REALTOR® | ABC Realty Inc.\" If you're hosting for another brokerage's listing, add \"Listing courtesy of\" and its name." },
+            { title: "Sign off with your name and brokerage", body: "On its own line, e.g. \"Jane Doe, REALTOR® | ABC Realty Inc., Brokerage\" If you're hosting for another brokerage's listing, add \"Listing courtesy of\" and its name." },
           ],
         },
         {
@@ -93,17 +93,17 @@ export const openHouseSocialMediaPost: Guide = {
         {
           type: "example",
           label: "Example: Instagram",
-          text: "Come see the wraparound porch everyone on Maple Lane talks about. 🏡\n\nOpen house Saturday and Sunday, 2 to 4 PM. 4 bedrooms, 3 baths, 2,400 sq. ft. in Stouffville.\n\nSave this post, or send it to a friend who's looking.\n\nJane Doe, REALTOR® | ABC Realty Inc.",
+          text: "Come see the wraparound porch everyone on Maple Lane talks about. 🏡\n\nOpen house Saturday and Sunday, 2 to 4 PM. 4 bedrooms, 3 baths, 2,400 sq. ft. in Stouffville.\n\nSave this post, or send it to a friend who's looking.\n\nJane Doe, REALTOR® | ABC Realty Inc., Brokerage",
         },
         {
           type: "example",
           label: "Example: Facebook",
-          text: "Open house this Saturday and Sunday, 2 to 4 PM, on Maple Lane in Stouffville.\n\n4 bedrooms, 3 baths, 2,400 sq. ft., and the wraparound porch everyone on the street already asks about.\n\nStop by, or message me and I'll save you a time to walk through quietly.\n\nJane Doe, REALTOR® | ABC Realty Inc.",
+          text: "Open house this Saturday and Sunday, 2 to 4 PM, on Maple Lane in Stouffville.\n\n4 bedrooms, 3 baths, 2,400 sq. ft., and the wraparound porch everyone on the street already asks about.\n\nStop by, or message me and I'll save you a time to walk through quietly.\n\nJane Doe, REALTOR® | ABC Realty Inc., Brokerage",
         },
         {
           type: "example",
           label: "Example: LinkedIn",
-          text: "Hosting the open house for a colleague's listing this weekend: a four-bedroom home on Maple Lane in Stouffville, Saturday and Sunday, 2 to 4 PM.\n\nKnow someone relocating to the area? I'd be glad to walk them through it.\n\nJane Doe, REALTOR® | ABC Realty Inc. | Listing courtesy of XYZ Realty",
+          text: "Hosting the open house for a colleague's listing this weekend: a four-bedroom home on Maple Lane in Stouffville, Saturday and Sunday, 2 to 4 PM.\n\nKnow someone relocating to the area? I'd be glad to walk them through it.\n\nJane Doe, REALTOR® | ABC Realty Inc., Brokerage | Listing courtesy of XYZ Realty",
         },
       ],
     },

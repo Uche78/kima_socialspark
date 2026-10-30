@@ -48,7 +48,7 @@ Not every guide needs every part; a narrow question gets a shorter guide. 1,000 
 - **Specific beats general.** "A new roof in 2024" not "well maintained". Numbers where they're true.
 - **Every product claim is true today**, checked in code. Gaps that must never be implied: MLS/DDF import, Reels or video, team seats in the app, languages other than English and French.
 - **Every outside claim has a source you read.** Regulators differ by province: name the province, or say "check your regulator".
-- **Examples are clearly examples.** Use the demo listings' facts (Oakville 5-bed with a saltwater pool, etc.) or none. No real agents', brokerages' or listings' names. Sample sign-offs use "Jane Doe, REALTOR® | ABC Realty Inc.".
+- **Examples are clearly examples.** Use the demo listings' facts (Oakville 5-bed with a saltwater pool, etc.) or none. No real agents', brokerages' or listings' names. Sample sign-offs use "Jane Doe, REALTOR® | ABC Realty Inc., Brokerage".
 - **No filler.** The test blocks the usual tells ("delve", "in today's fast-paced", "it's important to note", "in conclusion"), and the ad-copy skill's hype words. Beyond the test: no sentence that restates the heading, no intro that promises what's coming, no closing summary.
 - **Brokers:** never imply SocialSpark sets or recommends rates or makes anyone compliant.
 - **French guides** aren't supported by the template yet (it's English chrome and `en-CA`). If French demand shows up (Keyword Planner `fr` file), tell the user; adding a `locale` field is a template change, not a one-off.
