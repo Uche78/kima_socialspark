@@ -122,7 +122,7 @@ export const realEstateCaptionsForInstagram: Guide = {
       ],
     },
     {
-      heading: "Hashtags: five, chosen well",
+      heading: "How many hashtags should a real estate caption use?",
       blocks: [
         {
           type: "p",

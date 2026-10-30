@@ -14,7 +14,7 @@ The model is a reference article written by someone who does this work every wee
 | `meta.description` | 70–160 characters. What the reader will be able to do after reading. No "Learn about…". |
 | `h1` | Can be longer and more natural than the title; contains the keyword's words. |
 | `dek` | One line: what's covered. |
-| `answer` | 35–90 words. The complete answer in plain sentences, quotable by an AI overview. No "In this guide…". |
+| `answer` | 35–90 words. The complete answer in plain sentences, quotable on its own. No "In this guide…". |
 | `sections` | 4–10. Headings are the questions or steps a reader scans for. Paragraphs ≤ 120 words. |
 | `faq` | 3–8 real follow-up questions (Search Console queries and "People also ask"), answered in 1–3 sentences. Published as FAQPage. |
 | `related` | 2–3 sibling guides (once they exist). |
@@ -52,6 +52,42 @@ Not every guide needs every part; a narrow question gets a shorter guide. 1,000 
 - **No filler.** The test blocks the usual tells ("delve", "in today's fast-paced", "it's important to note", "in conclusion"), and the ad-copy skill's hype words. Beyond the test: no sentence that restates the heading, no intro that promises what's coming, no closing summary.
 - **Brokers:** never imply SocialSpark sets or recommends rates or makes anyone compliant.
 - **French guides** aren't supported by the template yet (it's English chrome and `en-CA`). If French demand shows up (Keyword Planner `fr` file), tell the user; adding a `locale` field is a template change, not a one-off.
+
+## Found, quoted and cited: SEO, GEO, AEO
+
+Every guide is written for three kinds of reader: Google's results (SEO), AI assistants that cite sources, like ChatGPT, Claude and Perplexity (GEO), and direct answers such as AI Overviews and voice (AEO). The rules below cover all three; `src/lib/guides.test.ts` enforces those marked ✓.
+
+**SEO**
+- ✓ The search phrase's words are in the title, H1, short answer and at least one section heading. The slug is the phrase.
+- One search intent per guide. If the top pages answer a different question from the phrase, write for what they show searchers want.
+- ✓ At least 2 internal links in the text and 2 related guides, with anchor text naming the topic.
+- Beat the top pages on substance: the gap brief's missing opportunities are the reason to rank.
+
+**AEO**
+- ✓ The short answer starts with the answer, in plain sentences, and makes sense quoted alone.
+- ✓ At least 2 headings are the questions a reader asks, or "How to…". Use the words from Keyword Planner, Search Console and the ranking pages.
+- The first sentence under each heading answers that heading on its own, with no "this" or "it" pointing back to earlier text.
+- ✓ FAQ questions end in a question mark and answers run 80 words at most.
+- Define a term the first time it appears, in one plain sentence ("A Coming Soon post is…").
+
+**GEO**
+- ✓ Cite outside facts next to the claim, with an inline link, and list at least 2 sources. Name the regulator or platform in the sentence ("RECO's Bulletin 5.1 says…").
+- ✓ Include a table or numbered steps. Assistants lift these cleanly.
+- Be specific enough to be worth citing: numbers, limits, dates and province-by-province differences, each one true and sourced.
+- Name things in full each time they matter: SocialSpark, RECO, Instagram, Ontario. An assistant may quote one paragraph without the rest.
+- State facts in one clear sentence each, so they survive being quoted on their own. Keep `updated` honest; assistants favour fresh pages.
+
+**Schema.** `src/lib/guides/schema.ts` builds the schema.org JSON-LD from the guide, so there's nothing to fill in, but what you write decides what it contains:
+
+| Type | Comes from |
+|---|---|
+| `Organization`, `WebSite`, `BreadcrumbList` | The site and the guide's URL |
+| `WebPage` with `speakable` | `meta`, the H1 and the short answer |
+| `Article` with `citation` | `h1`, `answer`, dates, `keyword`, `alsoAnswers`, `cluster`, `audience`, `sources` |
+| `FAQPage` | `faq` |
+| `HowTo` | Each section whose heading starts "How to" and has a `steps` block. Give a real procedure that heading; a list of tips isn't a how-to |
+
+Markup must describe what's visible on the page. Never add a type for content the page doesn't show, and no `Review` or `AggregateRating` without real, permitted reviews.
 
 ## Refreshing a guide
 

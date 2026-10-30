@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { DEMO_POSTS } from "../components/hero/demo-posts";
 import { dollarAmounts, HYPE, PLACEHOLDER, SLOP } from "./copy-rules";
 import { GUIDES, guideLinks, guideText, headingId, plain, wordCount } from "./guides";
+import { guideJsonLd } from "./guides/schema";
 import { PERSONA_PAGES } from "./persona-pages";
 import { PAID_PLANS } from "./plans";
 
@@ -115,6 +116,53 @@ describe("guides", () => {
         expect(text, `${at}: hype or boast`).not.toMatch(HYPE);
         expect(text, `${at}: filler phrase`).not.toMatch(SLOP);
       }
+    }
+  });
+
+  it("are built to be found, quoted and cited (SEO, GEO, AEO)", () => {
+    const question = /^(how|what|why|when|which|who|where|can|do|does|should|is|are)\b|\?$/i;
+    for (const g of GUIDES) {
+      const at = `/guides/${g.slug}`;
+      const links = guideLinks(g);
+      // SEO: the phrase in a section heading, and links that pass readers and authority around the site.
+      const headings = g.sections.map((s) => s.heading.toLowerCase()).join(" ");
+      expect(stems(g.keyword).some((w) => headings.includes(w)), `${at}: no section heading uses the search phrase's words`).toBe(true);
+      expect(g.related.length, `${at}: related guides`).toBeGreaterThanOrEqual(2);
+      expect(links.filter((h) => h.startsWith("/")).length, `${at}: internal links`).toBeGreaterThanOrEqual(2);
+      // AEO: headings a reader would ask, answers that stand alone.
+      expect(g.sections.filter((s) => question.test(s.heading)).length, `${at}: headings phrased as questions or "how to"`).toBeGreaterThanOrEqual(2);
+      expect(plain(g.answer), `${at}: the short answer must start with the answer`).not.toMatch(/^(in this (guide|article|post)|this (guide|article|post)|here'?s)/i);
+      for (const f of g.faq) {
+        expect(f.q.trim(), `${at}: FAQ questions end in a question mark`).toMatch(/\?$/);
+        expect(plain(f.a).split(/\s+/).length, `${at}: FAQ answer to "${f.q}"`).toBeLessThanOrEqual(80);
+      }
+      // GEO: structure that lifts out cleanly, and outside facts cited where they're stated.
+      expect(g.sections.flatMap((s) => s.blocks).some((b) => b.type === "table" || b.type === "steps"), `${at}: needs a table or numbered steps`).toBe(true);
+      expect(g.sources.length, `${at}: sources`).toBeGreaterThanOrEqual(2);
+      expect(links.some((h) => h.startsWith("https://")), `${at}: cite a source inline, next to the fact`).toBe(true);
+    }
+  });
+
+  it("publish schema.org markup that matches the page", () => {
+    for (const g of GUIDES) {
+      const at = `/guides/${g.slug}`;
+      const json = guideJsonLd(g);
+      const graph = json["@graph"] as Record<string, unknown>[];
+      const text = JSON.stringify(json);
+      expect(json["@context"]).toBe("https://schema.org");
+      for (const type of ["Organization", "WebSite", "WebPage", "Article", "BreadcrumbList", "FAQPage"]) {
+        expect(graph.filter((n) => n["@type"] === type).length, `${at}: ${type}`).toBe(1);
+      }
+      expect(text, `${at}: link markup in the schema`).not.toMatch(/\]\(|\*\*/);
+      const defined = new Set(graph.map((n) => n["@id"]));
+      for (const m of text.matchAll(/\{"@id":"([^"]+)"\}/g)) expect(defined.has(m[1]), `${at}: "${m[1]}" isn't defined on the page`).toBe(true);
+      const faq = graph.find((n) => n["@type"] === "FAQPage") as { mainEntity: unknown[] };
+      expect(faq.mainEntity.length, `${at}: FAQ schema`).toBe(g.faq.length);
+      const article = graph.find((n) => n["@type"] === "Article") as { citation: unknown[]; dateModified: string };
+      expect(article.citation.length, `${at}: citations`).toBe(g.sources.length);
+      expect(article.dateModified, `${at}: dateModified`).toBe(g.updated);
+      const howTo = g.sections.filter((s) => /^how to /i.test(s.heading) && s.blocks.some((b) => b.type === "steps"));
+      expect(graph.filter((n) => n["@type"] === "HowTo").length, `${at}: HowTo`).toBe(howTo.length);
     }
   });
 });

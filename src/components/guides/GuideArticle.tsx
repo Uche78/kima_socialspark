@@ -76,7 +76,7 @@ export function GuideArticle({ guide }: { guide: Guide }) {
         <div className="min-w-0 max-w-3xl space-y-14">
           <section aria-label="The short answer" className="rounded-3xl border-l-4 border-[#d4a24c] bg-white px-5 py-6 shadow-[0_1px_0_rgba(0,0,0,0.04)] sm:px-8">
             <p className={EYEBROW}>The short answer</p>
-            <p className={`mt-3 ${BODY} text-[#141414]/90`}>
+            <p data-speakable className={`mt-3 ${BODY} text-[#141414]/90`}>
               <RichText text={guide.answer} />
             </p>
           </section>

@@ -82,7 +82,7 @@ export const openHouseSocialMediaPost: Guide = {
           items: [
             { title: "Lead with the reason, not the address", body: "The image already states the address and time. Open the caption with the one detail that makes this open house worth the drive: the porch, the view, the renovation." },
             { title: "Repeat the day and time in words", body: "Even though it's on the image, say it again in the caption: \"Saturday and Sunday, 2 to 4 PM.\" Some platforms crop images differently in the feed, and people share captions without the photo." },
-            { title: "Ask people to come, save the post, or share it", body: "\"Stop by\", \"save this for Saturday\", or \"tag someone who's looking\" all work. Skip asking for an RSVP unless you actually need one; most Canadian open houses are drop-in." },
+            { title: "Ask people to come, save the post, or share it", body: "\"Stop by\", \"save this for Saturday\", or \"tag someone who's looking\" all work. Skip asking for an RSVP unless you actually need one; many Canadian open houses are drop-in." },
             { title: "Sign off with your name and brokerage", body: "On its own line, e.g. \"Jane Doe, REALTOR® | ABC Realty Inc.\" If you're hosting for another brokerage's listing, add \"Listing courtesy of\" and its name." },
           ],
         },
