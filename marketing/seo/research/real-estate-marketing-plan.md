@@ -24,25 +24,47 @@ Primary keyword chosen for the page: **real estate marketing plan** (the seed ph
 
 ## Missing opportunities (what none of them do well) → where it lands in the guide
 
-1. **No actual copy-paste weekly schedule tied to a realtor's real workload.** Every page gives monthly themes or a vague "3x a week"; none gives a Monday/Wednesday/weekend table a solo agent can just follow. → "A weekly social media schedule you can copy" (table).
+1. **Weekly schedules exist, but none follows the agent's listings.** Corrected in review: Avenue HQ gives a day-by-day calendar and Reallyo a Monday, Wednesday, Friday one, both built on generic content themes. → "A weekly social media schedule you can copy" (table), built around what the agent's listings are doing that week.
 2. **No Canadian context.** All six pages are U.S.-centric (HousingWire: Boston/Keller Williams; The Close: U.S. holidays only; InboundREM: MLS/Census Bureau/WSJ). None mention Canadian provincial advertising regulators or Canadian holidays. → "The Canadian rules a marketing plan has to follow" section, citing RECO Bulletin 5.1 and CREA's trademark rules (already verified sources from prior guides), plus a note to calendar around Canadian, not American, observances.
 3. **The plan is never tied to the listing lifecycle.** All six treat "social media" as one generic bucket; none structure the week around Just Listed → Open House → Price Reduced → Sold, which is the one thing a listing-based tool like SocialSpark can actually automate. → weekly schedule section + internal links to the four listing-stage guides.
 4. **"What do I post with no new listing?" is unanswered.** None of the six pages address the realtor's actual weekly problem: most weeks there's no new listing to announce. → dedicated "What to post when you have no new listing" section with concrete, verifiable ideas (reposting an active listing as Featured Property, a local fact, a past-sale story, a Q&A).
 5. **No budget-free version for a new or part-time agent.** HousingWire and InboundREM assume a budget and often a team/CRM/hired help; none scale the plan down to one listing a month. → "How the plan changes for a new agent, a busy one, or a team" section, linking to the new-agent and part-time-realtor persona pages.
 6. **Mortgage brokers are absent from every page.** → one FAQ answer tying the same weekly cadence to feature sheets, linking `/mortgage-brokers`.
 
+## Sources left out
+
+Reallyo sells a competing listing post and caption tool, and says of its 3-3-3 and 50/30/20 rules: "None has an official source; they circulate among social media coaches". The guide doesn't link to it or use those rules. Three posts a week is stated as our suggestion, with no official number.
+
 ## Fact-check
+
+The run's first table had 9 rows, marked two claims "already verified for prior guides" and left out general statements and product claims. This one was redone in review with every source reopened.
 
 | Claim | Source | Exact words | Result |
 |---|---|---|---|
-| HousingWire frames the plan as 9 steps, ending in content planning and tracking results | HousingWire, https://www.housingwire.com/articles/real-estate-marketing-plan/ | Headlines: "Set clear goals for your business" … "Plan your content ahead of time" … "Track your results and make smart adjustments" | Used, paraphrased as 9 steps in the guide's first section |
-| HousingWire suggests planning content in 90-day/quarterly chunks | HousingWire, same URL | "I suggest planning out your next 90 days. Sit down once a quarter with a cup of coffee and get your creative juices flowing." | Used, kept as "once a quarter" |
-| Reallyo's 3-3-3 rule: post 3x/week, across 3 content types, engage with 3 accounts per post | Reallyo, https://www.reallyo.com/blog/real-estate-social-media-marketing | "post 3 times a week, across 3 content types, and engage with 3 other accounts for every post" | Used as the frequency baseline, cited inline |
-| Reallyo's 50/30/20 content mix | Reallyo, same URL | "50% value or education, 30% personal and relatable, 20% promotional" | Used as the content-mix guidance, cited inline |
-| RECO requires the brokerage name clearly and prominently identified in every ad, including social media | RECO Bulletin 5.1 and 5.3, https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-1-advertising-requirements/ and .../reco-bulletin-5-3-advertising-online/ | "clearly and prominently identified"; Bulletin 5.3 applies the same requirements online | Already verified for prior guides; reused, cited inline |
-| REALTOR® is a CREA trademark, first use in capitals with the ® symbol | CREA, https://www.crea.ca/cafe/everything-you-need-to-know-about-creas-trademarks-2/ | CREA asks that the first use be in capital letters with the ® symbol | Already verified for prior guides; reused |
-| SocialSpark generates Just Listed, Open House, Price Reduced, Coming Soon, Sold, Featured Property and Mortgage Feature Sheet posts, on Instagram, Facebook and LinkedIn only | Code: `src/lib/types.ts` (`POST_TYPES`, `Platform`) | `POST_TYPES` lists exactly those 7 keys; `Platform = "instagram" \| "facebook" \| "linkedin"` | Used; guide does not claim Pinterest, TikTok or YouTube support (not in `Platform`), and does not claim an automated "market update" or "local fact" post type (not in `POST_TYPES`) |
-| Free plan: 3 listing imports (registered), 2 captions per listing | Code: `src/lib/plans.ts` (`FREE_LIMITS`) | `FREE_LIMITS = { guest: 1, registered: 3, captionsPerListing: 2 }` | Used, same wording as other guides |
-| New-agent and part-time-realtor persona pages exist at those slugs | Code: `src/lib/persona-pages.ts` | slugs `social-media-posts-for-new-real-estate-agents`, `listing-posts-for-part-time-realtors`, `social-media-for-top-producing-realtors` | Verified before linking |
+| HousingWire's plan has nine steps, from goals to tracking results | [HousingWire](https://www.housingwire.com/articles/real-estate-marketing-plan/) | "1. Set clear goals for your business" … "9. Track your results and make smart adjustments" | Confirmed |
+| HousingWire suggests planning a quarter at a time | HousingWire | "I do suggest planning out your next 90 days. Sit down once a quarter with a cup of coffee and get your creative juices flowing." | Confirmed |
+| HousingWire's template includes a budget | HousingWire | "7. Create a realistic marketing budget" | Confirmed; "most templates" cut |
+| Three posts a week is the agreed baseline | [Reallyo](https://www.reallyo.com/blog/real-estate-social-media-marketing) | "None has an official source; they circulate among social media coaches" | Corrected: now our suggestion, "no official number" |
+| 3-3-3 and 50/30/20 rules | Reallyo, as above | Same | Cut |
+| RECO: brokerage clearly and prominently identified | [Bulletin 5.1](https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-1-advertising-requirements/) | "Agents are prohibited from advertising in any manner unless the brokerage is clearly and prominently identified." | Confirmed; marked as Ontario |
+| The same requirements apply on social media | [Bulletin 5.3](https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-3-advertising-online/) | "While social media platforms may seem less formal, the same advertising requirements apply." | Confirmed |
+| This includes a personal account also used for listings | Bulletin 5.3 | "Agents using a social media account for both personal and professional purposes" "must ensure both accounts and each message relating to trading in real estate comply with advertising requirements." | Confirmed |
+| REALTOR® form | [CREA](https://www.crea.ca/cafe/everything-you-need-to-know-about-creas-trademarks-2/) | "all letters must be capitalized followed by the registered trademark symbol and provide a trademark statement." | Corrected: "on first use" isn't CREA's wording. Same error fixed in the just-listed, open house and Facebook guides. Raises a compliance flag |
+| REALTOR® identifies CREA members, not a job title | CREA | "should never be used as a synonym to describe a real estate professional, salesperson or broker" | Confirmed |
+| Sold posts need written consent with dates (Ontario) | [Bulletin 5.4](https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-4-advertising-sold-property/) | "The consent must be clear and include the date on which the consent takes effect and the date on which the consent expires." | Confirmed; added as a cited rule and limited to Ontario |
+| "Every post is under your provincial regulator's rules", with Ontario's rules listed | None | Not in any source for other provinces | Corrected: the rules are marked as Ontario's |
+| "For most Canadian agents, that's Instagram, Facebook and LinkedIn" | None | Not in any source | Cut |
+| "The part … most skip" | None | Not in any source | Cut |
+| "Most showings and open houses happen" on the weekend | None | Not in any source | Cut |
+| "Posting less than three times a week is where most plans actually fail" | None | Not in any source | Cut |
+| "Most weeks don't have a new listing" | None | Not in any source | Softened to "some weeks" |
+| "Most agents don't start there" | None | Not in any source | Cut |
+| Brokers' "channels, schedule and content mix stay the same" | None | Not in any source | Cut |
+| Reusing one caption across Instagram and Facebook | `src/lib/guides/real-estate-captions-for-instagram.ts` | "The same listing needs a different caption again on Facebook" | Corrected: it contradicted our own guide |
+| Free listings "enough to run a few weeks" | `src/lib/plans.ts` | `FREE_LIMITS = { guest: 1, registered: 3, captionsPerListing: 2 }` | Corrected: 6 posts is two weeks at this pace, so it's now "enough to try the schedule" |
+| Post types and platforms | `src/lib/types.ts` | `POST_TYPES`, `Platform = "instagram" \| "facebook" \| "linkedin"` | Confirmed |
+| REALTOR.ca needs copy and paste | `src/lib/faq.ts:30` | "REALTOR.ca blocks automated tools, so use “Copy and paste the page”" | Confirmed |
+| Edit, download, publish or schedule; nothing posts without a click | `src/lib/faq.ts:6,18` | "You can edit, download, publish or schedule them." "A post goes out only when you click Publish now or choose a time to schedule it." | Confirmed |
+| Example post types in the visual | `src/components/hero/demo-posts.ts:204,219` | `ig-maple` `postType: "sold"`; `li-laurier` `postType: "coming_soon"` | Confirmed; the caption's claim that they aren't listing posts was cut |
 
-Every claim above is sourced; nothing in the guide is left as "probably true." Canadian-holiday scheduling advice in the guide is phrased generally (don't calendar around American holidays) and makes no specific date claims, so it needed no external source.
+Our own advice, stated as advice and not as fact: the day-by-day schedule, a fixed-day habit, and one post a week at one listing a month.

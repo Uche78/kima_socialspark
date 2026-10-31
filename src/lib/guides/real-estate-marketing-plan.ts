@@ -20,7 +20,7 @@ export const realEstateMarketingPlan: Guide = {
   h1: "A real estate marketing plan for Canadian realtors, with a weekly posting schedule",
   dek: "What a marketing plan needs to include, a weekly social media schedule you can copy, and how it changes for a new agent, a busy one, or a team.",
   answer:
-    "A real estate marketing plan sets what you'll actually do every week, not just what you hope to do: your audience, your channels, a budget, and a schedule you'll keep. For social media, that means three posts a week as a baseline, split across a listing, something local or useful, and a weekend reminder, each on a fixed day so it survives a busy week. Scale it down to one post a week for a single listing a month, or up for a full pipeline.",
+    "A real estate marketing plan sets what you'll actually do every week, not just what you hope to do: your audience, your channels, a budget, and a schedule you'll keep. For social media, we suggest starting with three posts a week, split across a listing, something local or useful, and a weekend reminder, each on a fixed day so it survives a busy week. Scale it down to one post a week for a single listing a month, or up for a full pipeline.",
   published: "2026-10-31",
   updated: "2026-10-31",
   sections: [
@@ -29,15 +29,15 @@ export const realEstateMarketingPlan: Guide = {
       blocks: [
         {
           type: "p",
-          text: "Most templates for a real estate marketing plan ask for the same handful of things, in roughly this order: who you're trying to reach, the one message you want them to remember, which channels you'll actually run, a budget, and how you'll check what's working. [HousingWire's marketing-plan guide](https://www.housingwire.com/articles/real-estate-marketing-plan/) lays this out as nine steps, starting with a clear goal and ending with tracking results and adjusting.",
+          text: "A real estate marketing plan answers five questions: who you're trying to reach, the one message you want them to remember, which channels you'll actually run, what you'll spend, and how you'll check what's working. [HousingWire's marketing-plan guide](https://www.housingwire.com/articles/real-estate-marketing-plan/) lays this out as nine steps, starting with clear goals and ending with tracking results and adjusting.",
         },
         {
           type: "list",
           items: [
             "**Your audience and area.** The listings, price range and neighbourhoods you actually work, not \"everyone looking to buy or sell.\"",
             "**One message.** What you want someone to remember about working with you, stated plainly enough to repeat in a caption.",
-            "**Your channels.** For most Canadian agents, that's Instagram, Facebook and LinkedIn; pick what your audience actually uses, not every platform that exists.",
-            "**A schedule.** The part every plan needs and most skip: which day, which post, every week.",
+            "**Your channels.** Pick what your audience actually uses, not every platform that exists.",
+            "**A schedule.** Which day, which post, every week.",
             "**A way to check what worked.** Which posts got messages, not just likes.",
           ],
         },
@@ -53,28 +53,24 @@ export const realEstateMarketingPlan: Guide = {
       blocks: [
         {
           type: "p",
-          text: "The baseline most sources agree on is three posts a week. [Reallyo's \"3-3-3 rule\"](https://www.reallyo.com/blog/real-estate-social-media-marketing) puts it simply: post three times a week, across three content types, and engage with three other accounts for every post you make. Three content types beats three of the same post, because a feed of only listings reads as an ad, not an agent.",
+          text: "Start with three posts a week. There's no official number for this, so treat it as a pace you can keep, not a rule. Make the three posts different from each other, because a feed of only listings reads as an ad, not an agent. The schedule below follows your listings instead of a generic content calendar.",
         },
         {
           type: "table",
           caption: "A three-post weekly schedule",
           head: ["Day", "Post", "Why this day"],
           rows: [
-            ["Monday", "A listing: new, a price change, or an existing active listing reposted as Featured Property", "Early in the week, while people are planning weekend viewings"],
+            ["Monday", "A listing: new, a price change, or an existing active listing reposted as Featured Property", "Starts the week with your main post"],
             ["Wednesday", "Local or useful content: a market stat you've checked, a neighbourhood fact, a buying or selling tip", "Keeps you visible to people who aren't actively buying or selling yet"],
-            ["Friday or Saturday", "An open house reminder, a sold update, or a client story (with consent)", "Timed to the weekend, when most showings and open houses happen"],
+            ["Friday or Saturday", "An open house reminder, a sold update, or a client story (with consent)", "Goes out ahead of a weekend open house"],
           ],
-        },
-        {
-          type: "p",
-          text: "Reallyo also suggests a 50/30/20 split for the posts themselves: about half useful or educational, 30% personal and relatable, and 20% promotional. A feed that's all promotion reads as advertising; one that's never promotional never asks for the business.",
         },
         {
           type: "visual",
           visual: {
             kind: "posts",
             ids: ["ig-maple", "li-laurier"],
-            caption: "A Sold update and a Coming Soon teaser, made with SocialSpark: two of the three weekly post types that keep a feed from being only listings.",
+            caption: "A Sold update and a Coming Soon teaser, two example posts made with SocialSpark.",
           },
         },
       ],
@@ -84,11 +80,11 @@ export const realEstateMarketingPlan: Guide = {
       blocks: [
         {
           type: "p",
-          text: "Three times a week is the floor, not the ceiling. If you've got more than one listing moving at once, Open House, Price Reduced and Sold posts for each one fill extra days without inventing content: a single active listing can carry three or four posts across its time on the market before it needs new material.",
+          text: "Three times a week is a starting point, not a ceiling. If you've got more than one listing moving at once, Open House, Price Reduced and Sold posts for each one fill extra days without inventing content: a single active listing can carry three or four posts across its time on the market before it needs new material.",
         },
         {
           type: "p",
-          text: "Posting less than three times a week is where most plans actually fail, not from a lack of ideas but because nothing forces the post to happen on a specific day. Pick fixed days (Monday, Wednesday, Saturday, or whatever fits your week) and treat them the way you'd treat a showing: booked in advance, not squeezed in if there's time.",
+          text: "Keeping to the number matters more than the number. Pick fixed days (Monday, Wednesday, Saturday, or whatever fits your week) and treat them the way you'd treat a showing: booked in advance, not squeezed in if there's time.",
         },
       ],
     },
@@ -97,7 +93,7 @@ export const realEstateMarketingPlan: Guide = {
       blocks: [
         {
           type: "p",
-          text: "Most weeks don't have a new listing in them, and that's the week a plan without a schedule falls apart. A few options that don't need a new listing to work:",
+          text: "Some weeks have no new listing in them, and that's the week a plan without a schedule falls apart. A few options that don't need a new listing to work:",
         },
         {
           type: "list",
@@ -120,14 +116,14 @@ export const realEstateMarketingPlan: Guide = {
       blocks: [
         {
           type: "p",
-          text: "The three-post schedule above assumes a steady flow of listings and content. Most agents don't start there.",
+          text: "The three-post schedule above assumes a steady flow of listings and content. Here's how to adjust it if yours looks different.",
         },
         {
           type: "list",
           items: [
-            "**New or part-time, with one listing a month:** one post a week is enough. Get three or four angles out of that one listing instead of forcing new content, and reuse the same caption across Instagram and Facebook with small changes. See [social media posts for new real estate agents](/for/social-media-posts-for-new-real-estate-agents) or [listing posts for part-time realtors](/for/listing-posts-for-part-time-realtors).",
+            "**New or part-time, with one listing a month:** one post a week is enough. Get three or four angles out of that one listing instead of forcing new content, and write the caption for each platform instead of pasting the same one. See [social media posts for new real estate agents](/for/social-media-posts-for-new-real-estate-agents).",
             "**Busy, with several listings a month:** the full weekly schedule above, with a listing post most weeks instead of filler content.",
-            "**A team or a top producer:** the same schedule run across more listings and more platforms at once; batching captions ahead of the week matters more than adding new content types. See [social media for top-producing realtors](/for/social-media-for-top-producing-realtors).",
+            "**A team or a top producer:** the same schedule run across more listings and more platforms at once; batching captions ahead of the week matters more than adding new content types.",
           ],
         },
         {
@@ -141,13 +137,14 @@ export const realEstateMarketingPlan: Guide = {
       blocks: [
         {
           type: "p",
-          text: "A posting schedule doesn't change what counts as advertising. Every post in your plan is still subject to your provincial regulator's rules, the same as a sign or a print ad.",
+          text: "A posting schedule doesn't change what counts as advertising. In Ontario, RECO says the same advertising requirements apply on social media as anywhere else. The first and third rules below are Ontario's; if you work in another province, check them with your own regulator.",
         },
         {
           type: "list",
           items: [
             "**Name your brokerage, clearly and prominently, on every post.** In Ontario, [RECO Bulletin 5.1](https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-1-advertising-requirements/) requires it, and [Bulletin 5.3](https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-3-advertising-online/) applies the same requirement to social media, including a personal account you also post listings from. For the full set of rules, see [RECO advertising guidelines](/guides/reco-advertising-guidelines).",
-            "**Write REALTOR® correctly.** It's a [CREA trademark](https://www.crea.ca/cafe/everything-you-need-to-know-about-creas-trademarks-2/) for members, not a job title; capitals and the ® symbol on first use.",
+            "**Write REALTOR® correctly.** It's a [CREA trademark](https://www.crea.ca/cafe/everything-you-need-to-know-about-creas-trademarks-2/) for members, not a job title. CREA's form rule: all letters capitalized, followed by the ® symbol, with a trademark statement.",
+            "**Get written consent before a Sold post.** In Ontario, [RECO Bulletin 5.4](https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-4-advertising-sold-property/) requires it, with the dates it starts and ends. The [RECO guide](/guides/reco-advertising-guidelines) shows whose consent you need.",
             "**Calendar around Canadian observances, not American ones**, if you're planning content by month. A U.S. holiday calendar doesn't match Canadian Thanksgiving, Victoria Day or Canada Day.",
           ],
         },
@@ -174,7 +171,7 @@ export const realEstateMarketingPlan: Guide = {
         },
         {
           type: "p",
-          text: `Your first ${FREE_LIMITS.registered} listings are free, with ${FREE_LIMITS.captionsPerListing} posts each and no credit card, enough to run a few weeks of the schedule above. See [the plans](/pricing) if you're posting every week.`,
+          text: `Your first ${FREE_LIMITS.registered} listings are free, with ${FREE_LIMITS.captionsPerListing} posts each and no credit card, enough to try the schedule above. See [the plans](/pricing) if you're posting every week.`,
         },
       ],
     },
@@ -182,11 +179,11 @@ export const realEstateMarketingPlan: Guide = {
   faq: [
     {
       q: "How many social media posts should a real estate marketing plan include each week?",
-      a: "Three is the baseline most sources agree on, split across a listing post, something local or useful, and a weekend reminder or update. Busy agents with several listings moving can add more without inventing content, by posting each listing's stages separately.",
+      a: "Three is a good starting point, split across a listing post, something local or useful, and a weekend reminder or update. There's no official number. Busy agents with several listings moving can add more without inventing content, by posting each listing's stages separately.",
     },
     {
       q: "What's the difference between a marketing plan, a marketing schedule and a marketing calendar?",
-      a: "A plan sets the strategy: your audience, message, channels and budget. A schedule or calendar is the execution: which specific days you post what. A plan without a schedule rarely survives a busy week.",
+      a: "A plan sets the strategy: your audience, message, channels and budget. A schedule or calendar is the execution: which specific days you post what. A plan without a schedule tells you what to do but not when.",
     },
     {
       q: "What should I post when I don't have a new listing?",
@@ -194,15 +191,15 @@ export const realEstateMarketingPlan: Guide = {
     },
     {
       q: "Does a real estate marketing plan need a budget?",
-      a: "Most templates include one, even a small one, since it forces a choice between channels instead of trying to run all of them. If you're only using organic social media and your own time, that budget can be nothing but the time itself.",
+      a: "HousingWire's template includes one, and even a small one forces a choice between channels instead of trying to run all of them. If you're only using organic social media and your own time, that budget can be nothing but the time itself.",
     },
     {
       q: "Do mortgage brokers need a different marketing plan?",
-      a: "The same weekly cadence works, with a mortgage feature sheet in place of a listing post. The channels, schedule and content mix stay the same.",
+      a: "The same weekly cadence works, with a mortgage feature sheet in place of a listing post.",
     },
     {
       q: "What Canadian rules does my social media schedule need to follow?",
-      a: "Every post is still advertising under your provincial regulator's rules: your brokerage name has to be clearly shown, REALTOR® is reserved for CREA members, and a Sold post needs the parties' written consent. See RECO advertising guidelines for Ontario's specifics.",
+      a: "In Ontario, every post is advertising under RECO's rules: your brokerage name has to be clearly shown, and a Sold post needs the parties' written consent. REALTOR® is reserved for CREA members across Canada. In other provinces, check your own regulator's rules.",
     },
   ],
   related: ["just-listed-post-ideas", "real-estate-facebook-post-ideas", "reco-advertising-guidelines"],
@@ -212,9 +209,9 @@ export const realEstateMarketingPlan: Guide = {
   },
   sources: [
     { label: "HousingWire: Build Your Real Estate Marketing Plan in 9 Steps (+ Template)", url: "https://www.housingwire.com/articles/real-estate-marketing-plan/" },
-    { label: "Reallyo: Real Estate Social Media Marketing: 30 Ideas & the 3-3-3 Rule", url: "https://www.reallyo.com/blog/real-estate-social-media-marketing" },
     { label: "RECO Bulletin 5.1: Advertising requirements", url: "https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-1-advertising-requirements/" },
     { label: "RECO Bulletin 5.3: Advertising online", url: "https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-3-advertising-online/" },
+    { label: "RECO Bulletin 5.4: Advertising sold property", url: "https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-4-advertising-sold-property/" },
     { label: "CREA: Everything you need to know about CREA's trademarks", url: "https://www.crea.ca/cafe/everything-you-need-to-know-about-creas-trademarks-2/" },
   ],
 };

@@ -162,7 +162,7 @@ export const openHouseSocialMediaPost: Guide = {
           items: [
             "**Name your brokerage, clearly.** In Ontario, [RECO's advertising bulletin](https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-1-advertising-requirements/) requires the brokerage name in all advertising, including social media. Other provinces have similar rules. For the full set of RECO's advertising rules, see [RECO advertising guidelines](/guides/reco-advertising-guidelines).",
             "**Only host and post what you're allowed to.** If it's a colleague's or another brokerage's listing, follow your board's and regulator's rules on consent, credit the listing brokerage, and don't make it look like your own listing.",
-            "**Write REALTOR® correctly.** It's a CREA trademark for members, not a job title; [CREA asks](https://www.crea.ca/cafe/everything-you-need-to-know-about-creas-trademarks-2/) for capitals and the ® symbol on first use.",
+            "**Write REALTOR® correctly.** It's a CREA trademark for members, not a job title. [CREA's form rule](https://www.crea.ca/cafe/everything-you-need-to-know-about-creas-trademarks-2/): all letters capitalized, followed by the ® symbol, with a trademark statement.",
             "**Describe the home, not the visitor.** Human rights laws prohibit discriminatory housing ads. \"Four bedrooms on two floors\" is fine; \"perfect for a young family\" isn't.",
             "**No promises about value.** Skip \"guaranteed\" or \"best investment\", and don't predict what the home will be worth.",
             "**Get the time right, every time.** Posting a wrong date or time isn't just a bad look: it sends people to a closed door.",
