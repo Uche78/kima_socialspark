@@ -56,7 +56,7 @@ A new site has few impressions for the first weeks. The analyser then leans on K
 
 ## 5. Daily schedule (only when the user asks)
 
-The run uses gum's local credentials, so it runs on this Mac: it needs the Mac on and the user logged in (a run missed while asleep starts on wake; one missed while shut down is skipped). The project doesn't need to be open.
+The run uses gum's local credentials, so it runs on this Mac: it needs the Mac on and the user logged in (a run missed while asleep starts on wake and waits up to 10 minutes for the network; one missed while shut down is skipped). The project doesn't need to be open.
 
 **Why a separate clone.** macOS privacy protection doesn't let launchd jobs read `~/Desktop`, where the project lives, so the job works in its own clone of the GitHub repo at `~/socialspark-content-engine`. The first attempt, a git worktree, failed: a worktree's git data stays in the main checkout.
 

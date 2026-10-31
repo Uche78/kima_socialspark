@@ -31,6 +31,14 @@ mkdir -p marketing/seo/data
 LOG="marketing/seo/data/run-$DAY.log"
 echo "=== $(date) ===" >> "$LOG"
 
+# launchd starts a missed run the moment the Mac wakes, often before it's back online ("Could not resolve host"
+# on 2026-10-31). Wait up to 10 minutes for GitHub before giving up.
+for TRY in {1..30}; do
+  git ls-remote -q origin HEAD >/dev/null 2>&1 && break
+  [ $TRY -eq 1 ] && echo "=== $(date): no connection to GitHub, waiting up to 10 minutes ===" >> "$LOG"
+  /bin/sleep 20
+done
+
 # Start clean from GitHub's main. Kept: the data folder (past pulls, run logs), the product ideas list, the local
 # env file and installed dependencies, all gitignored.
 if ! git fetch -q --prune origin >> "$LOG" 2>&1; then notify "Couldn't fetch from GitHub. See $ENGINE/$LOG"; exit 1; fi
