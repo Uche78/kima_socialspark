@@ -115,6 +115,10 @@ export const realEstateFacebookPostIdeas: Guide = {
             { title: "The bilingual post", body: "In Québec, Ottawa–Gatineau or anywhere your buyers read French, the same post in English and French in one caption reaches both." },
           ],
         },
+        {
+          type: "p",
+          text: "These ten ideas fill more than one week on their own. For how they fit into a full week's schedule alongside other content, see [a real estate marketing plan](/guides/real-estate-marketing-plan).",
+        },
       ],
     },
     {
@@ -222,7 +226,7 @@ export const realEstateFacebookPostIdeas: Guide = {
       a: "Only with the consent your regulator and board require. Credit the listing brokerage in the post and don't make it look like your own listing.",
     },
   ],
-  related: ["just-listed-post-ideas", "real-estate-captions-for-instagram", "open-house-social-media-post", "reco-advertising-guidelines"],
+  related: ["just-listed-post-ideas", "real-estate-captions-for-instagram", "open-house-social-media-post", "real-estate-marketing-plan"],
   cta: {
     heading: "See your next listing as a Facebook post",
     sub: "Paste a link to one of your listings. SocialSpark writes a caption for Facebook's audience and lays out a clean listing photo, ready to edit.",
