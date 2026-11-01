@@ -66,7 +66,7 @@ export const realEstateFacebookPostIdeas: Guide = {
         {
           type: "example",
           label: "Just Listed",
-          text: "Just listed in Oakville: 5 beds, 4.5 baths and a kitchen built for hosting.\n\nThe backyard is the part you'll remember: a heated saltwater pool with room around it for the whole family. Know someone who's been waiting for a home like this? Tag them below.\n\nMessage me to book a private showing.\n\nJane Doe, REALTOR® | ABC Realty Inc., Brokerage",
+          text: "Just listed in Oakville: 5 beds, 4.5 baths and a kitchen built for hosting.\n\nThe backyard is the part you'll remember: a heated saltwater pool with room around it for a crowd. Know someone who's been waiting for a home like this? Tag them below.\n\nMessage me to book a private showing.\n\nJane Doe, REALTOR® | ABC Realty Inc., Brokerage",
         },
         {
           type: "example",
@@ -81,7 +81,7 @@ export const realEstateFacebookPostIdeas: Guide = {
         {
           type: "example",
           label: "Sold",
-          text: "Another family is moving into Maple Lane.\n\nIf you've been wondering what your Stouffville home could get in this market, I'm happy to walk you through what's selling on your street, no pressure.\n\nThinking of selling? Let's talk.\n\nJane Doe, REALTOR® | ABC Realty Inc., Brokerage",
+          text: "Another home on Maple Lane just sold.\n\nIf you've been wondering what your Stouffville home could get in this market, I'm happy to walk you through what's selling on your street, no pressure.\n\nThinking of selling? Let's talk.\n\nJane Doe, REALTOR® | ABC Realty Inc., Brokerage",
         },
         {
           type: "visual",

@@ -91,7 +91,7 @@ export const justListedPostIdeas: Guide = {
         {
           type: "example",
           label: "Example: Facebook",
-          text: "Just listed in Oakville: 5 beds, 4.5 baths and a chef's kitchen made for hosting.\n\nThe backyard is the part you'll remember: a heated saltwater pool with room around it for the whole family. Know someone who's been waiting for a home like this? Tag them below.\n\nMessage me to book a private showing.\n\nJane Doe, REALTOR® | ABC Realty Inc., Brokerage",
+          text: "Just listed in Oakville: 5 beds, 4.5 baths and a chef's kitchen made for hosting.\n\nThe backyard is the part you'll remember: a heated saltwater pool with room around it for a crowd. Know someone who's been waiting for a home like this? Tag them below.\n\nMessage me to book a private showing.\n\nJane Doe, REALTOR® | ABC Realty Inc., Brokerage",
         },
         {
           type: "example",
@@ -238,7 +238,7 @@ export const justListedPostIdeas: Guide = {
       a: "A Sold post speaks to future sellers: tell the short story of the result and invite people to talk about their own home. Advertising a sale needs written consent. In Ontario, RECO requires the seller's before closing, the buyer's after, and both to show the price or terms. Check your own regulator's rules.",
     },
   ],
-  related: ["real-estate-captions-for-instagram", "real-estate-facebook-post-ideas", "open-house-social-media-post", "property-descriptions"],
+  related: ["real-estate-captions-for-instagram", "real-estate-facebook-post-ideas", "property-descriptions", "reco-advertising-guidelines"],
   cta: {
     heading: "See your next listing as a Just Listed post",
     sub: "Paste a link to one of your listings. SocialSpark lays out the image with your name and brokerage and writes the caption, ready to edit.",

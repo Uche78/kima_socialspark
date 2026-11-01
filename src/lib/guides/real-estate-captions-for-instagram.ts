@@ -53,7 +53,7 @@ export const realEstateCaptionsForInstagram: Guide = {
       blocks: [
         {
           type: "p",
-          text: "Each post type has a different job, so each caption leads differently. These examples use the demo listings you'll see on this site; swap in your own facts and keep the shape, pulled from the [property description](/guides/property-descriptions) you've already written. The same listing needs a different caption again on Facebook, where readers expect more story and a link works; see [real estate Facebook post ideas](/guides/real-estate-facebook-post-ideas). For the Open House caption, including the posting timeline that gets it seen more than once, see [open house social media posts](/guides/open-house-social-media-post).",
+          text: "Each post type has a different job, so each caption leads differently. These examples use the demo listings you'll see on this site; swap in the facts from your own [property description](/guides/property-descriptions) and keep the shape. The same listing needs a different caption again on Facebook, where readers expect more story and a link works; see [real estate Facebook post ideas](/guides/real-estate-facebook-post-ideas). For the Open House caption, including the posting timeline that gets it seen more than once, see [open house social media posts](/guides/open-house-social-media-post).",
         },
         {
           type: "example",
@@ -78,7 +78,7 @@ export const realEstateCaptionsForInstagram: Guide = {
         {
           type: "example",
           label: "Sold",
-          text: "Another family is moving into Maple Lane.\n\nIf you've been wondering what your Stouffville home could get, I'm happy to walk you through what's selling on your street.\n\nThinking of selling? Let's talk.\n\nJane Doe, REALTOR® | ABC Realty Inc., Brokerage",
+          text: "Another home on Maple Lane just sold.\n\nIf you've been wondering what your Stouffville home could get, I'm happy to walk you through what's selling on your street.\n\nThinking of selling? Let's talk.\n\nJane Doe, REALTOR® | ABC Realty Inc., Brokerage",
         },
         {
           type: "example",
