@@ -121,7 +121,7 @@ export const realEstateMarketingPlan: Guide = {
         {
           type: "list",
           items: [
-            "**New or part-time, with one listing a month:** one post a week is enough. Get three or four angles out of that one listing instead of forcing new content, and write the caption for each platform instead of pasting the same one. See [social media posts for new real estate agents](/for/social-media-posts-for-new-real-estate-agents).",
+            "**New or part-time, with one listing a month:** one post a week is enough. Get three or four angles out of that one listing instead of forcing new content, and write the caption for each platform instead of pasting the same one — pulled from the [property description](/guides/property-descriptions) you've already written, not copied whole. See [social media posts for new real estate agents](/for/social-media-posts-for-new-real-estate-agents).",
             "**Busy, with several listings a month:** the full weekly schedule above, with a listing post most weeks instead of filler content.",
             "**A team or a top producer:** the same schedule run across more listings and more platforms at once; batching captions ahead of the week matters more than adding new content types.",
           ],
@@ -202,7 +202,7 @@ export const realEstateMarketingPlan: Guide = {
       a: "In Ontario, every post is advertising under RECO's rules: your brokerage name has to be clearly shown, and a Sold post needs the parties' written consent. REALTOR® is reserved for CREA members across Canada. In other provinces, check your own regulator's rules.",
     },
   ],
-  related: ["just-listed-post-ideas", "real-estate-facebook-post-ideas", "reco-advertising-guidelines"],
+  related: ["just-listed-post-ideas", "real-estate-facebook-post-ideas", "property-descriptions"],
   cta: {
     heading: "Fill this week's slot in minutes",
     sub: "Paste a listing link and pick the post type this week's schedule calls for. SocialSpark writes the caption and lays out the image, ready to review.",

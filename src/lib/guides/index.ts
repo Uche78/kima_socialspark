@@ -6,6 +6,7 @@
 import type { Language } from "@/lib/types";
 import { justListedPostIdeas } from "./just-listed-post-ideas";
 import { openHouseSocialMediaPost } from "./open-house-social-media-post";
+import { propertyDescriptions } from "./property-descriptions";
 import { realEstateCaptionsForInstagram } from "./real-estate-captions-for-instagram";
 import { realEstateFacebookPostIdeas } from "./real-estate-facebook-post-ideas";
 import { realEstateMarketingPlan } from "./real-estate-marketing-plan";
@@ -78,6 +79,7 @@ export const GUIDES: Guide[] = [
   openHouseSocialMediaPost,
   recoAdvertisingGuidelines,
   realEstateMarketingPlan,
+  propertyDescriptions,
 ].sort((a, b) => b.published.localeCompare(a.published));
 
 export function guide(slug: string) {

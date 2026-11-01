@@ -81,7 +81,7 @@ export const justListedPostIdeas: Guide = {
         },
         {
           type: "p",
-          text: "Skip the words every listing uses: stunning, nestled, boasts, must-see, dream home, turnkey, won't last long. Buyers skim past them. A specific fact does more: \"new roof in 2024\" beats \"meticulously maintained\". For Open House, Price Reduced, Coming Soon and Sold captions too, see [real estate captions for Instagram](/guides/real-estate-captions-for-instagram).",
+          text: "Skip the words every listing uses: stunning, nestled, boasts, must-see, dream home, turnkey, won't last long. Buyers skim past them. A specific fact does more: \"new roof in 2024\" beats \"meticulously maintained\". These facts usually come straight from the longer write-up on the listing; see [property descriptions](/guides/property-descriptions) for how to write that first. For Open House, Price Reduced, Coming Soon and Sold captions too, see [real estate captions for Instagram](/guides/real-estate-captions-for-instagram).",
         },
         {
           type: "example",
@@ -238,7 +238,7 @@ export const justListedPostIdeas: Guide = {
       a: "A Sold post speaks to future sellers: tell the short story of the result and invite people to talk about their own home. Advertising a sale needs written consent. In Ontario, RECO requires the seller's before closing, the buyer's after, and both to show the price or terms. Check your own regulator's rules.",
     },
   ],
-  related: ["real-estate-captions-for-instagram", "real-estate-facebook-post-ideas", "open-house-social-media-post", "reco-advertising-guidelines"],
+  related: ["real-estate-captions-for-instagram", "real-estate-facebook-post-ideas", "open-house-social-media-post", "property-descriptions"],
   cta: {
     heading: "See your next listing as a Just Listed post",
     sub: "Paste a link to one of your listings. SocialSpark lays out the image with your name and brokerage and writes the caption, ready to edit.",
