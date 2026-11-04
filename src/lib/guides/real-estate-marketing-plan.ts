@@ -10,6 +10,9 @@ export const realEstateMarketingPlan: Guide = {
     "social media marketing plan for realtors",
     "real estate marketing plan template",
     "weekly marketing plan for realtors",
+    "listing marketing plan",
+    "marketing plan for listing a home",
+    "listing presentation marketing plan",
   ],
   audience: "realtor",
   cluster: "Listing marketing",
@@ -22,7 +25,7 @@ export const realEstateMarketingPlan: Guide = {
   answer:
     "A real estate marketing plan sets what you'll actually do every week, not just what you hope to do: your audience, your channels, a budget, and a schedule you'll keep. For social media, we suggest starting with three posts a week, split across a listing, something local or useful, and a weekend reminder, each on a fixed day so it survives a busy week. Scale it down to one post a week for a single listing a month, or up for a full pipeline.",
   published: "2026-10-31",
-  updated: "2026-10-31",
+  updated: "2026-11-04",
   sections: [
     {
       heading: "What a real estate marketing plan needs to include",
@@ -45,6 +48,40 @@ export const realEstateMarketingPlan: Guide = {
           type: "tip",
           label: "Plan in chunks, not all at once",
           text: "HousingWire's own suggestion is to plan content a quarter at a time: \"sit down once a quarter … and get your creative juices flowing,\" then work from that for the next 90 days instead of starting from nothing each week.",
+        },
+      ],
+    },
+    {
+      heading: "What goes in the marketing plan slide of a listing presentation?",
+      blocks: [
+        {
+          type: "p",
+          text: "Before the weekly schedule below starts, you usually have to win the listing. [RealAnalytica](https://www.realanalytica.com/blog/real-estate-listing-presentation) puts the marketing plan ahead of price in a listing presentation: sellers price-shop several agents, then hire the one who shows exactly how the home will reach buyers, not the one who names the lowest commission.",
+        },
+        {
+          type: "list",
+          items: [
+            "**A timeline, not just a list of platforms.** [Launchlisting](https://www.launchlisting.com/blog/the-listing-marketing-plan)'s stage checklist moves through Just Listed, Week 2 Promotion, Open House, Price Update, Under Contract and Sold, so the seller sees when each thing happens, not just that it will.",
+            "**The channels you'll actually run.** MLS and your own site, the social platforms you post from every week, email to your buyer list, and direct mail if that's part of your practice, not every channel that exists.",
+            "**Proof, not a promise.** RealAnalytica's finding: sellers \"want to see the polish, not just hear about it,\" so show a real example instead of describing one.",
+          ],
+        },
+        {
+          type: "tip",
+          label: "Use a past sale, not this one",
+          text: "You don't have this seller's listing yet, so the example can't be their home. Show a past sale you have consent to reference, or a similar active listing, instead of guessing at details for a property you don't have.",
+        },
+        {
+          type: "visual",
+          visual: {
+            kind: "posts",
+            ids: ["ig-oakridge", "fb-maple"],
+            caption: "A Just Listed post and an Open House post made with SocialSpark, the kind of example to show a seller before you have their listing.",
+          },
+        },
+        {
+          type: "p",
+          text: "Keep the example honest to how you'd actually post it: your brokerage name shown the way RECO's rules require (below), and no price or sale referenced without the consent it needs.",
         },
       ],
     },
@@ -194,6 +231,10 @@ export const realEstateMarketingPlan: Guide = {
       a: "HousingWire's template includes one, and even a small one forces a choice between channels instead of trying to run all of them. If you're only using organic social media and your own time, that budget can be nothing but the time itself.",
     },
     {
+      q: "What should I include in the marketing plan section of a listing presentation?",
+      a: "A timeline by stage (Just Listed, Open House, a price update if the home sits, Sold), the channels you actually run, and a real example instead of a promise. You don't have this seller's listing yet, so use a past sale you have consent to reference, or a similar active listing.",
+    },
+    {
       q: "Do mortgage brokers need a different marketing plan?",
       a: "The same weekly cadence works, with a mortgage feature sheet in place of a listing post.",
     },
@@ -209,6 +250,8 @@ export const realEstateMarketingPlan: Guide = {
   },
   sources: [
     { label: "HousingWire: Build Your Real Estate Marketing Plan in 9 Steps (+ Template)", url: "https://www.housingwire.com/articles/real-estate-marketing-plan/" },
+    { label: "RealAnalytica: Real Estate Listing Presentation: Template, Examples, and Checklist for Agents", url: "https://www.realanalytica.com/blog/real-estate-listing-presentation" },
+    { label: "Launchlisting: The Listing Marketing Plan to Attract and Impress Home Sellers", url: "https://www.launchlisting.com/blog/the-listing-marketing-plan" },
     { label: "RECO Bulletin 5.1: Advertising requirements", url: "https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-1-advertising-requirements/" },
     { label: "RECO Bulletin 5.3: Advertising online", url: "https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-3-advertising-online/" },
     { label: "RECO Bulletin 5.4: Advertising sold property", url: "https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-4-advertising-sold-property/" },

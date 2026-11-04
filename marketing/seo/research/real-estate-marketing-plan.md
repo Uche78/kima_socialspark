@@ -1,5 +1,33 @@
 # Gap brief: real estate marketing plan
 
+## 2026-11-04 refresh
+
+Cannibalisation check: today's top Keyword Planner rows were all "marketing plan" variants with weak product fit (property management marketing plan, real estate SMMA, property marketing strategy, tom ferry/mike ferry marketing plan, home marketing plan — scores 15–37.5, none about a realtor's own listing). The one with real fit, "listing marketing plan" (score 22.5; variants "marketing plan for listing a home", "listing presentation marketing plan"), is ≥50% the same question as this guide's keyword, so per the skill's cannibalisation rule it's a refresh, not a new guide. Confirmed via search that the actual intent is different from the published guide's weekly-posting-cadence angle: it's what to put in the marketing plan section of a listing presentation, used to win a listing before you have one. Added as a new section plus one FAQ; nothing else in the guide changed.
+
+Pages read for the refresh (WebSearch then WebFetch, 5 pages): Matterport, HeyGen, Tom Ferry, SlideModel and WisePelican came up for "listing presentation marketing plan" generally; read in full: Virtuance, ShowingTime, Launchlisting, RealAnalytica and AgentWealthHustle (listed below). None are Canadian; none mention RECO/CREA rules; all assume the example shown is this seller's own home, which an agent doesn't have yet at the presentation stage. RealAnalytica's "show real examples, don't just promise" point and Launchlisting's stage checklist were the two gaps worth adding; AgentWealthHustle was mostly generic marketing-textbook material (SWOT, buyer personas) not specific to a listing presentation, so it wasn't used.
+
+| Page read | Used |
+|---|---|
+| [Virtuance](https://www.virtuance.com/blog/listing-presentation-guide/) | Confirmed the "channels, not a promise" framing matches other pages; not quoted directly |
+| [ShowingTime](https://showingtime.com/lo/real-estate-listing-marketing-plan-guide) | Confirmed general channel list; not quoted directly |
+| [Launchlisting](https://www.launchlisting.com/blog/the-listing-marketing-plan) | Quoted for the stage checklist |
+| [RealAnalytica](https://www.realanalytica.com/blog/real-estate-listing-presentation) | Quoted for "closes more listings" and "show real examples" |
+| [AgentWealthHustle](https://agentwealthhustle.com/real-estate-listing-marketing-plan/) | Read, not used (generic marketing-textbook content, nothing listing-presentation-specific) |
+
+### Fact-check (refresh)
+
+| Claim | Source | Exact words | Result |
+|---|---|---|---|
+| The marketing plan section is what wins the listing, ahead of price | [RealAnalytica](https://www.realanalytica.com/blog/real-estate-listing-presentation) | "The marketing plan section closes more listings than the pricing section. Sellers price-shop multiple agents; they hire the one who shows them exactly how the home will reach buyers." | Confirmed |
+| Show real examples instead of describing them | RealAnalytica | "Show real examples of past marketing collateral if you have it. Sellers want to see the polish, not just hear about it." | Confirmed |
+| Stage checklist: Just Listed, Week 2 Promotion, Open House, Price Update, Under Contract, Sold | [Launchlisting](https://www.launchlisting.com/blog/the-listing-marketing-plan) | "Just Listed, Week 2 Promotion, Open House, Price Update, Under Contract, Sold" | Confirmed |
+| Channels: MLS, a site, social, email, direct mail | Virtuance, ShowingTime (consistent across both) | Virtuance: "a pricing proposal, professional real estate photography, a virtual 3d tour, a direct mail campaign, social sharing"; ShowingTime: MLS/aggregators, a dedicated webpage, social platforms, video | Confirmed; stated at the level common to both, not either page's specific list |
+| Brokerage name has to appear on an example post the same as a live one | [Bulletin 5.1](https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-1-advertising-requirements/), already verified for this guide's first draft | "Agents are prohibited from advertising in any manner unless the brokerage is clearly and prominently identified." | Confirmed; same source reused, not reopened |
+| A referenced sale needs the consent the Sold rule requires | [Bulletin 5.4](https://www.reco.on.ca/agents-and-brokerages/reco-bulletins/reco-bulletin-5-4-advertising-sold-property/), already verified for this guide's first draft | "The consent must be clear and include the date on which the consent takes effect and the date on which the consent expires." | Confirmed; same source reused, not reopened |
+| Example post ids and types | `src/components/hero/demo-posts.ts` | `ig-oakridge`: `postType: "just_listed"`; `fb-maple`: `postType: "open_house"` | Confirmed |
+| "You don't have this seller's listing yet" / use a past sale or similar listing instead | None | Our own reasoning from the product's import flow (no listing link exists for an unsigned listing), not from any source | Stated as our advice, not a cited fact |
+
+
 Opportunity: Keyword Planner family "real estate social marketing" (score 882.5), ~310 searches/mo in Canada across 9 phrasings (real estate marketing strategy, real estate marketing plan, real estate marketing schedule, real estate social network, real estate marketing calendar, pinterest real estate marketing, real estate marketing proposal, real estate marketing goals), 2,910/mo US (tiebreak). Deferred from the 2026-10-30 run in favour of the RECO guide; top-scored opportunity again today with 0 Search Console rows (site not yet indexed). Chosen as "listing marketing plan" and "real estate marketing plan"/"real estate marketing schedule" are explicit seed keywords, and the cluster is in the topic map ("Listing marketing": how to market a listing on social media, listing marketing plan, posting schedule for a listing).
 
 Primary keyword chosen for the page: **real estate marketing plan** (the seed phrase realtors actually type), with the schedule/calendar variants answered inside via `alsoAnswers` and a dedicated weekly-schedule section, since that's the part none of the ranking pages execute well.
